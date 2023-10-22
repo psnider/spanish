@@ -1,0 +1,25 @@
+{
+  "name": "spanish",
+  "version": "0.1.0",
+  "description": "verb conjugator",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -P .",
+    "test": "node generated/test.js"
+  },
+  "author": "Peter Snider",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^20.3.3",
+    "typescript": "^5.1.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psnider/spanish.git"
+  },
+  "bugs": {
+    "url": "https://github.com/psnider/spanish/issues"
+  },
+  "homepage": "https://github.com/psnider/spanish#readme"
+}

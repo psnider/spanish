@@ -1,0 +1,22 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+		"target": "es2020", // Node.js 14
+        "module": "ES2020",
+		"lib": [
+			"es2020"
+		],
+        "typeRoots" : ["./node_modules/@types"],
+        "noImplicitAny": true,
+        "noUnusedLocals": false,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "outDir": "generated",
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}
