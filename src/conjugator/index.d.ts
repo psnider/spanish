@@ -2,71 +2,131 @@
 type VerbFamily = "ar" | "er" | "ir"
 type VerbMood = "Cnd" | "Imp" | "Ind" | "Sub"
 type VerbTense = "Fut" | "Imp" | "Past" | "Pres"
-type VerbMoodTense = "IndPres" | "IndPast"
+type VerbTenseMood = "PresInd" | "PresSub" | "PastInd" | "PastImpInd" | "PastCond" | "FutInd" | "CmdPos" | "CmdNeg"
 
-// A set of changes that can be applied to a set of conjugations for a verb of a given mood and tense. 
-// This is used both for suffixes and stem change rules.
-interface VerbConjugationChanges {
-    "1s": string
-    "2s": string
-    "3s": string
-    "1p": string
-    "2p": string
-    "3p": string
+interface VerbRules {
+    "1s"?: string
+    "2s"?: string
+    "3s"?: string
+    "1p"?: string
+    "2p"?: string
+    "3p"?: string
 }
+
+// The conjugated forms of a verb
 // In a few cases for irregular verbs, there can be alternate forms for conjugation, e.g. haber,3s: ha,hay
 // Such verbs never have derived verbs. 
+// null indicates that the conjugation is disallowed, for example for weather verbs (llover) and commands.
 interface VerbConjugation {
-    "1s": string | [string, string]
-    "2s": string | [string, string]
-    "3s": string | [string, string]
-    "1p": string
-    "2p": string
-    "3p": string | [string, string]
+    "1s"?: string | [string, string] | null
+    "2s"?: string | [string, string] | null
+    "3s"?: string | [string, string]
+    "1p"?: string | null
+    "2p"?: string | null
+    "3p"?: string | [string, string] | null
 }
 
-interface VerbConjugationOverrides {
-    IndPres?: Partial<VerbConjugation>
-    IndPast?: Partial<VerbConjugation>
-}
-interface VerbConjugationChangesOverrides {
-    IndPres?: Partial<VerbConjugationChanges>
-    IndPast?: Partial<VerbConjugationChanges>
-}
-interface VerbConjugation_nonStandard extends VerbConjugationOverrides {
-    change_accents?: VerbConjugationChangesOverrides
-}
-type VerbConjugationSuffixes = VerbConjugationChanges
-interface VerbConjugationSuffixesForMoodAndTense {
-    IndPres?: VerbConjugationSuffixes
-    IndPast?: VerbConjugationSuffixes
+interface VerbConjugationAnnotation {
+    // filled in for returned conjugations.
+    tense_mood?: VerbTenseMood
+    // set if verb is unknown and results are a best guess
+    unconfirmed?: boolean
 }
 
-type VerbConjugationSuffixChanges = Partial<VerbConjugationChanges>
-interface VerbConjugationChangesForMoodAndTense {  //OK
-    IndPres?: VerbConjugationSuffixChanges
-    IndPast?: VerbConjugationSuffixChanges
+interface VerbConjugationAnnotated {
+    notes: VerbConjugationAnnotation
+    forms: VerbConjugation
 }
-interface StemChangePatterns extends VerbConjugationChangesForMoodAndTense {
+
+// // A set of changes that can be applied to a set of conjugations for a verb of a given mood and tense. 
+// // This is used both for suffixes and stem change rules, and for fully conjugated forms.
+// interface VerbConjugations {
+//     "1s": string
+//     "2s": string
+//     "3s": string
+//     "1p": string
+//     "2p": string
+//     "3p": string
+// }
+
+// A set of changes that can be applied to a set of conjugations for a verb of a given mood and tense. 
+// This is used both for suffixes and stem change rules, and for fully conjugated forms.
+type VerbConjugationChanges = VerbConjugation
+
+
+export interface VerbConjugationRules {
+    // Used only for spelling change transforms
+    PresInd?: VerbFormConjugationRules
+    PresSub?: VerbFormConjugationRules
+
+    PastInd?: VerbFormConjugationRules
+    PastImpInd?: VerbFormConjugationRules
+    PastCond?: VerbFormConjugationRules
+
+    FutInd?: VerbFormConjugationRules
+
+    CmdPos?: VerbFormConjugationRules
+    CmdNeg?: VerbFormConjugationRules
+}
+
+
+// The rules for conjugating a single form of a verb, such as: "PresInd", "PastImpInd"
+interface VerbFormConjugationRules {
+    // A list of keys that lead to the base form of this conjugation
+    // Normally, the verb form is shared, in which case, only a single key is specified.
+    // But in cases in which the shared conjugation is found in a different verb form, then both are provided. 
+    base?: VerbFamily | VerbTenseMood
+    // true if the suffixes should be appended to the infinitive form, otherwise they are appended to the root/stem.
+    add_suffix_to_infinitive?: boolean
+    suffixes?: VerbConjugationChanges
     // lists valid transforms, used to check for typos
-    transforms: string[]
+    // spelling?: {
+    //     pattern: RegExp,
+    //     suffixes: VerbConjugationChanges
+    // }
+    change_accents?: VerbConjugationChanges
 }
 
-interface SuffixesForRegularVerbFamily {
-    regular: VerbConjugationSuffixesForMoodAndTense
-    eer?: VerbConjugationSuffixesForMoodAndTense
-}
-export interface SuffixesForRegularVerbs {
-    ar: SuffixesForRegularVerbFamily
-    er: SuffixesForRegularVerbFamily
-    ir: SuffixesForRegularVerbFamily
-}
+
+
+// interface VerbConjugationChangesOverrides {
+//     PresInd?: Partial<VerbConjugationChanges>
+//     PastInd?: Partial<VerbConjugationChanges>
+//     PastImpInd?: Partial<VerbConjugationChanges>
+// }
+// interface VerbConjugation_nonStandard extends VerbConjugationOverrides {
+// }
+// type VerbConjugationSuffixes = VerbConjugationChanges
+// interface VerbConjugationSuffixesForMoodAndTense {
+//     PresInd?: VerbConjugationSuffixes
+//     PastInd?: VerbConjugationSuffixes
+//     PastImpInd?: VerbConjugationSuffixes
+// }
+
+// type VerbConjugationSuffixChanges = Partial<VerbConjugationChanges>
+// interface VerbConjugationChangesForMoodAndTense {  //OK
+//     PresInd?: VerbConjugationSuffixChanges
+//     PastInd?: VerbConjugationSuffixChanges
+//     PastImpInd?: VerbConjugationSuffixChanges
+// }
+// interface StemChangePatterns extends VerbConjugationChangesForMoodAndTense {
+// }
+
+// interface SuffixesForRegularVerbFamily {
+//     regular: VerbConjugationSuffixesForMoodAndTense
+//     eer?: VerbConjugationSuffixesForMoodAndTense
+// }
+// export interface SuffixesForRegularVerbs {
+//     ar: SuffixesForRegularVerbFamily
+//     er: SuffixesForRegularVerbFamily
+//     ir: SuffixesForRegularVerbFamily
+// }
 
 type StemChangeType = "e:i" | "e:ie" | "o:u" | "o:ue" | "u:ue"
 type SuffixChangeType = "eer"
 
 type ConjugationKey = "1s" | "2s" | "3s" | "1p" | "2p" | "3p"
-type VerbMoodTenseKey = "IndPres" |  "IndPast"
+type VerbTenseMoodKey = "PresInd" |  "PastInd"
 
 
 interface IrregularBase {
@@ -83,13 +143,14 @@ interface IrregularBase {
 }
 
 
-interface ConjugationChanges {
+interface ConjugationRules {
     unsupported?: boolean
     // another verb that serves as the model for conjugation for this verb
+    // This is interesting, but may not be needed...
     model?: string
-    suffix_change_type?: SuffixChangeType
+    // suffix_change_type?: SuffixChangeType    // TODO remove this if unnecessary
     stem_change_type?: StemChangeType
-    stem_change_inclusions?: VerbMoodTenseKey[]
+    stem_change_inclusions?: VerbTenseMoodKey[]
     conjugate_only?: ConjugationKey[]
     irregular?: IrregularBase
     reflexive_only?: boolean
@@ -99,46 +160,5 @@ interface ConjugationChanges {
 export interface VerbTextUsage_forTypographicalChange {
     text: string
     infinitive: string
-}
-
-
-// A filter for selecting the verbs for which a rule may apply.
-export interface TypographicalChangeRuleFilter {
-    // The last characters of the infinitive.
-    // The match succeeds if any of these endings match VerbTextUsage_forTypographicalChange.infinitive. 
-    infinitive_endings?: string[]
-    // TODO: remove these if it seems they have no application.
-    // NOTE: these were used originally, but were later determined to be too narrowing, and unnecessary for the know transformations.
-    // // Indicates the last characters of the verb root.
-    // verb_root_ending?: string
-    // // The verb conjugation group: "ar", "er", "ir"
-    // // May be used for any value of apply_to, but it is redundant if infinitive_ending is used).
-    // // The match succeeds if any of these endings match VerbTextUsage_forTypographicalChange.infinitive. 
-    // verb_families?: VerbFamily[]
-    // // The verb mood+tense combinations to which this filter applies.
-    // // The match succeeds if any of these endings match VerbTextUsage_forTypographicalChange.mood_tense. 
-    // mood_tenses?: VerbMoodTense[]
-    // // The match succeeds if any of these endings match VerbTextUsage_forTypographicalChange.conjugation_key. 
-    // conjugation_keys?: Array<keyof VerbConjugation>
-}
-
-
-// The form of a typographical change rule.
-// These rules are only applied to the conjugated forms of verbs.
-export interface TypographicalChangeRule {
-    // The name of this rule, used for reporting
-    name: string
-    // An empty filter means that all verbs will be checked.
-    filter: TypographicalChangeRuleFilter
-    change: {
-        // A pattern describing what to replace.
-        // The entire matching text will be replaced by the text described by "replacement".
-        match_pattern: RegExp
-        // A pattern describing the text that replaces what is matched by match_pattern.
-        // A replacement pattern uses the syntax of MS VS Code, e.g.: "c$1"
-        // This may contain one capture group index.
-        // (The "$" indicates the index of the capture group from the RegExp.)
-        replacement_pattern: string
-    }
 }
 
