@@ -25,22 +25,6 @@ export function assert_singleForm(infinitive: string, mood_tense: VerbTenseMood,
 }
 
 
-// function assert_RegularSuffixes(infinitive: string, mood_tense: VerbTenseMood, expected: VerbConjugation) {
-//     const actual = getRegularSuffixes(infinitive, mood_tense)
-//     const expected_keys = Object.keys(expected)
-//     expected_keys.forEach((expected_key: keyof VerbConjugation) => {
-//         if (! equal(actual[expected_key], expected[expected_key])) {
-//             throw new Error(`${verb_family},${mood_tense},${expected_key}: ${actual[expected_key]} !== ${expected[expected_key]}`)
-//         }
-//         delete actual[expected_key]
-//     })
-//     const unexpected_keys = Object.keys(actual)
-//     if (unexpected_keys.length > 0) {
-//         throw new Error(`${verb_family},${mood_tense}: has more keys than expected: ${unexpected_keys}`)
-//     }
-// }
-
-
 export function assert_TenseMood(infinitive: string, mood_tense: VerbTenseMood, expected: VerbConjugation) {
     const actual = conjugateVerb(infinitive, mood_tense)
     const forms = actual.forms

@@ -1,10 +1,8 @@
 
-import {VerbConjugation, VerbTenseMood} from "."
-import { conjugateVerb } from "./conjugate-verb.js"
-import { test_applyTypographicalChange } from "./typographical-rules.js"
+import {VerbConjugation} from "."
 
 // The names of the conjugations.
-// The first character refers to person, and the second to plurality.
-// So "1s" refers to 1st-person-singular, and "2p" refers to 2nd-person-plural.
-export const conjugation_keys: Array <keyof VerbConjugation> = ["1s", "2s", "3s", "1p", "2p", "3p"]
+// The first character refers to plurality, and the second to person.
+// So "s1" refers to 1st-person-singular, and "p2" refers to 2nd-person-plural.
+export const conjugation_keys: Array <keyof VerbConjugation> = ["s1", "s2", "s3", "p1", "p2", "p3"]
 

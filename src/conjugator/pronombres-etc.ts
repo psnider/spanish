@@ -2,69 +2,69 @@ import "./index"
 
 
 const pronombres_personales = {
-    "1s": "yo",
-    "2s": {
+    s1: "yo",
+    s2: {
         es: "vos",
         mx: "tú"
     },
-    "3s": ["él", "ella", "usted"],
-    "1p": ["nosotros", "nosotras"],
-    "2p": {
+    s3: ["él", "ella", "usted"],
+    p1: ["nosotros", "nosotras"],
+    p2: {
         es: ["vosotros", "vosotras"],
         mx: "ustedes"
     },
-    "3p": ["ellos", "ellas", "ustedes"],
+    p3: ["ellos", "ellas", "ustedes"],
 }
 
 
 const objetos_directos = {
-    "1s": "me",
-    "2s": "te",
-    "3s": ["lo", "la"],
-    "1p": "nos",
-    "2p": "os",
-    "3p": ["los", "las"],
+    s1: "me",
+    s2: "te",
+    s3: ["lo", "la"],
+    p1: "nos",
+    p2: "os",
+    p3: ["los", "las"],
 }
 
 const objetos_indirectos = {
-    "1s": "me",
-    "2s": "te",
-    "3s": "le",
-    "1p": "nos",
-    "2p": "os",
-    "3p": "les",
+    s1: "me",
+    s2: "te",
+    s3: "le",
+    p1: "nos",
+    p2: "os",
+    p3: "les",
 }
 
 
 // used with "a"+
 const pronombres = {
-    "1s": "mí",
-    "2s": "ti",
-    "3s": ["él", "ella", "usted"],
-    "1p": "nos",
-    "2p": {
+    s1: "mí",
+    s2: "ti",
+    s3: ["él", "ella", "usted"],
+    p1: "nos",
+    p2: {
         es: ["vosotros", "vosotras"],
         mx: "ustedes"
     },
-    "3p": ["ellos", "ellas", "ustedes"],
+    p3: ["ellos", "ellas", "ustedes"],
 }
 
 
 const pronombres_reflexivos_y_recíprocos = {
-    "1s": "me",
-    "2s": "te",
-    "3s": "se",
-    "1p": "nos",
-    "2p": "os",
-    "3p": "se",
+    s1: "me",
+    s2: "te",
+    s3: "se",
+    p1: "nos",
+    p2: "os",
+    p3: "se",
 }
 
 
 const what_do_you_call_this = {
-    "1s": "conmigo",
-    "2s": "contigo",
-    "3s": "consigo",
-    "3p": "consigo",
+    s1: "conmigo",
+    s2: "contigo",
+    s3: "consigo",
+    p3: "consigo",
 }
 
 
@@ -87,12 +87,12 @@ const pronombres_demostrativos = {
 
 
 const pronombres_posesivos = {
-    "1s": ["mío", "mía", "míos", "mías"],
-    "2s": ["tuyo", "tuya", "tuyos", "tuyas"],
-    "3s": ["suyo", "suya", "suyos", "suyas"],
-    "1p": ["nuestro", "nuestra", "nuestros", "nuestras"],
-    "2p": ["vuestro", "vuestra", "vuestros", "vuestras"],
-    "3p": ["suyo", "suya", "suyos", "suyas"],
+    s1: ["mío", "mía", "míos", "mías"],
+    s2: ["tuyo", "tuya", "tuyos", "tuyas"],
+    s3: ["suyo", "suya", "suyos", "suyas"],
+    p1: ["nuestro", "nuestra", "nuestros", "nuestras"],
+    p2: ["vuestro", "vuestra", "vuestros", "vuestras"],
+    p3: ["suyo", "suya", "suyos", "suyas"],
 }
 
 

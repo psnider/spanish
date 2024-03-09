@@ -16,29 +16,29 @@ export interface StemChangeRules extends AspectsT<VerbRules> {
 export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChangeRules} = {
     "o:ue": {
         transforms: ["o:ue", "o:u"],
-        PresInd: {"1s": "o:ue", "2s": "o:ue", "3s": "o:ue", "3p": "o:ue"},
-        PastInd: {"3s": "o:u", "3p": "o:u"},
+        PresInd: {s1: "o:ue", s2: "o:ue", s3: "o:ue", p3: "o:ue"},
+        PastInd: {s3: "o:u", p3: "o:u"},
     },
     "e:i": {
         transforms: ["e:i"],
-        PresInd: {"1s": "e:i", "2s": "e:i", "3s": "e:i", "3p": "e:i"},
-        PastInd: {"3s": "e:i", "3p": "e:i"},
+        PresInd: {s1: "e:i", s2: "e:i", s3: "e:i", p3: "e:i"},
+        PastInd: {s3: "e:i", p3: "e:i"},
     },
     "e:ie": {
         transforms: ["e:ie", "e:i"],
-        PresInd: {"1s": "e:ie", "2s": "e:ie", "3s": "e:ie", "3p": "e:ie"},
-        PresSub: {"1s": "e:ie", "2s": "e:ie", "3s": "e:ie", "3p": "e:ie"},
-        PastInd: {"1s": "e:i", "2s": "e:i", "3s": "e:i", "1p": "e:i", "2p": "e:i", "3p": "e:i"},
-        FutInd:  {"1s": "e:ie", "2s": "e:ie", "3s": "e:ie", "1p": "e:ie", "2p": "e:ie", "3p": "e:ie"},
-        CmdPos:  {              "2s": "e:ie", "3s": "e:ie",                             "3p": "e:ie"},
-        CmdNeg:  {              "2s": "e:ie", "3s": "e:ie",                             "3p": "e:ie"},
+        PresInd: {s1: "e:ie", s2: "e:ie", s3: "e:ie", p3: "e:ie"},
+        PresSub: {s1: "e:ie", s2: "e:ie", s3: "e:ie", p3: "e:ie"},
+        PastInd: {s1: "e:i", s2: "e:i", s3: "e:i", p1: "e:i", p2: "e:i", p3: "e:i"},
+        FutInd:  {s1: "e:ie", s2: "e:ie", s3: "e:ie", p1: "e:ie", p2: "e:ie", p3: "e:ie"},
+        CmdPos:  {              s2: "e:ie", s3: "e:ie",                             p3: "e:ie"},
+        CmdNeg:  {              s2: "e:ie", s3: "e:ie",                             p3: "e:ie"},
     },
     "u:ue": {
         transforms: ["u:ue"],
-        PresInd: {"1s": "u:ue", "2s": "u:ue", "3s": "u:ue", "3p": "u:ue"},
-        PresSub: {"1s": "u:ue", "2s": "u:ue", "3s": "u:ue", "3p": "u:ue"},
-        CmdPos:  {              "2s": "u:ue", "3s": "u:ue",                             "3p": "u:ue"},
-        CmdNeg:  {              "2s": "u:ue", "3s": "u:ue",                             "3p": "u:ue"},
+        PresInd: {s1: "u:ue", s2: "u:ue", s3: "u:ue", p3: "u:ue"},
+        PresSub: {s1: "u:ue", s2: "u:ue", s3: "u:ue", p3: "u:ue"},
+        CmdPos:  {              s2: "u:ue", s3: "u:ue",                             p3: "u:ue"},
+        CmdNeg:  {              s2: "u:ue", s3: "u:ue",                             p3: "u:ue"},
     },
 }
 
@@ -46,7 +46,7 @@ export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChan
 // Get any stem change patterns for the given verb mood and tense.
 // @return Stem change patterns for those conjugated forms for which they exist.
 //   For example: getStemChanges("PresInd", {stem_change_type: "o:ue"}):
-//     {"1s": "o:ue", "2s": "o:ue", "3s": "o:ue", "3p": "o:ue"},
+//     {s1: "o:ue", s2: "o:ue", s3: "o:ue", p3: "o:ue"},
 function getStemChangesFromRule(infinitive: string, mood_tense: VerbTenseMood, irregular_rules?: ConjugationRules) : VerbConjugation | undefined {
     const stem_change_type = irregular_rules?.stem_change_type
     if (stem_change_type) {

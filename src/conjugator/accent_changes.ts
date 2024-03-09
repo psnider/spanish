@@ -8,8 +8,8 @@ namespace accents {
 
     // based on model: vaciar
     export const criar: AccentChanges = {
-        PresInd: {"2p": "á:a"},
-        PastInd: {"1s": "é:e", "3s": "ó:o"},
+        PresInd: {p2: "á:a"},
+        PastInd: {s1: "é:e", s3: "ó:o"},
     }
 
 }
@@ -22,7 +22,7 @@ const accent_changes_by_infinitive: {[base_infinitive: string]: AccentChanges} =
 
 
 
-export function applyAccentChanges(infinitive: string, tense_mood: VerbTenseMood, conjugation: VerbConjugation) : VerbConjugation {
+export function getChangedAccents(infinitive: string, tense_mood: VerbTenseMood, conjugation: VerbConjugation) : VerbConjugation {
     const accent_changes: VerbConjugation = {}
     const accent_change_rules = accent_changes_by_infinitive[infinitive]?.[tense_mood]
     if (accent_change_rules) {

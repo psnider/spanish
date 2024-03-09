@@ -1,11 +1,11 @@
 import { IrregularBase, VerbConjugation, VerbConjugationAnnotated, VerbTenseMood } from ".";
-import { applyAccentChanges } from "./accent_changes.js";
+import { getChangedAccents } from "./accent_changes.js";
 import { getAnnotations, verb_conjugation_rules } from "./conjugation-rules-per-verb.js";
 import { applyIrregularConjugationRules } from "./irregular-conjugations.js";
 import { conjugation_keys } from "./lib.js";
 import { getVerbFamily, getRegularSuffixes, doAddSuffixToInfinitive } from "./regular-verb-rules.js";
 import { getStemChanges } from "./stem-change-patterns.js";
-import { applyTypographicalChangeRules } from "./typographical-rules.js";
+import { getTypographicChanges } from "./typographical-rules.js";
 
 
 export function combineRegularSuffixesAndStemChanges(infinitive: string, tense_mood: VerbTenseMood) : VerbConjugation {
@@ -37,7 +37,7 @@ export function combineRegularSuffixesAndStemChanges(infinitive: string, tense_m
 
 
 
-function applySpellingChangesToFormDerived(infinitive: string, tense_mood: VerbTenseMood, irregular_base_conjugated: VerbConjugation, irregular: IrregularBase) : VerbConjugation {
+function getDerivedSpelling(infinitive: string, tense_mood: VerbTenseMood, irregular_base_conjugated: VerbConjugation, irregular: IrregularBase) : VerbConjugation {
     if (irregular.add || irregular.remove) {
         const derived_spelling: VerbConjugation = {}
         Object.keys(irregular_base_conjugated).forEach((conjugation_key: keyof VerbConjugation) => {
@@ -85,16 +85,17 @@ export function conjugateVerb(infinitive: string, tense_mood: VerbTenseMood): Ve
     }
     const base_infinitive = getBaseInfinitive(infinitive)
     const base_regular_conjugation = combineRegularSuffixesAndStemChanges(base_infinitive, tense_mood)
-    const base_corrected_typography = applyTypographicalChangeRules(base_infinitive, base_regular_conjugation)
+    const base_corrected_typography = getTypographicChanges(base_infinitive, base_regular_conjugation)
     const base_corrected_regular_conjugation = {...base_regular_conjugation, ...base_corrected_typography}
     const base_irregular_conjugation = applyIrregularConjugationRules(base_infinitive, tense_mood, base_corrected_regular_conjugation)
+    // use over-ride assignment pattern in case regular and irregular don't have exactly the same conjugations 
     const base_merged_conjugation = {...base_corrected_regular_conjugation, ...base_irregular_conjugation}
-    const base_accent_changes = applyAccentChanges(base_infinitive, tense_mood, base_merged_conjugation)
+    const base_accent_changes = getChangedAccents(base_infinitive, tense_mood, base_merged_conjugation)
     const base_complete_conjugation: VerbConjugation = {...base_merged_conjugation, ...base_accent_changes}
     const notes = getAnnotations(infinitive, tense_mood)
     if (base_infinitive != infinitive) {
         const irregular = verb_conjugation_rules[infinitive].irregular
-        const derived_spelling_changes = applySpellingChangesToFormDerived(base_infinitive, tense_mood, base_complete_conjugation, irregular)
+        const derived_spelling_changes = getDerivedSpelling(base_infinitive, tense_mood, base_complete_conjugation, irregular)
         const derived_conjugation = {...base_complete_conjugation, ...derived_spelling_changes}
         const accent_changes = irregular?.individual_accents?.[tense_mood]
         const derived_accented_conjugation = {...derived_conjugation, ...accent_changes}

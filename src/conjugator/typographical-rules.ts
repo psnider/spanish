@@ -34,50 +34,34 @@ const infinitive_3_endings_to_rules: {[ending: string]: string} = {
 // Verb changes made solely for phonetic reasons, and using changes in typography.
 const typographical_change_rules : {[rule_name: string]: TypographicalChangeRule} = {
     "preserve-soft-c-sound": {
-        // example: conocer,PresInd,1s: conoco => conozco
+        // example: conocer,PresInd,s1: conoco => conozco
         match_pattern: /c([aáoóuú])$/u, 
         replacement_pattern: "zc$1"
     },
     "preserve-hard-c-sound": {
-        // example: sacar,PastInd,1s: sacé => saqué
+        // example: sacar,PastInd,s1: sacé => saqué
         match_pattern: /c([eéií])$/u,
         replacement_pattern: "qu$1"
     },
     "preserve-soft-g-sound": {
-        // example: elegir,PresInd,1s: eligo => elijo
+        // example: elegir,PresInd,s1: eligo => elijo
         match_pattern: /g([aáoóuú])$/u,
         replacement_pattern: "j$1"
     },
     "preserve-hard-g-sound": {
-        // example: llegar,PastInd,1s: llegé => llegué
+        // example: llegar,PastInd,s1: llegé => llegué
         match_pattern: /g([eéií])$/u,
         replacement_pattern: "gu$1"
     },
     "replace-disallowed-ze-zi": {
         // Spanish doesn't have "ze", or "zi"
         // It does have "za" (zanahoria), "zo" (zoo), "zu" (azul)
-        // example: empezar,PastInd,1s: empezé => empecé
+        // example: empezar,PastInd,s1: empezé => empecé
         match_pattern: /z([eéií])/u,
         replacement_pattern: "c$1"
     },
 }
 
-
-// assert_typographicalChange({text: "empezé", infinitive: "empezar"}, "empecé")
-
-
-
-
-
-
-// if (doesMatchTypographicalChangeRule(infinitive, rule)) {
-//     const typographical_change = applyTypographicalChangeRule(verb, rule)
-//     if (typographical_change) {
-//         rules_applied?.push(rule.name)
-//         corrected_verb_text = typographical_change
-//         verb.text = typographical_change
-//     }
-// }
 
 const capture_group_id_regexp = /\$(\d+)/
 
@@ -121,7 +105,7 @@ export function test_applyTypographicalChange(conjugated_form: string, infinitiv
 
 // @return The conjugated form after applying the typographical change rules.
 // @param @output rules_applied Contains the names of the rules that were applied to the input verb.
-export function applyTypographicalChangeRules(infinitive: string, conjugation: VerbConjugation) : VerbConjugation {
+export function getTypographicChanges(infinitive: string, conjugation: VerbConjugation) : VerbConjugation {
     // Apply the rule to the conjugated_form, if the rule matches the form.
     let typographical_changes: {[k:string]: string} = {}
     const ending = infinitive.slice(-3)
@@ -143,31 +127,4 @@ export function applyTypographicalChangeRules(infinitive: string, conjugation: V
     }
     return typographical_changes
 }
-
-
-// // @return the text as changed by applying the rule, or undefined if the rule isn't applied
-// function applyTypographicalChangeRule(verb: VerbTextUsage_forTypographicalChange, rule: TypographicalChangeRule) {
-//     const {match_pattern, replacement_pattern} = rule.change
-//     const match = verb.text.match(match_pattern)
-//     if (match) {
-//         const unchanged_length = match[0].length
-//         const unchanged_index = match.index
-//         let replacement_text
-//         const capture_group_id_match = replacement_pattern.match(capture_group_id_regexp)
-//         if (capture_group_id_match) {
-//             const id_index = capture_group_id_match.index
-//             const id_length = capture_group_id_match[0].length
-//             const capture_group_id = parseInt(capture_group_id_match[1])
-//             if (Number.isNaN(capture_group_id)) {
-//                 throw new Error(`Invalid capture_group_id in replacement_pattern=${replacement_pattern}`)
-//             }
-//             const capture_group_match = match[capture_group_id]
-//             replacement_text = replacement_pattern.slice(0, id_index) + capture_group_match + replacement_pattern.slice(id_index + id_length)
-//         } else {
-//             replacement_text = replacement_pattern
-//         }
-//         const changed = verb.text.slice(0, unchanged_index) + replacement_text + verb.text.slice(unchanged_index + unchanged_length)
-//         return changed
-//     }
-// }
 

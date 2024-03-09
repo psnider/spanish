@@ -15,11 +15,6 @@ interface VerbAspectSuffixRules {
     // true if the suffixes should be appended to the infinitive form, otherwise they are appended to the root/stem.
     add_suffix_to_infinitive?: boolean
     suffixes?: VerbConjugationChanges
-    // lists valid transforms, used to check for typos
-    // spelling?: {
-    //     pattern: RegExp,
-    //     suffixes: VerbConjugationChanges
-    // }
     change_accents?: VerbConjugationChanges
 }
 
@@ -30,41 +25,41 @@ interface VerbAspectSuffixRules {
 export const regular_verb_suffixes: { [ending: string]: VerbConjugationRules<VerbAspectSuffixRules> } = {
     ar: {    // ar: like "amar"
         aspects: {
-            PresInd: { suffixes: { "1s": "o", "2s": "as", "3s": "a", "1p": "amos", "2p": "áis", "3p": "an" } },
-            PresSub: { suffixes: { "1s": "e", "2s": "es", "3s": "e", "1p": "emos", "2p": "éis", "3p": "en" } },
-            PastInd: { suffixes: { "1s": "é", "2s": "aste", "3s": "ó", "1p": "amos", "2p": "asteis", "3p": "aron" } },
-            PastImp: { suffixes: { "1s": "aba", "2s": "abas", "3s": "aba", "1p": "ábamos", "2p": "abais", "3p": "aban" } },
-            FutInd: { add_suffix_to_infinitive: true, suffixes: { "1s": "é", "2s": "ás", "3s": "á", "1p": "emos", "2p": "éis", "3p": "án" } },
-            FutCond: { add_suffix_to_infinitive: true, suffixes: { "1s": "ía", "2s": "ías", "3s": "ía", "1p": "íamos", "2p": "íais", "3p": "ían" } },
-            CmdPos: { suffixes: { "1s": null, "2s": "a", "3s": "e", "1p": "emos", "2p": "ad", "3p": "en" } },
-            CmdNeg: { base: "PresSub", suffixes: { "1s": null } },
+            PresInd: { suffixes: { s1: "o", s2: "as", s3: "a", p1: "amos", p2: "áis", p3: "an" } },
+            PresSub: { suffixes: { s1: "e", s2: "es", s3: "e", p1: "emos", p2: "éis", p3: "en" } },
+            PastInd: { suffixes: { s1: "é", s2: "aste", s3: "ó", p1: "amos", p2: "asteis", p3: "aron" } },
+            PastImp: { suffixes: { s1: "aba", s2: "abas", s3: "aba", p1: "ábamos", p2: "abais", p3: "aban" } },
+            FutInd: { add_suffix_to_infinitive: true, suffixes: { s1: "é", s2: "ás", s3: "á", p1: "emos", p2: "éis", p3: "án" } },
+            FutCond: { add_suffix_to_infinitive: true, suffixes: { s1: "ía", s2: "ías", s3: "ía", p1: "íamos", p2: "íais", p3: "ían" } },
+            CmdPos: { suffixes: { s1: null, s2: "a", s3: "e", p1: "emos", p2: "ad", p3: "en" } },
+            CmdNeg: { base: "PresSub", suffixes: { s1: null } },
         }
     },
     er: {   // er: like "temer"
         aspects: {
-            PresInd: { suffixes: { "1s": "o", "2s": "es", "3s": "e", "1p": "emos", "2p": "éis", "3p": "en" } },
-            PresSub: { suffixes: { "1s": "a", "2s": "as", "3s": "a", "1p": "amos", "2p": "áis", "3p": "an" } },
-            PastInd: { suffixes: { "1s": "í", "2s": "iste", "3s": "ió", "1p": "imos", "2p": "isteis", "3p": "ieron" } },
+            PresInd: { suffixes: { s1: "o", s2: "es", s3: "e", p1: "emos", p2: "éis", p3: "en" } },
+            PresSub: { suffixes: { s1: "a", s2: "as", s3: "a", p1: "amos", p2: "áis", p3: "an" } },
+            PastInd: { suffixes: { s1: "í", s2: "iste", s3: "ió", p1: "imos", p2: "isteis", p3: "ieron" } },
             //   spelling: {
             //     pattern: /eer$/,
-            //     suffixes: { "1s": "í", "2s": "íste", "3s": "yó", "1p": "ímos", "2p": "ísteis", "3p": "yeron"}
+            //     suffixes: { s1: "í", s2: "íste", s3: "yó", p1: "ímos", p2: "ísteis", p3: "yeron"}
             //  }},
-            PastImp: { suffixes: { "1s": "ía", "2s": "ías", "3s": "ía", "1p": "íamos", "2p": "íais", "3p": "ían" } },
+            PastImp: { suffixes: { s1: "ía", s2: "ías", s3: "ía", p1: "íamos", p2: "íais", p3: "ían" } },
             FutInd: { base: "ar" },
             FutCond: { base: "ar" },
-            CmdPos: { suffixes: { "1s": null, "2s": "e", "3s": "a", "1p": "amos", "2p": "ed", "3p": "an" } },
-            CmdNeg: { base: "PresSub", suffixes: { "1s": null } },
+            CmdPos: { suffixes: { s1: null, s2: "e", s3: "a", p1: "amos", p2: "ed", p3: "an" } },
+            CmdNeg: { base: "PresSub", suffixes: { s1: null } },
         }
     },
     ir: {    // ir: like "partir"
         aspects: {
-            PresInd: { base: "er", suffixes: { "1p": "imos", "2p": "ís" } },
+            PresInd: { base: "er", suffixes: { p1: "imos", p2: "ís" } },
             PresSub: { base: "er" },
             PastInd: { base: "er" },
             PastImp: { base: "er" },
             FutInd: { base: "ar" },
             FutCond: { base: "ar" },
-            CmdPos: { base: "er", suffixes: { "2p": "id" } },
+            CmdPos: { base: "er", suffixes: { p2: "id" } },
             CmdNeg: { base: "er" },
         }
     }
@@ -108,7 +103,7 @@ export function getAncestorRuleSets(infinitive: string, tense_mood: VerbTenseMoo
     }
     if (["CmdPos","CmdNeg"].includes(tense_mood)) {
         const last_rule_set = rule_sets[rule_sets.length - 1]
-        last_rule_set.suffixes["1s"] = null
+        last_rule_set.suffixes.s1 = null
     }
     return rule_sets
 }
@@ -123,7 +118,7 @@ export function doAddSuffixToInfinitive(infinitive: string, tense_mood: VerbTens
 // Get the suffixes for the given verb family, mood, and tense, applying a suffix change if one is given. 
 // @return The set of suffixes for all of the conjugated forms.
 // For example: getSuffixes("creer", "PastInd", "eer")
-//    {"1s":"í", "2s":"íste", "3s":"yó", "1p":"ímos", "2p":"ísteis", "3p":"yeron"}
+//    {s1:"í", s2:"íste", s3:"yó", p1:"ímos", p2:"ísteis", p3:"yeron"}
 export function getRegularSuffixes(infinitive: string, tense_mood: VerbTenseMood /* , suffix_change_type?: SuffixChangeType */) : VerbConjugationChanges {
     // let spelling_change_rules: VerbAspectSuffixRules["spelling"]
     const rule_sets = getAncestorRuleSets(infinitive, tense_mood)
@@ -157,21 +152,5 @@ export function getRegularSuffixes(infinitive: string, tense_mood: VerbTenseMood
         }
     })
     return suffixes
-    //     // make a local copy (to prevent polluting the source data)
-    //     if (base_conjugation_rules.spelling) {
-    //         spelling_change_rules = {...base_conjugation_rules.spelling}
-    //     }
-    // } else {
-    //     suffixes = {...conjugation_rules.suffixes}
-    //     if (conjugation_rules.spelling) {
-    //         spelling_change_rules = {...conjugation_rules.spelling}
-    //     }
-    // }
-    // if (spelling_change_rules) {
-    //     if (infinitive.match(spelling_change_rules.pattern)) {
-    //         suffixes = {...suffixes, ...spelling_change_rules.suffixes}
-    //     }
-    // }
-    // return suffixes
 }
 

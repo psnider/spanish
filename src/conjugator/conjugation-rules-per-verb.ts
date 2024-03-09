@@ -1,25 +1,6 @@
 import {ConjugationRules, VerbConjugationAnnotation, VerbTenseMood} from "./index"
 
 
-// @description Data describing the general conjugation rules for the supported verbs.
-//  This contains several major components:
-//  - rules for conjugating regular verbs
-//    See: regular_verb_suffixes
-//  - rules for spelling changes to verb stems (verb roots)
-//    See: stem_change_patterns
-//  - rules for typographical (spelling) changes
-//    See: typographical_change_rules
-//  - rules for conjugating irregular verbs 
-//    See: irregular_conjugations
-//  - verbs that have conjugated correctly using these rules
-//    See: verb_conjugation_types
-
-
-
-// Note: this combination of conjugated forms is sometimes referred to as the "boot".
-// const conjugation_keys_1s2s3s3p: ConjugationKey[] = ["1s", "2s", "3s", "3p"]
-
-
 
 // Verbs that have conjugated correctly using these rules.
 // Each verb has a description of the rules required to conjugate it properly.
@@ -176,7 +157,7 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     desembocar: null,
     desoír: {irregular: {base: "oír", add: "des"}},
     desproteger: null,
-    detener: {irregular: {base: "tener", add: "de", individual_accents: {CmdPos: {"2s": "detén"}}}},
+    detener: {irregular: {base: "tener", add: "de", individual_accents: {CmdPos: {s2: "detén"}}}},
     disfrazar: null,
     duchar: null,
     duplicar: {model: "sacar"},
@@ -236,17 +217,17 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     formalizar: null,
     formar: null,
     fortalecer: null,
-    // FIX: no need for this conjugate_only: ["3s"] rule, now that ze is converted to ce
+    // FIX: no need for this conjugate_only: [s3] rule, now that ze is converted to ce
     forzar: {model: "forzar", stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"]},
     fotografiar: {irregular: {base: "vaciar", remove: "vac", add: "fotograf"}},
-    guiar: {irregular: {base: "vaciar", remove: "vac", add: "gu", individual_accents: {PresInd: {"2p": "guiais"}, PresSub: {"2p": "guieis"}, PastInd: {"1s": "guie", "3s": "guio"}, CmdNeg: {"2p": "guieis"}}}},
+    guiar: {irregular: {base: "vaciar", remove: "vac", add: "gu", individual_accents: {PresInd: {p2: "guiais"}, PresSub: {p2: "guieis"}, PastInd: {s1: "guie", s3: "guio"}, CmdNeg: {p2: "guieis"}}}},
     funcionar: null,
     ganar: null,
     garantizar: null,
     gastar: null,
     gobernar: {stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"]},
     gozar: null,
-    granizar: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"], conjugate_only: ["3s"]},
+    granizar: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"], conjugate_only: ["s3"]},
     gustar: null,
     haber: {irregular: {base: "haber"}},
     habitar: null,
@@ -281,7 +262,7 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     llegar: null,
     llevar: null,
     llorar: null,
-    llover: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"], conjugate_only: ["3s"]},
+    llover: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"], conjugate_only: ["s3"]},
     lograr: null,
     machucar: {model: "sacar"},
     maldecir: {irregular: {base: "decir", add: "mal"}},
@@ -303,7 +284,7 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     nacer: null,
     nadar: null,
     necesitar: null,
-    nevar: {stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"], conjugate_only: ["3s"]},
+    nevar: {stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"], conjugate_only: ["s3"]},
     normalizar: null,
     obedecer: null,
     obtener: {irregular: {base: "tener", add: "ob"}},

@@ -14,7 +14,7 @@ For example:
 ```
 returns:  
 ```json
-{"1s": "vengo", "2s": "vienes", "3s": "viene", "1p": "venimos", "2p": "venís", "3p": "vienen"}
+{"s1": "vengo", "s2": "vienes", "s3": "viene", "p1": "venimos", "p2": "venís", "p3": "vienen"}
 ```
 
 
@@ -33,7 +33,7 @@ The transforms are performed in this order:
 
 The remaining steps only affect those forms that are not correct yet.  
 - If the verb is irregular, apply the corresponding changes.  
-  For example, the **PresInd** conjugation of "dar" is irregular, but only for the "1s" and "2p" forms.  
+  For example, the **PresInd** conjugation of "dar" is irregular, but only for the "s1" and "p2" forms.  
   See: [getIrregularConjugations()](./src/conjugator/irregular-conjugations.ts)  
   The most common irregular verbs are all handled.  
 - Apply any rules for additional typographical (spelling) changes.  
@@ -76,10 +76,5 @@ pluscuamperfecto        | había amado, había tenido | PastPerf | Mood=Ind,Tens
 subjuntivo presente     | ame, tenga          | PresSub | Mood=Sub,Tense=Pres
 imperativo afirmativo   | ama, ten            | Cmd | Mood=Imp
 imperativo negativo     | no ames, no tengas  | Cmd | Mood=Imp
-
-
-
-
-
 
 
