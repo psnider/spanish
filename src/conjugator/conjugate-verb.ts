@@ -1,6 +1,6 @@
-import { VerbConjugation, VerbConjugationAnnotated, VerbTenseMood } from ".";
+import { IrregularBase, VerbConjugation, VerbConjugationAnnotated, VerbTenseMood } from ".";
 import { applyAccentChanges } from "./accent_changes.js";
-import { getAnnotations } from "./conjugation-rules-per-verb.js";
+import { getAnnotations, verb_conjugation_rules } from "./conjugation-rules-per-verb.js";
 import { applyIrregularConjugationRules } from "./irregular-conjugations.js";
 import { conjugation_keys } from "./lib.js";
 import { getVerbFamily, getRegularSuffixes, doAddSuffixToInfinitive } from "./regular-verb-rules.js";
@@ -8,7 +8,7 @@ import { getStemChanges } from "./stem-change-patterns.js";
 import { applyTypographicalChangeRules } from "./typographical-rules.js";
 
 
-function combineRegularSuffixesAndStemChanges(infinitive: string, tense_mood: VerbTenseMood) : VerbConjugation {
+export function combineRegularSuffixesAndStemChanges(infinitive: string, tense_mood: VerbTenseMood) : VerbConjugation {
     const regular_suffixes = getRegularSuffixes(infinitive, tense_mood)
     const add_suffix_to_infinitive = doAddSuffixToInfinitive(infinitive, tense_mood)
     const stem_changes = getStemChanges({infinitive, tense_mood})
@@ -36,20 +36,70 @@ function combineRegularSuffixesAndStemChanges(infinitive: string, tense_mood: Ve
 }
 
 
+
+function applySpellingChangesToFormDerived(infinitive: string, tense_mood: VerbTenseMood, irregular_base_conjugated: VerbConjugation, irregular: IrregularBase) : VerbConjugation {
+    if (irregular.add || irregular.remove) {
+        const derived_spelling: VerbConjugation = {}
+        Object.keys(irregular_base_conjugated).forEach((conjugation_key: keyof VerbConjugation) => {
+            const irregular_base_form = irregular_base_conjugated[conjugation_key]
+            if (Array.isArray(irregular_base_form)) {
+                throw new Error(`require single form for infinitive=${infinitive} tense_mood=${tense_mood} irregular_base_conjugated[${conjugation_key}]=${irregular_base_form}`)
+            }
+            let irregular_derived_conjugated: string = irregular_base_form
+            if (irregular.remove) {
+                if (!irregular_derived_conjugated.startsWith(irregular.remove)) {
+                    throw new Error (`irregular_base_form=${irregular_base_form} from infinitive=${infinitive} doesn't start with irregular_rules.irregular.remove=${irregular.remove}"`)
+                }
+                irregular_derived_conjugated = irregular_base_form.slice(irregular.remove.length)
+            }
+            if (irregular.add) {
+                irregular_derived_conjugated = irregular.add + irregular_derived_conjugated
+            }
+            derived_spelling[conjugation_key] = irregular_derived_conjugated
+        })
+        return derived_spelling
+    } else {
+        return {}
+    }
+}
+
+
 // @param tense_mood The forms to conjugate, given by mood and tense. 
 // @return The conjugated forms for the given verb.
 // @note In some cases, only some forms are returned, such as for weather verbs.
 //   For example, there is no form of "I rain".
 export function conjugateVerb(infinitive: string, tense_mood: VerbTenseMood): VerbConjugationAnnotated {
-    const regular_conjugation = combineRegularSuffixesAndStemChanges(infinitive, tense_mood)
-    const corrected_typography = applyTypographicalChangeRules(infinitive, regular_conjugation)
-    const corrected_regular_conjugation = {...regular_conjugation, ...corrected_typography}
-    const irregular_conjugation = applyIrregularConjugationRules(infinitive, tense_mood, corrected_regular_conjugation)
-    const spelled_conjugation = {...corrected_regular_conjugation, ...irregular_conjugation}
-    const accent_changes = applyAccentChanges(infinitive, tense_mood, spelled_conjugation)
-    const complete_conjugation: VerbConjugation = {...spelled_conjugation, ...accent_changes}
+    function getBaseInfinitive(infinitive: string) {
+        let irregular = verb_conjugation_rules[infinitive]?.irregular
+        if (irregular) {
+            const base_infinitive = irregular?.base
+            if (base_infinitive && (infinitive !== base_infinitive)) {
+                if (irregular.remove || irregular.add) {
+                    return base_infinitive
+                } else {
+                    throw new Error(`irregular infinitive=${infinitive} with base must have spelling changes`)
+                }
+            }
+        }
+        return infinitive
+    }
+    const base_infinitive = getBaseInfinitive(infinitive)
+    const base_regular_conjugation = combineRegularSuffixesAndStemChanges(base_infinitive, tense_mood)
+    const base_corrected_typography = applyTypographicalChangeRules(base_infinitive, base_regular_conjugation)
+    const base_corrected_regular_conjugation = {...base_regular_conjugation, ...base_corrected_typography}
+    const base_irregular_conjugation = applyIrregularConjugationRules(base_infinitive, tense_mood, base_corrected_regular_conjugation)
+    const base_merged_conjugation = {...base_corrected_regular_conjugation, ...base_irregular_conjugation}
+    const base_accent_changes = applyAccentChanges(base_infinitive, tense_mood, base_merged_conjugation)
+    const base_complete_conjugation: VerbConjugation = {...base_merged_conjugation, ...base_accent_changes}
     const notes = getAnnotations(infinitive, tense_mood)
-    const annotated_conjugation = {notes, forms: complete_conjugation}
-    return annotated_conjugation
+    if (base_infinitive != infinitive) {
+        const irregular = verb_conjugation_rules[infinitive].irregular
+        const derived_spelling_changes = applySpellingChangesToFormDerived(base_infinitive, tense_mood, base_complete_conjugation, irregular)
+        const derived_conjugation = {...base_complete_conjugation, ...derived_spelling_changes}
+        const accent_changes = irregular?.individual_accents?.[tense_mood]
+        const derived_accented_conjugation = {...derived_conjugation, ...accent_changes}
+        return {notes, forms: derived_accented_conjugation}
+    } else {
+        return {notes, forms: base_complete_conjugation}
+    }
 }
-

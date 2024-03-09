@@ -1,22 +1,12 @@
-import { ConjugationRules, VerbConjugation, VerbRules, VerbTenseMood, VerbTenseMoodKey } from ".";
+import { AspectsT, ConjugationRules, VerbConjugation, VerbRules, VerbTenseMood } from ".";
 import { verb_conjugation_rules } from "./conjugation-rules-per-verb.js";
 import { conjugation_keys } from "./lib.js";
 
 
 
-export interface StemChangeRules {
+export interface StemChangeRules extends AspectsT<VerbRules> {
     // Used only for spelling change transforms
     transforms?: string[]
-    PresInd?: VerbRules
-    PresSub?: VerbRules
-
-    PastInd?: VerbRules
-    PastImpInd?: VerbRules
-    PastCond?: VerbRules
-    
-    FutInd?: VerbRules
-    CmdPos?: VerbRules
-    CmdNeg?: VerbRules
 }
 
 
@@ -37,11 +27,18 @@ export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChan
     "e:ie": {
         transforms: ["e:ie", "e:i"],
         PresInd: {"1s": "e:ie", "2s": "e:ie", "3s": "e:ie", "3p": "e:ie"},
-        PastInd: {"3s": "e:i", "3p": "e:i"},
+        PresSub: {"1s": "e:ie", "2s": "e:ie", "3s": "e:ie", "3p": "e:ie"},
+        PastInd: {"1s": "e:i", "2s": "e:i", "3s": "e:i", "1p": "e:i", "2p": "e:i", "3p": "e:i"},
+        FutInd:  {"1s": "e:ie", "2s": "e:ie", "3s": "e:ie", "1p": "e:ie", "2p": "e:ie", "3p": "e:ie"},
+        CmdPos:  {              "2s": "e:ie", "3s": "e:ie",                             "3p": "e:ie"},
+        CmdNeg:  {              "2s": "e:ie", "3s": "e:ie",                             "3p": "e:ie"},
     },
     "u:ue": {
         transforms: ["u:ue"],
         PresInd: {"1s": "u:ue", "2s": "u:ue", "3s": "u:ue", "3p": "u:ue"},
+        PresSub: {"1s": "u:ue", "2s": "u:ue", "3s": "u:ue", "3p": "u:ue"},
+        CmdPos:  {              "2s": "u:ue", "3s": "u:ue",                             "3p": "u:ue"},
+        CmdNeg:  {              "2s": "u:ue", "3s": "u:ue",                             "3p": "u:ue"},
     },
 }
 
@@ -50,12 +47,12 @@ export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChan
 // @return Stem change patterns for those conjugated forms for which they exist.
 //   For example: getStemChanges("PresInd", {stem_change_type: "o:ue"}):
 //     {"1s": "o:ue", "2s": "o:ue", "3s": "o:ue", "3p": "o:ue"},
-function getStemChangesFromRule(mood_tense: VerbTenseMood, irregular_rules?: ConjugationRules) : VerbConjugation | undefined {
+function getStemChangesFromRule(infinitive: string, mood_tense: VerbTenseMood, irregular_rules?: ConjugationRules) : VerbConjugation | undefined {
     const stem_change_type = irregular_rules?.stem_change_type
     if (stem_change_type) {
         const stem_changes_for_type = stem_change_patterns[<keyof StemChangeRules> stem_change_type]
         if (stem_changes_for_type) {
-            if (irregular_rules.stem_change_inclusions?.includes(<VerbTenseMoodKey> mood_tense)) {
+            if (irregular_rules.stem_change_inclusions?.includes(mood_tense)) {
                 const stem_changes = stem_changes_for_type[mood_tense]
                 return stem_changes
             }
@@ -75,7 +72,7 @@ export function getStemChanges(args: {infinitive: string, tense_mood: VerbTenseM
     conjugation_keys.forEach((key: keyof VerbConjugation) => {conjugated_stems[key] = verb_root})
     let conjugation_rules = verb_conjugation_rules[infinitive]
     if (conjugation_rules) {
-        const stem_changes = getStemChangesFromRule(tense_mood, conjugation_rules)
+        const stem_changes = getStemChangesFromRule(infinitive, tense_mood, conjugation_rules)
         const valid_conjugation_keys = conjugation_rules?.conjugate_only || conjugation_keys
         conjugation_keys.forEach((conjugation_key: keyof(VerbConjugation)) => {
             const stem_change = stem_changes[conjugation_key]

@@ -2,28 +2,51 @@
 type VerbFamily = "ar" | "er" | "ir"
 type VerbMood = "Cnd" | "Imp" | "Ind" | "Sub"
 type VerbTense = "Fut" | "Imp" | "Past" | "Pres"
-type VerbTenseMood = "PresInd" | "PresSub" | "PastInd" | "PastImpInd" | "PastCond" | "FutInd" | "CmdPos" | "CmdNeg"
+type VerbTenseMood = "PresInd" | "PresSub" | "PastInd" | "PastImp" | "FutInd" | "FutCond" | "CmdPos" | "CmdNeg"
 
-interface VerbRules {
-    "1s"?: string
-    "2s"?: string
-    "3s"?: string
-    "1p"?: string
-    "2p"?: string
-    "3p"?: string
+interface AspectsT<T> {
+    // Used only for spelling change transforms
+    PresInd?: T
+    PresSub?: T
+
+    PastInd?: T
+    PastImp?: T
+
+    FutInd?: T
+    FutCond?: T
+
+    CmdPos?: T
+    CmdNeg?: T
 }
+
+interface ConjugationKeys<T> {
+    "1s"?: T
+    "2s"?: T
+    "3s"?: T
+    "1p"?: T
+    "2p"?: T
+    "3p"?: T
+    "vos"?: T
+}
+
+
+type VerbRules = ConjugationKeys<string>
 
 // The conjugated forms of a verb
 // In a few cases for irregular verbs, there can be alternate forms for conjugation, e.g. haber,3s: ha,hay
 // Such verbs never have derived verbs. 
 // null indicates that the conjugation is disallowed, for example for weather verbs (llover) and commands.
+type VerbForms = string | [string, string] | null
 interface VerbConjugation {
-    "1s"?: string | [string, string] | null
-    "2s"?: string | [string, string] | null
-    "3s"?: string | [string, string]
-    "1p"?: string | null
-    "2p"?: string | null
-    "3p"?: string | [string, string] | null
+    "1s"?: VerbForms
+    "2s"?: VerbForms
+    // haber,PresInd has ["hay", "ha"]
+    "3s"?: VerbForms
+    // ir,CmdPos has ["vayamos", "vamos"]
+    "1p"?: VerbForms
+    "2p"?: VerbForms
+    "3p"?: VerbForms
+    vos?: VerbForms
 }
 
 interface VerbConjugationAnnotation {
@@ -54,45 +77,18 @@ interface VerbConjugationAnnotated {
 type VerbConjugationChanges = VerbConjugation
 
 
-export interface VerbConjugationRules {
-    // Used only for spelling change transforms
-    PresInd?: VerbFormConjugationRules
-    PresSub?: VerbFormConjugationRules
-
-    PastInd?: VerbFormConjugationRules
-    PastImpInd?: VerbFormConjugationRules
-    PastCond?: VerbFormConjugationRules
-
-    FutInd?: VerbFormConjugationRules
-
-    CmdPos?: VerbFormConjugationRules
-    CmdNeg?: VerbFormConjugationRules
+export interface VerbConjugationRules<T> {
+    participles?: {pres: string, past: string}
+    aspects: AspectsT<T> 
 }
 
-
-// The rules for conjugating a single form of a verb, such as: "PresInd", "PastImpInd"
-interface VerbFormConjugationRules {
-    // A list of keys that lead to the base form of this conjugation
-    // Normally, the verb form is shared, in which case, only a single key is specified.
-    // But in cases in which the shared conjugation is found in a different verb form, then both are provided. 
-    base?: VerbFamily | VerbTenseMood
-    // true if the suffixes should be appended to the infinitive form, otherwise they are appended to the root/stem.
-    add_suffix_to_infinitive?: boolean
-    suffixes?: VerbConjugationChanges
-    // lists valid transforms, used to check for typos
-    // spelling?: {
-    //     pattern: RegExp,
-    //     suffixes: VerbConjugationChanges
-    // }
-    change_accents?: VerbConjugationChanges
-}
 
 
 
 // interface VerbConjugationChangesOverrides {
 //     PresInd?: Partial<VerbConjugationChanges>
 //     PastInd?: Partial<VerbConjugationChanges>
-//     PastImpInd?: Partial<VerbConjugationChanges>
+//     PastImp?: Partial<VerbConjugationChanges>
 // }
 // interface VerbConjugation_nonStandard extends VerbConjugationOverrides {
 // }
@@ -100,14 +96,14 @@ interface VerbFormConjugationRules {
 // interface VerbConjugationSuffixesForMoodAndTense {
 //     PresInd?: VerbConjugationSuffixes
 //     PastInd?: VerbConjugationSuffixes
-//     PastImpInd?: VerbConjugationSuffixes
+//     PastImp?: VerbConjugationSuffixes
 // }
 
 // type VerbConjugationSuffixChanges = Partial<VerbConjugationChanges>
 // interface VerbConjugationChangesForMoodAndTense {  //OK
 //     PresInd?: VerbConjugationSuffixChanges
 //     PastInd?: VerbConjugationSuffixChanges
-//     PastImpInd?: VerbConjugationSuffixChanges
+//     PastImp?: VerbConjugationSuffixChanges
 // }
 // interface StemChangePatterns extends VerbConjugationChangesForMoodAndTense {
 // }
@@ -126,7 +122,7 @@ type StemChangeType = "e:i" | "e:ie" | "o:u" | "o:ue" | "u:ue"
 type SuffixChangeType = "eer"
 
 type ConjugationKey = "1s" | "2s" | "3s" | "1p" | "2p" | "3p"
-type VerbTenseMoodKey = "PresInd" |  "PastInd"
+// type VerbTenseMoodKey = "PresInd" |  "PastInd"
 
 
 interface IrregularBase {
@@ -140,6 +136,7 @@ interface IrregularBase {
     add?: string
     // Indicates that the associated rules to change accents should be applied. 
     change_accents?: boolean
+    individual_accents?: AspectsT<ConjugationKeys<string>>
 }
 
 
@@ -150,7 +147,7 @@ interface ConjugationRules {
     model?: string
     // suffix_change_type?: SuffixChangeType    // TODO remove this if unnecessary
     stem_change_type?: StemChangeType
-    stem_change_inclusions?: VerbTenseMoodKey[]
+    stem_change_inclusions?: VerbTenseMood[]
     conjugate_only?: ConjugationKey[]
     irregular?: IrregularBase
     reflexive_only?: boolean

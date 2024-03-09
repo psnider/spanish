@@ -1,18 +1,7 @@
-import { VerbConjugation, VerbTenseMood } from "."
+import { AspectsT, VerbConjugation, VerbTenseMood } from "."
 
 
-interface AccentChanges {
-    PresInd?: VerbConjugation
-    PresSub?: VerbConjugation
-
-    PastInd?: VerbConjugation
-    PastImpInd?: VerbConjugation
-    PastCond?: VerbConjugation
-    
-    FutInd?: VerbConjugation
-    CmdPos?: VerbConjugation
-    CmdNeg?: VerbConjugation
-}
+type AccentChanges = AspectsT<VerbConjugation>
 
 
 namespace accents {

@@ -67,7 +67,7 @@ You can find usage examples in the test file: [test.ts](./src/conjugator/test.ts
 form | examples | common code | NLP coding  
 -----|-------------|-----|-----------
 indicativo presente     | amo, tengo          | PresInd | Mood=Ind,Tense=Pres
-indicativo imperfecto   | amaba, tenía        | PastImpInd  | Mood=Ind,Tense=Imp
+indicativo imperfecto   | amaba, tenía        | PastImp  | Mood=Ind,Tense=Imp
 indicativo pretérito    | amé, tuve           | PastInd | Mood=Ind,Tense=Past
 indicativo futuro       | amaré, tendré       | FutInd  | Mood=Ind,Tense=Fut
 indicativo condicional  | amaría, tendría     | CndInd  | Mood=Cnd
