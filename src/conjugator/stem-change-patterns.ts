@@ -14,14 +14,9 @@ export interface StemChangeRules extends AspectsT<VerbRules> {
 // The form is: original_character : replacement_characters
 // The changes apply to the last instance of the original_character in a verb stem (root form).
 export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChangeRules} = {
-    "o:ue": {
-        transforms: ["o:ue", "o:u"],
-        PresInd: {s1: "o:ue", s2: "o:ue", s3: "o:ue", p3: "o:ue"},
-        PastInd: {s3: "o:u", p3: "o:u"},
-    },
     "e:i": {
         transforms: ["e:i"],
-        PresInd: {s1: "e:i", s2: "e:i", s3: "e:i", p3: "e:i"},
+        PresInd: {s1: "e:i", s2: "e:i", s3: "e:i",                             p3: "e:i"},
         PastInd: {s3: "e:i", p3: "e:i"},
     },
     "e:ie": {
@@ -32,6 +27,21 @@ export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChan
         FutInd:  {s1: "e:ie", s2: "e:ie", s3: "e:ie", p1: "e:ie", p2: "e:ie", p3: "e:ie"},
         CmdPos:  {              s2: "e:ie", s3: "e:ie",                             p3: "e:ie"},
         CmdNeg:  {              s2: "e:ie", s3: "e:ie",                             p3: "e:ie"},
+    },
+    "o:ue": {
+        transforms: ["o:ue", "o:u"],
+        PresInd: {s1: "o:ue", s2: "o:ue", s3: "o:ue",                          p3: "o:ue"},
+        PastInd: {                        s3: "o:u",                           p3: "o:u"},
+        PresSub: {s1: "o:ue", s2: "o:ue", s3: "o:ue",                          p3: "o:ue"},
+        CmdPos:  {            s2: "o:ue", s3: "o:ue",                          p3: "o:ue"},
+        CmdNeg:  {            s2: "o:ue", s3: "o:ue",                          p3: "o:ue"},
+    },
+    "u:ú": {
+        transforms: ["u:ú"],
+        PresInd: {s1: "u:ú", s2: "u:ú", s3: "u:ú",                                  p3: "u:ú"},
+        PresSub: {s1: "u:ú", s2: "u:ú", s3: "u:ú",                                  p3: "u:ú",    vos: "u:ú"},
+        CmdPos:  {s1: "u:ú", s2: "u:ú", s3: "u:ú",                                  p3: "u:ú"},
+        CmdNeg:  {s1: "u:ú", s2: "u:ú", s3: "u:ú",                                  p3: "u:ú",    vos: "u:ú"},
     },
     "u:ue": {
         transforms: ["u:ue"],

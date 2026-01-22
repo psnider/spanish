@@ -70,6 +70,9 @@ function getDerivedSpelling(infinitive: string, tense_mood: VerbTenseMood, irreg
 //   For example, there is no form of "I rain".
 export function conjugateVerb(infinitive: string, tense_mood: VerbTenseMood): VerbConjugationAnnotated {
     function getBaseInfinitive(infinitive: string) {
+        // if ((infinitive.length > 3) && infinitive.endsWith("eer")) {
+        //     return {irregular: {base: "huir", remove: "h", add: "infl"}}
+        // }
         let irregular = verb_conjugation_rules[infinitive]?.irregular
         if (irregular) {
             const base_infinitive = irregular?.base
@@ -94,10 +97,11 @@ export function conjugateVerb(infinitive: string, tense_mood: VerbTenseMood): Ve
     const base_complete_conjugation: VerbConjugation = {...base_merged_conjugation, ...base_accent_changes}
     const notes = getAnnotations(infinitive, tense_mood)
     if (base_infinitive != infinitive) {
-        const irregular = verb_conjugation_rules[infinitive].irregular
-        const derived_spelling_changes = getDerivedSpelling(base_infinitive, tense_mood, base_complete_conjugation, irregular)
+        const base_rules = verb_conjugation_rules[infinitive]
+        const irregular_rules = base_rules.irregular
+        const derived_spelling_changes = getDerivedSpelling(base_infinitive, tense_mood, base_complete_conjugation, irregular_rules)
         const derived_conjugation = {...base_complete_conjugation, ...derived_spelling_changes}
-        const accent_changes = irregular?.individual_accents?.[tense_mood]
+        const accent_changes = base_rules.individual_accents?.[tense_mood]
         const derived_accented_conjugation = {...derived_conjugation, ...accent_changes}
         return {notes, forms: derived_accented_conjugation}
     } else {

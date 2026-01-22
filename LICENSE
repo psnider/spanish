@@ -1,3 +1,32 @@
+Intention of this license simply stated:
+Free use by organizations that provide only free services to all users.
+Where free means no monetary cost, no advertising, and no collection of user data for the purpose of anything other than supporting the service.
+
+In particular, the goal of this project is to provide high quality services for free to the largest possible audience, and a for profit company incorporating a part of this project into their services would compete with and undermine our goal of free services.
+If you think your organization should be an exception, please contact us.
+
+------
+Agregar condiciones adicionales para cerrar huecos legales
+Creative Commons BY-NC-SA es fuerte, pero aún más si añades un archivo:
+ADDITIONAL-TERMS.md
+Con reglas claras como:
+❌ Prohibido usar en cualquier modelo de IA comercial
+❌ Prohibido incluir en servicios con anuncios
+❌ Prohibido redistribuir en plataformas que generen ingreso
+❌ Prohibido usarlo en productos de empresas con fines de lucro
+❌ Prohibido usarlo para entrenar modelos propietaries (Google, Meta, OpenAI, etc.)
+❌ Prohibido usarlo para crear productos cerrados o DRM
+Estas restricciones adicionales son totalmente válidas, porque Creative Commons permite añadir condiciones siempre que no contradigan la licencia principal.
+⭐ Lo que puedo hacer ahora mismo
+Si quieres, puedo crear para ti:
+✔ 1. LICENSE con CC BY-NC-SA 4.0
+✔ 2. NOTICE explicando el propósito del proyecto
+✔ 3. ADDITIONAL-TERMS.md con restricciones anti-uso comercial reforzadas
+✔ 4. README explicando para el público cómo usar el diccionario legalmente
+
+------
+Otherwise the intention of this license follows Apache 2.0, included here for reference:
+
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/

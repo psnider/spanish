@@ -1,0 +1,53 @@
+{
+  "id": "dar.v",
+  "lemma": "dar",
+  "pos": "verb",
+  "metadata": {
+    "transitivity": "both",
+    "auxiliary": "haber",
+    "register": "neutral",
+    "frequency": "very_common"
+  },
+  "syntax": {
+    "valency": [
+      {
+        "pattern": "NP[subj] + dar + NP[obj]",
+        "sense": "transferencia"
+      },
+      {
+        "pattern": "NP[subj] + dar + NP[obj] + a + NP[iobj]",
+        "sense": "transferencia"
+      },
+      {
+        "pattern": "dar + infinitivo",
+        "sense": "causar/permitir"
+      }
+    ],
+    "clitics": {
+      "allows": true,
+      "notes": "Uso frecuente de le/lo/la/se; el leísmo depende de la región."
+    }
+  },
+  "senses": [
+    {
+      "id": "dar.v.1",
+      "gloss": "entregar o transferir algo a alguien",
+      "domain": "general",
+      "figurative": false
+    },
+    {
+      "id": "dar.v.2",
+      "gloss": "causar, producir o provocar",
+      "domain": "abstract",
+      "figurative": true
+    }
+  ],
+  "links": {
+    "idioms": [
+      "dar_a_luz",
+      "dar_en_el_clavo",
+      "dar_por_hecho"
+    ],
+    "derived": []
+  }
+}

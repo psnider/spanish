@@ -1,0 +1,48 @@
+I am designing an **open, multilingual, non-profit dictionary**.
+
+The dictionary clearly separates system structure from linguistic content. 
+The system structure describes how data is organized and connected; for this reason, 
+its fields use English, which is the standard language of programming and 
+ensures long-term consistency and interoperability.
+
+Linguistic content describes how a word works inside a specific language. 
+These fields must be written in the language being described, so that native speakers, 
+teachers, and tutors can maintain entries (in JSON) without needing technical knowledge or English terminology.
+
+When a local concept needs to connect to the global system, global identifiers in English are used, 
+together with a local mapping in the dictionary’s language. This keeps the data easy for 
+humans to edit while remaining clear and reliable for computers.
+
+This project has the following goals:
+- It is focused on the words required for basic language competency for everyday situations.
+- **Each lemma and each sense** lives in its own **monolingual JSON file**.
+- JSON must be **human-maintainable** by teachers, tutors, and native speakers with minimal technical knowledge.
+- The system must be **language-agnostic** so that it can support English, Spanish, Japanese, and any other language from the beginning.
+- The system determines the proficiency level for each sense, and for each sense uses a definition within that same proficiency level. 
+- The dictionary must support:
+   * grammatical properties (gender, number, countability, etc.)
+   * regional variation
+   * register (formal, informal, vulgar, técnico)
+   * polysemy (separate senses per lemma)
+   * etymology
+   * examples
+   * idioms, proverbs or sayings
+   * nouns, adjectives, adverbs, and verbs that are most often used with this word
+   * semantic domains
+   * stable sense IDs
+   * cross-lingual translation links
+- Part-of-speech must use **Universal Dependencies (UD)** tags.
+  The schema must support meanings that are shared between adjectives and nouns.
+- There is audio for each term and example.
+   When available, also with different speakers, and from different regions.
+- The dictionary must be published **for free**, **ad-free**, with an **anti-commercial license** (CC BY-NC-SA or stronger), and ideally **hosted on static infrastructure** (GitHub Pages or Cloudflare Pages).
+- Translation support must be enabled by linking sense IDs across languages.
+- We want to consider a design that allows for:
+   * fast client-side search
+   * static hosting
+   * no backend server (or minimal free server if needed)
+- The project should avoid sensitive or proprietary data; everything must be **open and shareable**.
+
+We’ve already designed several schema ideas. 
+So I will provide you with the TypeScript definitions, which I want you to acknowledge without immediate comment.
+Please comment again once I start asking you questions.

@@ -1,0 +1,35 @@
+{
+  "id": "manzana.n.fruit",
+  "lemma": "manzana",
+  "pos": "noun",
+  "gender": "feminine",
+  "countability": "countable",
+  "metadata": {
+    "domain": "food",
+    "register": "neutral",
+    "frequency": "common"
+  },
+  "syntax": {
+    "determination": {
+      "allows": ["definite", "indefinite", "demonstrative", "possessive"],
+      "plural": true
+    }
+  },
+  "senses": [
+    {
+      "id": "manzana.n.fruit.1",
+      "gloss": "fruit of the apple tree, typically round with edible flesh",
+      "domain": "food",
+      "figurative": false
+    }
+  ],
+  "links": {
+    "related": [
+      "manzano.n",
+      "fruta.n"
+    ],
+    "idioms": [
+      "manzana_de_la_discordia"
+    ]
+  }
+}

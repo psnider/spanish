@@ -25,7 +25,7 @@ interface ConjugationKeys<T> {
     p1?: T
     p2?: T
     p3?: T
-    "vos"?: T
+    vos?: T
 }
 
 
@@ -72,7 +72,7 @@ export interface VerbConjugationRules<T> {
 }
 
 
-type StemChangeType = "e:i" | "e:ie" | "o:u" | "o:ue" | "u:ue"
+type StemChangeType = "e:i" | "e:ie" | "o:u" | "o:ue" | "u:ú" | "u:ue"
 type SuffixChangeType = "eer"
 
 type ConjugationKey = "s1" | "s2" | "s3" | "p1" | "p2" | "p3"
@@ -87,9 +87,6 @@ interface IrregularBase {
     remove?: string
     // The prefix to add to base verb after any prefix has been removed.
     add?: string
-    // Indicates that the associated rules to change accents should be applied. 
-    change_accents?: boolean
-    individual_accents?: AspectsT<ConjugationKeys<string>>
 }
 
 
@@ -100,10 +97,13 @@ interface ConjugationRules {
     model?: string
     // suffix_change_type?: SuffixChangeType    // TODO remove this if unnecessary
     stem_change_type?: StemChangeType
+    // The verb VerbTenseMood's that have a stem change.
+    // Note that this is not dependent on other verb construction relationships, so if the stem change occurs in a VerbTenseMood, it must be listed here.
     stem_change_inclusions?: VerbTenseMood[]
     conjugate_only?: ConjugationKey[]
     irregular?: IrregularBase
     reflexive_only?: boolean
+    individual_accents?: AspectsT<ConjugationKeys<string>>
 }
 
 
@@ -111,4 +111,3 @@ export interface VerbTextUsage_forTypographicalChange {
     text: string
     infinitive: string
 }
-

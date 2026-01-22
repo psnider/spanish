@@ -40,7 +40,7 @@ const typographical_change_rules : {[rule_name: string]: TypographicalChangeRule
     },
     "preserve-hard-c-sound": {
         // example: sacar,PastInd,s1: sacé => saqué
-        match_pattern: /c([eéií])$/u,
+        match_pattern: /c([eéií](s|mos|is|n)?)$/u,
         replacement_pattern: "qu$1"
     },
     "preserve-soft-g-sound": {

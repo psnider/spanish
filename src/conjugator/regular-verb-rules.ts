@@ -15,7 +15,6 @@ interface VerbAspectSuffixRules {
     // true if the suffixes should be appended to the infinitive form, otherwise they are appended to the root/stem.
     add_suffix_to_infinitive?: boolean
     suffixes?: VerbConjugationChanges
-    change_accents?: VerbConjugationChanges
 }
 
 

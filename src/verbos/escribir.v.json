@@ -1,0 +1,33 @@
+{
+  "id": "escribir.v",
+  "lemma": "escribir",
+  "pos": "verb",
+  "metadata": {
+    "transitivity": "both",
+    "auxiliary": "haber",
+    "register": "neutral",
+    "frequency": "very_common"
+  },
+  "syntax": {
+    "valency": [] ,
+    "clitics": {
+      "allows": true,
+      "notes": "Uso opcional de le/lo/la/se dependiendo del contexto."
+    }
+  },
+  "senses": [
+    {
+      "id": "escribir.v.1",
+      "gloss": "trazar palabras o símbolos sobre una superficie para comunicar o registrar información",
+      "domain": "general",
+      "figurative": false
+    }
+  ],
+  "links": {
+    "idioms": [
+      "escribir_a_mano",
+      "escribir_en_el_aire"
+    ],
+    "derived": []
+  }
+}

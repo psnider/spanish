@@ -12,10 +12,10 @@
                 "<node_internals>/**"
             ],
             "type": "node",
+            "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
-            ],
-            "preLaunchTask": "${defaultBuildTask}"
+            ]
         },
         {
             "type": "node",
@@ -25,10 +25,10 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/src/conjugator/test-conjugate-verb.ts",
+            "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
-            ],
-            "preLaunchTask": "${defaultBuildTask}"
+            ]
         }
     ]
 }

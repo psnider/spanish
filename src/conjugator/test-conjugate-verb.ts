@@ -4,8 +4,8 @@ import { assert_TenseMood } from "./test-support.js"
 
 
 
-let infinitive = "detener"
-let mood_tense: VerbTenseMood = "PresInd"
+let infinitive = "reunir"
+let mood_tense: VerbTenseMood = "CmdPos"
 
 
 

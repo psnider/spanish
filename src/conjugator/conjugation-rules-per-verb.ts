@@ -1,7 +1,6 @@
 import {ConjugationRules, VerbConjugationAnnotation, VerbTenseMood} from "./index"
 
 
-
 // Verbs that have conjugated correctly using these rules.
 // Each verb has a description of the rules required to conjugate it properly.
 // If there are no ConjugationRules (a value of "null"), then the verb is regular, and is conjugated normally.
@@ -14,7 +13,8 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     acabar: null,
     aceptar: null,
     acercar: {model: "sacar"},
-    acordar: {model: "contar", stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"]},
+    acertar: {model: "acertar", stem_change_type: "e:ie", stem_change_inclusions: ["PresInd","PresSub","CmdPos","CmdNeg"]},
+    acordar: {model: "contar", stem_change_type: "o:ue", stem_change_inclusions: ["PresInd","PresSub","CmdPos","CmdNeg"]},
     acostar: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"]},
     actualizar: null,
     acudir: null,
@@ -24,24 +24,24 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     agradecer: null,
     agredir: null,
     alcanzar: null,
-    almorzar: {model: "forzar", stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"]},
-    // almorzar: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"]},
+    almorzar: {model: "forzar", stem_change_type: "o:ue", stem_change_inclusions: ["PresInd","PresSub","CmdPos","CmdNeg"]},
     alzar: null,
     amanecer: null,
     amenazar: null,
     aparecer: null,
     aplicar: {model: "sacar"},
-    apostar: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"]},
-    aprobar: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"]},
+    apostar: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd","PresSub","CmdPos","CmdNeg"]},
+    aprobar: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd","PresSub","CmdPos","CmdNeg"]},
     amar: null,
     ampliar: {irregular: {base: "vaciar", remove: "vac", add: "ampl"}},
     analizar: null,
     aprender: null,
+    argüir: {model: "unfinished"}, // ChatGPT
     arrancar: null,
     arrodillar: null,
     ascender: {stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"]},
     asegurar: null,
-    asistir: null,   // conjugates like cambiar
+    asistir: null,
     asociar: null,
     atacar: {model: "sacar"},
     atender: {stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"]},
@@ -58,7 +58,7 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     brincar: null,
     bucear: null,
     buscar: {model: "sacar"},
-    caber: {irregular: {base: "caber"}},
+    caber: {irregular: {base: "caber"}}, // ChatGPT
     caer: {irregular: {base: "caer"}},
     calentar: {stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"]},
     cambiar: null,
@@ -68,14 +68,14 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     cazar: null,
     celebrar: null,
     cenar: null,
-    cerrar: {stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"]},
+    cerrar: {model: "acertar", stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"]},
     cepillar: null,
     checar: {model: "sacar"},
     chequear: null,
     chocar: null,
     coger: null,
     colocar: null,
-    comenzar: {stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"]},
+    comenzar: {stem_change_type: "e:ie", stem_change_inclusions: ["PresInd","PresSub","CmdPos","CmdNeg"]},
     comer: null,
     compartir: null,
     competir: {stem_change_type: "e:i"},
@@ -95,7 +95,7 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     confiar: {irregular: {base: "vaciar", remove: "vac", add: "conf"}},
     confundir: null,
     conmover: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"]},
-    conocer: null,
+    conocer: null, // ChatGPT
     conseguir: {irregular: {base: "seguir", add: "con"}, stem_change_type: "e:i", stem_change_inclusions: ["PresInd", "PastInd"]},    // except for yo, similar to {stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"]},
     considerar: null,
     construir: {irregular: {base: "huir", remove: "h", add: "constr"}},
@@ -114,8 +114,9 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     cotizar: null,
     crear: null,
     crecer: null,
-    creer: null, // TODO: verify this is no longer needed: {suffix_change_type: "eer"},
-    criar: {irregular: {base: "vaciar", remove: "vac", add: "cr", change_accents: true}},
+    // creer: {individual_accents: {PastInd: {s2:"creíste",s3: "creyó",p1:"creímos",p2:"creísteis",p3:"creyeron",vos:"creíste"}}},  // ChatGPT
+    // creer: {model: "leer"},
+    criar: {irregular: {base: "vaciar", remove: "vac", add: "cr"}},
     criticar: {model: "sacar"},
     cruzar: null,
     dar: {irregular: {base: "dar"}},
@@ -125,6 +126,7 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     dedicar: {model: "sacar"},
     defender: {stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"]},
     dejar: null,
+    delinquir: {model: "unfinished"}, // ChatGPT
     democratizar: null,
     demostrar: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"]},
     derrocar: {model: "sacar"},
@@ -157,7 +159,7 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     desembocar: null,
     desoír: {irregular: {base: "oír", add: "des"}},
     desproteger: null,
-    detener: {irregular: {base: "tener", add: "de", individual_accents: {CmdPos: {s2: "detén"}}}},
+    detener: {irregular: {base: "tener", add: "de"}, individual_accents: {CmdPos: {s2: "detén"}}},
     disfrazar: null,
     duchar: null,
     duplicar: {model: "sacar"},
@@ -188,7 +190,7 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     envejecer: null,
     enviar: {irregular: {base: "vaciar", remove: "vac", add: "env"}},
     equivocar: {model: "sacar"},
-    erguir: {irregular: {base: "erguir"}},
+    erguir: {irregular: {base: "erguir"}}, // ChatGPT
     escalar: null,
     escoger: null,
     escribir: null,
@@ -220,7 +222,7 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     // FIX: no need for this conjugate_only: [s3] rule, now that ze is converted to ce
     forzar: {model: "forzar", stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"]},
     fotografiar: {irregular: {base: "vaciar", remove: "vac", add: "fotograf"}},
-    guiar: {irregular: {base: "vaciar", remove: "vac", add: "gu", individual_accents: {PresInd: {p2: "guiais"}, PresSub: {p2: "guieis"}, PastInd: {s1: "guie", s3: "guio"}, CmdNeg: {p2: "guieis"}}}},
+    guiar: {irregular: {base: "vaciar", remove: "vac", add: "gu"}, individual_accents: {PresInd: {p2: "guiais"}, PresSub: {p2: "guieis"}, PastInd: {s1: "guie", s3: "guio"}, CmdNeg: {p2: "guieis"}}},
     funcionar: null,
     ganar: null,
     garantizar: null,
@@ -229,7 +231,7 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     gozar: null,
     granizar: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"], conjugate_only: ["s3"]},
     gustar: null,
-    haber: {irregular: {base: "haber"}},
+    haber: {irregular: {base: "haber"}}, // ChatGPT
     habitar: null,
     hablar: null,
     hacer: {irregular: {base: "hacer"}},
@@ -255,11 +257,11 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     jugar: {irregular: {base: "jugar"}, stem_change_type: "u:ue", stem_change_inclusions: ["PresInd","PresSub","CmdPos","CmdNeg"]},
     lanzar: null,
     lavar: null,
-    leer: {irregular: {base: "leer"}},
+    leer: {irregular: {base: "leer"}}, // ChatGPT
     legalizar: null,
     levantar: null,
     llamar: null,
-    llegar: null,
+    llegar: null, // ChatGPT
     llevar: null,
     llorar: null,
     llover: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"], conjugate_only: ["s3"]},
@@ -290,7 +292,7 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     obtener: {irregular: {base: "tener", add: "ob"}},
     ocurrir: null,
     ofrecer: null,
-    oír: {irregular: {base: "oír"}},
+    oír: {irregular: {base: "oír"}}, // ChatGPT
     oponer: {irregular: {base: "poner", add: "o"}},
     orar: null,
     organizar: null,
@@ -314,10 +316,10 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     platicar: {model: "sacar"},
     poder: {irregular: {base: "poder"}, stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"]},
     politizar: null,
-    poner: {irregular: {base: "poner"}},
+    poner: {irregular: {base: "poner"}}, // ChatGPT
     posponer: {irregular: {base: "poner", add: "pos"}},
     practicar: {model: "sacar"},
-    preferir: {stem_change_type: "e:ie"},
+    preferir: {stem_change_type: "e:ie"}, // ChatGPT
     preguntar: null,
     preocupar: null,
     preparar: null,
@@ -369,11 +371,12 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     resolver: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"]},
     responder: null,
     retener: {irregular: {base: "tener", add: "re"}},
+    reunir: {model: "reunir", stem_change_type: "u:ú", stem_change_inclusions: ["PresInd","PresSub","CmdPos","CmdNeg"]},
     revisar: null,
     revolver: {stem_change_type: "o:ue", stem_change_inclusions: ["PresInd"]},
     rezar: null,
     saber: {irregular: {base: "saber"}},
-    sacar: {model: "sacar"},
+    sacar: {model: "sacar"}, // ChatGPT
     sacer: null,
     sacrificar: {model: "sacar"},
     sacudir: null,
@@ -405,7 +408,7 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     temblar: {stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"]},
     temer: null,
     tender: {stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"]},
-    tener: {irregular: {base: "tener"}, stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"]}, //{irregular: {base: "tener"}},
+    tener: {irregular: {base: "tener"}, stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"]}, //{irregular: {base: "tener"}}, // ChatGPT
     terminar: null,
     tirar: null,
     tocar: {model: "sacar"},
@@ -424,10 +427,10 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     unificar: {model: "sacar"},
     usar: null,
     utilizar: null,
-    vaciar: {irregular: {base: "vaciar"} },
+    vaciar: {irregular: {base: "vaciar"} }, // ChatGPT
     variar: {irregular: {base: "vaciar", remove: "vac", add: "var"}},
     vender: null,
-    venir: {irregular: {base: "venir"}, stem_change_type: "e:ie", stem_change_inclusions: ["PresInd", "PastInd"]},
+    venir: {irregular: {base: "venir"}, stem_change_type: "e:ie", stem_change_inclusions: ["PresInd", "PastInd"]}, // ChatGPT
     ver: {irregular: {base: "ver"}},
     verificar: {model: "sacar"},
     vestir: {stem_change_type: "e:ie", stem_change_inclusions: ["PresInd"]},

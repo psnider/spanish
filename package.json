@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -P .",
-    "test": "node generated/test.js"
+    "test": "node generated/src/conjugator/test.js"
   },
   "author": "Peter Snider",
   "license": "Apache-2.0",
