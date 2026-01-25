@@ -83,10 +83,6 @@ interface IrregularBase {
     // This is the name of the verb itself if it is the topmost verb, for example: "huir"
     // "huir" is also the base of "construir", which is formed by removing the "h", and adding "constr".
     base: string
-    // The prefix to remove from the base verb, before adding the final prefix.
-    remove?: string
-    // The prefix to add to base verb after any prefix has been removed.
-    add?: string
 }
 
 
@@ -101,8 +97,10 @@ interface ConjugationRules {
     // Note that this is not dependent on other verb construction relationships, so if the stem change occurs in a VerbTenseMood, it must be listed here.
     stem_change_inclusions?: VerbTenseMood[]
     conjugate_only?: ConjugationKey[]
+    // The common tail portion of the verbs in this family.
+    // Only specified for the canonical verb, to which all others in the family refer.
+    conjugation_family?: string
     irregular?: IrregularBase
-    reflexive_only?: boolean
     individual_accents?: AspectsT<ConjugationKeys<string>>
 }
 

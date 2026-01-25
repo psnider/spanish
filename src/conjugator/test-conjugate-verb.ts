@@ -1,12 +1,10 @@
-import { VerbConjugation, VerbTenseMood } from ".";
+import { VerbTenseMood } from ".";
 import { conjugateVerb } from "./conjugate-verb.js";
-import { assert_TenseMood } from "./test-support.js"
 
 
 
-let infinitive = "reunir"
-let mood_tense: VerbTenseMood = "CmdPos"
-
+let infinitive = "delinquir"
+let mood_tense: VerbTenseMood = "PresInd"
 
 
 let conjugation = conjugateVerb(infinitive, mood_tense)

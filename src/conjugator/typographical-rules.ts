@@ -1,5 +1,5 @@
 import { VerbConjugation, VerbConjugationAnnotated } from ".";
-import { conjugation_keys } from "./lib.js";
+import { applyToVerbForms, conjugation_keys } from "./lib.js";
 
 
 
@@ -17,9 +17,11 @@ export interface TypographicalChangeRule {
 }
 
 
-// A mapping of the last 3-characters of an infinitive to the possible typographic change rule.
-const infinitive_3_endings_to_rules: {[ending: string]: string} = {
-    car: "preserve-hard-c-sound",
+
+// A mapping of the last 3 or 4 characters of an infinitive to the possible typographic change rule.
+const infinitive_endings_to_rules: {[ending: string]: string} = {
+    quir: "preserve-hard-c-sound-of-q",
+    car: "preserve-hard-c-sound-of-c",
     cer: "preserve-soft-c-sound",
     cir: "preserve-soft-c-sound",
     gar: "preserve-hard-g-sound",
@@ -38,7 +40,7 @@ const typographical_change_rules : {[rule_name: string]: TypographicalChangeRule
         match_pattern: /c([aáoóuú])$/u, 
         replacement_pattern: "zc$1"
     },
-    "preserve-hard-c-sound": {
+    "preserve-hard-c-sound-of-c": {
         // example: sacar,PastInd,s1: sacé => saqué
         match_pattern: /c([eéií](s|mos|is|n)?)$/u,
         replacement_pattern: "qu$1"
@@ -60,6 +62,11 @@ const typographical_change_rules : {[rule_name: string]: TypographicalChangeRule
         match_pattern: /z([eéií])/u,
         replacement_pattern: "c$1"
     },
+    "preserve-hard-c-sound-of-q": {
+        // example: delinquir,PresInd,s1: delinquo -> delinco
+        match_pattern: /qu([o])/u,
+        replacement_pattern: "c$1"
+    }
 }
 
 
@@ -91,10 +98,19 @@ function applyTypographicalChange(conjugated_form: string, rule: TypographicalCh
     }
 }
 
+function findMatchingRuleName(infinitive: string) {
+    let ending = infinitive.slice(-4)
+    let rule_name = infinitive_endings_to_rules[ending]
+    if (!rule_name) {
+        ending = infinitive.slice(-3)
+        rule_name = infinitive_endings_to_rules[ending]
+    }
+    return rule_name
+}
+
 
 export function test_applyTypographicalChange(conjugated_form: string, infinitive: string) {
-    const ending = infinitive.slice(-3)
-    const rule_name = infinitive_3_endings_to_rules[ending]
+    const rule_name = findMatchingRuleName(infinitive)
     if (rule_name) {
         const rule = typographical_change_rules[rule_name]
         const changed = applyTypographicalChange(conjugated_form, rule)
@@ -107,22 +123,19 @@ export function test_applyTypographicalChange(conjugated_form: string, infinitiv
 // @param @output rules_applied Contains the names of the rules that were applied to the input verb.
 export function getTypographicChanges(infinitive: string, conjugation: VerbConjugation) : VerbConjugation {
     // Apply the rule to the conjugated_form, if the rule matches the form.
-    let typographical_changes: {[k:string]: string} = {}
-    const ending = infinitive.slice(-3)
-    const rule_name = infinitive_3_endings_to_rules[ending]
+    let typographical_changes: {[key:string]: string} = {}
+    const rule_name = findMatchingRuleName(infinitive)
     if (rule_name) {
         const rule = typographical_change_rules[rule_name]
-        const keys: Array<keyof VerbConjugation> = <Array<keyof VerbConjugation>> Object.keys(conjugation).filter((key: keyof VerbConjugation) => {
+        // FIX: copy the 
+        const filtered_keys: Array<keyof VerbConjugation> = <Array<keyof VerbConjugation>> Object.keys(conjugation).filter((key: keyof VerbConjugation) => {
             return conjugation_keys.includes(key)
         })
-        keys.forEach((key) => {
-            const conjugated_form = conjugation[key]
-            if (conjugated_form && (typeof conjugated_form === "string")) {
+        filtered_keys.forEach((conjugation_key) => {
+            applyToVerbForms(conjugation, typographical_changes, conjugation_key, (conjugated_form: string) => {
                 const changed = applyTypographicalChange(conjugated_form, rule)
-                if (changed) {
-                    typographical_changes[key] = changed
-                }
-            }
+                return changed
+            })
         })
     }
     return typographical_changes

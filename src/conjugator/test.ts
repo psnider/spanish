@@ -1,7 +1,6 @@
 import { assert_TenseMood, assert_typographicalChange } from "./test-support.js"
 
 
-
 // -ar
 assert_TenseMood("amar", "PresInd", {s1: "amo", s2: "amas", s3: "ama", p1: "amamos", p2: "amáis", p3: "aman"})
 assert_TenseMood("amar", "PresSub", {s1: "ame", s2: "ames", s3: "ame", p1: "amemos", p2: "améis", p3: "amen"})
@@ -63,6 +62,16 @@ assert_TenseMood("almorzar", "FutCond", {s1:"almorzaría", s2:"almorzarías", s3
 assert_TenseMood("almorzar", "CmdPos", {s1:null, s2:"almuerza", s3:"almuerce", p1:"almorcemos", p2:"almorzad", p3:"almuercen", vos: "almorzá"})
 assert_TenseMood("almorzar", "CmdNeg", {s1:null, s2:"almuerces", s3:"almuerce", p1:"almorcemos", p2:"almorcéis", p3:"almuercen", vos: ["almuerces","*almorcés"]})
 
+// "-üir" family of typographic changes
+assert_TenseMood("argüir","PresInd",{s1:"arguyo",s2:"arguyes",s3:"arguye",p1:"argüimos",p2:"argüís",p3:"arguyen",vos:"argüís"})
+assert_TenseMood("argüir","PresSub",{s1:"arguya",s2:"arguyas",s3:"arguya",p1:"arguyamos",p2:"arguyáis",p3:"arguyan",vos:"arguyas"})
+assert_TenseMood("argüir","PastInd",{s1:"argüí",s2:"argüiste",s3:"arguyó",p1:"argüimos",p2:"argüisteis",p3:"arguyeron",vos:"argüiste"})
+assert_TenseMood("argüir","PastImp",{s1:"argüía",s2:"argüías",s3:"argüía",p1:"argüíamos",p2:"argüíais",p3:"argüían",vos:"argüías"})
+assert_TenseMood("argüir","FutInd",{s1:"argüiré",s2:"argüirás",s3:"argüirá",p1:"argüiremos",p2:"argüiréis",p3:"argüirán",vos:"argüirás"})
+assert_TenseMood("argüir","FutCond",{s1:"argüiría",s2:"argüirías",s3:"argüiría",p1:"argüiríamos",p2:"argüiríais",p3:"argüirían",vos:"argüirías"})
+assert_TenseMood("argüir","CmdPos",{s1:null,s2:"arguye",s3:"arguya",p1:"arguyamos",p2:"argüid",p3:"arguyan",vos:"arguí"})
+assert_TenseMood("argüir","CmdNeg",{s1:null,s2:"arguyas",s3:"arguya",p1:"arguyamos",p2:"arguyáis",p3:"arguyan",vos:"arguyas"})
+
 assert_TenseMood("caber", "PresInd", {s1:"quepo",s2:"cabes",s3:"cabe",p1:"cabemos",p2:"cabéis",p3:"caben",vos:"cabés"})
 assert_TenseMood("caber", "PresSub", {s1:"quepa",s2:"quepas",s3:"quepa",p1:"quepamos",p2:"quepáis",p3:"quepan",vos:"quepas"})
 assert_TenseMood("caber", "PastInd", {s1:"cupe",s2:"cupiste",s3:"cupo",p1:"cupimos",p2:"cupisteis",p3:"cupieron",vos:"cupiste"})
@@ -89,6 +98,16 @@ assert_TenseMood("conducir", "FutInd", {s1:"conduciré",s2:"conducirás",s3:"con
 assert_TenseMood("conducir", "FutCond", {s1:"conduciría",s2:"conducirías",s3:"conduciría",p1:"conduciríamos",p2:"conduciríais",p3:"conducirían",vos:"conducirías"})
 assert_TenseMood("conducir", "CmdPos", {s1:null,s2:"conduce",s3:"conduzca",p1:"conduzcamos",p2:"conducid",p3:"conduzcan",vos:"conducí"})
 assert_TenseMood("conducir", "CmdNeg", {s1:null,s2:"conduzcas",s3:"conduzca",p1:"conduzcamos",p2:"conduzcáis",p3:"conduzcan",vos:"conduzcas"})
+
+// test prefix + irregular base: 'co-' + 'ser'
+assert_TenseMood("coser", "PresInd", {s1:"coso", s2:"coses", s3:"cose",     p1:"cosemos",  p2:"coséis",    p3:"cosen"})
+assert_TenseMood("coser", "PresSub", {s1:"cosa", s2:"cosas", s3:"cosa",     p1:"cosamos",  p2:"cosáis",    p3:"cosan"})
+assert_TenseMood("coser", "PastInd", {s1:"cosí", s2:"cosiste", s3:"cosió",   p1:"cosimos",  p2:"cosisteis", p3:"cosieron"})
+assert_TenseMood("coser", "PastImp", {s1:"cosía", s2:"cosías", s3:"cosía",  p1:"cosíamos", p2:"cosíais",  p3:"cosían"})
+assert_TenseMood("coser", "FutInd",  {s1:"coseré", s2:"coserás", s3:"coserá", p1:"coseremos", p2:"coseréis", p3:"coserán"})
+assert_TenseMood("coser", "FutCond", {s1:"cosería", s2:"coserías", s3:"cosería", p1:"coseríamos", p2:"coseríais", p3:"coserían"})
+assert_TenseMood("coser", "CmdPos",  {s1:null, s2:"cose", s3:"cosa",        p1:"cosamos",  p2:"cosed",    p3:"cosan"})
+assert_TenseMood("coser", "CmdNeg",  {s1:null, s2:"cosas", s3:"cosa",       p1:"cosamos",  p2:"cosáis",   p3:"cosan"})
 
 assert_TenseMood("creer", "PresInd", {s1:"creo",s2:"crees",s3:"cree",p1:"creemos",p2:"creéis",p3:"creen",vos:"creés"})
 assert_TenseMood("creer", "PresSub", {s1:"crea",s2:"creas",s3:"crea",p1:"creamos",p2:"creáis",p3:"crean",vos:"creas"})
@@ -117,6 +136,17 @@ assert_TenseMood("decir", "FutCond", {s1: "diría", s2: "dirías", s3: "diría",
 assert_TenseMood("decir", "CmdPos",  {s1: null,   s2: "di", s3: "diga",        p1: "digamos",  p2: "decid", p3: "digan" })
 assert_TenseMood("decir", "CmdNeg",  {s1: null,   s2: "digas", s3: "diga",     p1: "digamos",  p2: "digáis", p3: "digan" })
 
+// 
+assert_TenseMood("delinquir", "PresInd", {s1:"delinco",s2:"delinques",s3:"delinque",p1:"delinquimos",p2:"delinquís",p3:"delinquen",vos:"delinquís"})
+assert_TenseMood("delinquir", "PresSub", {s1:"delinqua",s2:"delinquas",s3:"delinqua",p1:"delinquamos",p2:"delinquáis",p3:"delinquan",vos:"delinquas"})
+assert_TenseMood("delinquir", "PastInd", {s1:"delinquí",s2:"delinquiste",s3:"delinquió",p1:"delinquimos",p2:"delinquisteis",p3:"delinquieron",vos:"delinquiste"})
+assert_TenseMood("delinquir", "PastImp", {s1:"delinquía",s2:"delinquías",s3:"delinquía",p1:"delinquíamos",p2:"delinquíais",p3:"delinquían",vos:"delinquías"})
+assert_TenseMood("delinquir", "FutInd",  {s1:"delinquiré",s2:"delinquirás",s3:"delinquirá",p1:"delinquiremos",p2:"delinquiréis",p3:"delinquirán",vos:"delinquirás"})
+assert_TenseMood("delinquir", "FutCond", {s1:"delinquiría",s2:"delinquirías",s3:"delinquiría",p1:"delinquiríamos",p2:"delinquiríais",p3:"delinquirían",vos:"delinquirías"})
+assert_TenseMood("delinquir", "CmdPos",  {s1:null,s2:"delinque",s3:"delinqua",p1:"delinquamos",p2:"delinquid",p3:"delinquan",vos:"delinquí"})
+assert_TenseMood("delinquir", "CmdNeg",  {s1:null,s2:"delinquas",s3:"delinqua",p1:"delinquamos",p2:"delinquáis",p3:"delinquan",vos:"delinquas"})
+
+// tests prefix 'de' + 'tener'
 assert_TenseMood("detener", "PresInd", {s1:"detengo",s2:"detienes",s3:"detiene",p1:"detenemos",p2:"detenéis",p3:"detienen",vos:"detenés"})
 assert_TenseMood("detener", "PresSub", {s1:"detenga",s2:"detengas",s3:"detenga",p1:"detengamos",p2:"detengáis",p3:"detengan",vos:"detengas"})
 assert_TenseMood("detener", "PastInd", {s1:"detuve",s2:"detuviste",s3:"detuvo",p1:"detuvimos",p2:"detuvisteis",p3:"detuvieron",vos:"detuviste"})
@@ -143,6 +173,16 @@ assert_TenseMood("estar", "FutInd", {s1: "estaré", s2: "estarás", s3: "estará
 assert_TenseMood("estar", "FutCond", {s1: "estaría", s2: "estarías", s3: "estaría", p1: "estaríamos", p2: "estaríais", p3: "estarían"})
 assert_TenseMood("estar", "CmdPos",  {s1: null,   s2: "está", s3: "esté",           p1: "estemos",  p2: "estad", p3: "estén" })
 assert_TenseMood("estar", "CmdNeg",  {s1: null,   s2: "estés", s3: "esté",          p1: "estemos", p2: "estéis", p3: "estén" })
+
+// conjugation_families["uir"]
+assert_TenseMood("fluir", "PresInd", {s1:"fluyo",s2:"fluyes",s3:"fluye",p1:"fluimos",p2:"fluis",p3:"fluyen",vos:"fluis"})
+assert_TenseMood("fluir", "PresSub", {s1:"fluya",s2:"fluyas",s3:"fluya",p1:"fluyamos",p2:"fluyáis",p3:"fluyan",vos:"fluyas"})
+assert_TenseMood("fluir", "PastInd", {s1:"flui",s2:"fluiste",s3:"fluyó",p1:"fluimos",p2:"fluisteis",p3:"fluyeron",vos:"fluiste"})
+assert_TenseMood("fluir", "PastImp", {s1:"fluía",s2:"fluías",s3:"fluía",p1:"fluíamos",p2:"fluíais",p3:"fluían",vos:"fluías"})
+assert_TenseMood("fluir", "FutInd", {s1:"fluiré",s2:"fluirás",s3:"fluirá",p1:"fluiremos",p2:"fluiréis",p3:"fluirán",vos:"fluirás"})
+assert_TenseMood("fluir", "FutCond", {s1:"fluiría",s2:"fluirías",s3:"fluiría",p1:"fluiríamos",p2:"fluiríais",p3:"fluirían",vos:"fluirías"})
+assert_TenseMood("fluir", "CmdPos", {s1:null,s2:"fluye",s3:"fluya",p1:"fluyamos",p2:"fluid",p3:"fluyan",vos:"flui"})
+assert_TenseMood("fluir", "CmdNeg", {s1:null,s2:"fluyas",s3:"fluya",p1:"fluyamos",p2:"fluyáis",p3:"fluyan",vos:"fluyas"})
 
 // based on "vaciar", but has changes to the accents
 assert_TenseMood("guiar", "PresInd", {s1:"guío",s2:"guías",s3:"guía",p1:"guiamos",p2:"guiais",p3:"guían",vos:"guias"})
