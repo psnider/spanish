@@ -23,6 +23,7 @@ interface VerbAspectSuffixRules {
 // Note that even irregular verbs often use these suffixes for most forms.
 export const regular_verb_suffixes: { [ending: string]: VerbConjugationRules<VerbAspectSuffixRules> } = {
     ar: {    // ar: like "amar"
+        conjugation_classes: [],
         aspects: {
             PresInd: { suffixes: { s1: "o", s2: "as", s3: "a", p1: "amos", p2: "áis", p3: "an" } },
             PresSub: { suffixes: { s1: "e", s2: "es", s3: "e", p1: "emos", p2: "éis", p3: "en" } },
@@ -35,6 +36,7 @@ export const regular_verb_suffixes: { [ending: string]: VerbConjugationRules<Ver
         }
     },
     er: {   // er: like "temer"
+        conjugation_classes: [],
         aspects: {
             PresInd: { suffixes: { s1: "o", s2: "es", s3: "e", p1: "emos", p2: "éis", p3: "en" } },
             PresSub: { suffixes: { s1: "a", s2: "as", s3: "a", p1: "amos", p2: "áis", p3: "an" } },
@@ -51,6 +53,7 @@ export const regular_verb_suffixes: { [ending: string]: VerbConjugationRules<Ver
         }
     },
     ir: {    // ir: like "partir"
+        conjugation_classes: [],
         aspects: {
             PresInd: { base: "er", suffixes: { p1: "imos", p2: "ís" } },
             PresSub: { base: "er" },
@@ -69,6 +72,10 @@ export function getVerbFamily(infinitive: string) {
     let verb_family = infinitive.slice(-2)
     if (verb_family === "ír") {
         verb_family = "ir"
+    }
+    if (verb_family !== "ar" && verb_family !== "er" && verb_family !== "ir") {
+        console.log(`invalid infinitive=${infinitive}`)
+        verb_family = undefined
     }
     return <VerbFamily> verb_family
 }

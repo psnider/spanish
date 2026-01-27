@@ -8,36 +8,46 @@ import { verb_conjugation_rules } from "./conjugation-rules-per-verb.js"
 const verb_prefixes = [
 "a",        // atener, atraer, avenir
 "abs",      // abstener, abstraer
-// "ante",
-// "auto",
-// "co",
-"con",      // contener, contraer
-"contra",
+"ante",     // anteponer
+"auto",     // autoregular, NO irregular
+"ben",      // bendecir
+"co",       // cooperar, NO irregular
+"com",      // componer
+"con",      // contener, contraer, condecir, convenir
+"contra",   // contradecir, contrahacer, contraponer
 "de",       // detener, detraer
-"desa",     // desavenir= des + a + venir
-"des",      // desavenir= des + a + venir
+"desa",     // (des + a ) desavenir
+"des",      // desavenir, deshacer, desoír
 "dis",      // distraer
 "en",
-"entre",
-"ex",
+"entre",    // entreoír
+"ex",       // extraer
 "extra",
 "hiper",
-"im",
+"im",       // imponer
 "in",
-"inter",
+"inter",    // interponer, intervenir
+"mal",      // maldecir
+// mantener
 "micro",
 "mini",
 "mono",
 "multi",
+// oponer
+// obtener
 "post",
-"pre",
-"pro",
-"re",
+"pos",     // posponer
+"pre",     // predecir, prevenir
+"pro",     // proponer, provenir
+"re",      // rehacer, reponer, retener, retraer
 "retro",
 "semi",
-"sobre",
+"sobre",   // sobresalir, sobrevenir
+"sos",     // sostener
+// suponer
 "sub",
-"super",
+"super",   // superponer
+// sustraer
 "trans",
 "ultra",
 ]
@@ -53,6 +63,12 @@ export interface BaseWPrefix {
   base: string
 }
 
+
+// ChatGPT says: Si ves un verbo que:
+// - tiene prefijo claro (pre-, re-, con-, sub-, ante-, etc.)
+// - termina como un verbo irregular fuerte
+// 👉 Asume que se conjuga como el verbo base, hasta que alguien te demuestre lo contrario.
+//    Funciona el 95 %+ del tiempo.
 export function findPrefixOfIrregularVerb(infinitive: string): BaseWPrefix {
   if (verbs_with_false_prefixes.has(infinitive)) {
     return {base: infinitive}
@@ -68,6 +84,7 @@ export function findPrefixOfIrregularVerb(infinitive: string): BaseWPrefix {
       }
     }
   }
-  // if a prefix was found, check for a compound prefix, eg. desavenir
+  // It seems we don't have to check for compound prefixes, eg. desavenir
+  // We will add checks once failure cases are found
   return {prefix, base}
 }

@@ -3,8 +3,8 @@ import { conjugateVerb } from "./conjugate-verb.js";
 
 
 
-let infinitive = "delinquir"
-let mood_tense: VerbTenseMood = "PresInd"
+let infinitive = "oponer"
+let mood_tense: VerbTenseMood = "PresSub"
 
 
 let conjugation = conjugateVerb(infinitive, mood_tense)

@@ -8,7 +8,7 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     // abrazar: null,
     // abrir: null,
 // FIX:
-    abstener: {model: "retener", irregular: {base: "tener"}},
+    abstener: {irregular: {base: "tener"}},
     // aburrir: null,
     // acabar: null,
     // aceptar: null,

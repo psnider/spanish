@@ -66,7 +66,29 @@ interface VerbConjugationAnnotated {
 type VerbConjugationChanges = VerbConjugation
 
 
+// The conjugation clases of verbs.
+// These may be presented to users, so they are in Spanish.
+// The classes apply in a strict order, which is indicated in the comments.
+type ConjugationClass = "atómico verdadero"  // Nivel 0 - Bloqueo (cancela todo: no prefijos, no deducción, no herencia)
+     // Nivel 1 — Raíz base
+     | "pretérito: raíz corta"
+     | "futuro: raíz especial"
+     // Nivel 2 — Alternancia vocálica
+     | "presente: diptongo e → i"
+     | "presente: diptongo e → ie"
+     | "presente: diptongo o → ue"
+     // Nivel 3 — Sufijación regular, no es una clase, es implícito: -ar, -er, -ir
+     // Nivel 4 — Ortografía
+     | "u → ü (diéresis)"
+     | "u → y (hiato)"
+     | "hiato → y (fonológico)"
+     // Nivel 5 - Excepciones puntuales
+     | "presente: -go 1.ª p"
+     | "presente: -oy 1.ª p"
+
+
 export interface VerbConjugationRules<T> {
+    conjugation_classes: ConjugationClass[]
     participles?: {pres: string, past: string}
     aspects: AspectsT<T> 
 }
