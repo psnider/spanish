@@ -1,6 +1,14 @@
-import { VerbConjugation, VerbConjugationRules, VerbTenseMood } from ".";
+import { GrammaticalPersons, VerbConjugation, VerbConjugationRules, VerbTenseMood } from ".";
 import { verb_conjugation_rules } from "./conjugation-rules-per-verb.js";
 import { getRegularSuffixes } from "./regular-verb-rules.js";
+
+
+export interface DerivationRule {
+    preserve_stress_from_base?: boolean
+}
+
+
+export type DerivationRules = GrammaticalPersons<DerivationRule>
 
 
 // The rules for conjugating a single form of a verb, such as: "PresInd", "PastImp"
@@ -10,6 +18,9 @@ export interface VerbAspectConjugations {
     // The conjugated forms.
     // If this is set, 'root' may not be set.
     forms?: VerbConjugation
+    // Rules for modifying derived forms.
+    // If this is set, 'root' may not be set.
+    derivations?: DerivationRules
     // If set, then this string replaces the root used in regular conjugation rules.
     // If this is set, 'forms' may not be set.
     root?: string
@@ -215,7 +226,10 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
                        forms: { s1: "puse", s2: "pusiste", s3: "puso",    p1: "pusimos", p2: "pusisteis", p3: "pusieron" } },
             FutInd:  { root: "pondr" },
             FutCond: { root: "pondr" },
-            CmdPos:  { forms: { s1: null, s2: "pon", s3: "ponga",         p1: "pongamos",           p3: "pongan" , vos: "poné"} },
+            CmdPos:  {
+                forms: { s1: null, s2: "pon", s3: "ponga",         p1: "pongamos",           p3: "pongan" , vos: "poné"},
+                derivations: {s2: {preserve_stress_from_base: true}}
+            },
             CmdNeg:  { parent_tense_mood: "PresSub" },
         }
     },

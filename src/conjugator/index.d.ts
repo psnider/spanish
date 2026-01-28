@@ -18,7 +18,7 @@ interface AspectsT<T> {
     CmdNeg?: T
 }
 
-interface ConjugationKeys<T> {
+interface GrammaticalPersons<T> {
     s1?: T
     s2?: T
     s3?: T
@@ -29,24 +29,17 @@ interface ConjugationKeys<T> {
 }
 
 
-type VerbRules = ConjugationKeys<string>
+type VerbRules = GrammaticalPersons<string>
 
 // The conjugated forms of a verb
-// In a few cases for irregular verbs, there can be alternate forms for conjugation, e.g. haber,s3: ha,hay
+// In a few cases for irregular verbs, there can be alternate forms for conjugation, e.g.:
+// - haber,PresInd,s2 has ["hay", "ha"]
+// - ir,CmdPos,p1 has ["vayamos", "vamos"]
 // Such verbs never have derived verbs. 
 // null indicates that the conjugation is disallowed, for example for weather verbs (llover) and commands, or the s1 forms of Commands.
+
 type VerbForms = string | [string, string] | null
-interface VerbConjugation {
-    s1?: VerbForms
-    s2?: VerbForms
-    // haber,PresInd has ["hay", "ha"]
-    s3?: VerbForms
-    // ir,CmdPos has ["vayamos", "vamos"]
-    p1?: VerbForms
-    p2?: VerbForms
-    p3?: VerbForms
-    vos?: VerbForms
-}
+interface VerbConjugation extends GrammaticalPersons<VerbForms>  {}
 
 interface VerbConjugationAnnotation {
     // filled in for returned conjugations.
@@ -97,7 +90,7 @@ export interface VerbConjugationRules<T> {
 type StemChangeType = "e:i" | "e:ie" | "o:u" | "o:ue" | "u:ú" | "u:ue"
 type SuffixChangeType = "eer"
 
-type ConjugationKey = "s1" | "s2" | "s3" | "p1" | "p2" | "p3"
+type GrammaticalPerson = "s1" | "s2" | "s3" | "p1" | "p2" | "p3" | "vos"
 
 
 interface IrregularBase {
@@ -118,12 +111,12 @@ interface ConjugationRules {
     // The verb VerbTenseMood's that have a stem change.
     // Note that this is not dependent on other verb construction relationships, so if the stem change occurs in a VerbTenseMood, it must be listed here.
     stem_change_inclusions?: VerbTenseMood[]
-    conjugate_only?: ConjugationKey[]
+    conjugate_only?: GrammaticalPerson[]
     // The common tail portion of the verbs in this family.
     // Only specified for the canonical verb, to which all others in the family refer.
     conjugation_family?: string
     irregular?: IrregularBase
-    individual_accents?: AspectsT<ConjugationKeys<string>>
+    individual_accents?: AspectsT<GrammaticalPersons<string>>
 }
 
 

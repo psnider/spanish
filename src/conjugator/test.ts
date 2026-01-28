@@ -268,8 +268,8 @@ assert_TenseMood("oponer", "PastInd", {s1: "opuse", s2: "opusiste", s3: "opuso",
 assert_TenseMood("oponer", "PastImp", {s1: "oponía", s2: "oponías", s3: "oponía", p1: "oponíamos", p2: "oponíais", p3: "oponían"})
 assert_TenseMood("oponer", "FutInd", {s1: "opondré", s2: "opondrás", s3: "opondrá", p1: "opondremos", p2: "opondréis", p3: "opondrán"})
 assert_TenseMood("oponer", "FutCond", {s1: "opondría", s2: "opondrías", s3: "opondría", p1: "opondríamos", p2: "opondríais", p3: "opondrían"})
-// assert_TenseMood("oponer", "CmdPos", {s1: null, s2: "opón", s3: "oponga", p1: "opongamos", p2: "oponed", p3: "opongan"})
-assert_TenseMood("oponer", "CmdNeg", {s1: null, s2: "opongas", s3: "oponga", p1: "opongamos", p2: "opongáis", p3: "opongan", vos: "oponé"})
+assert_TenseMood("oponer", "CmdPos", {s1: null, s2: "opón", s3: "oponga", p1: "opongamos", p2: "oponed", p3: "opongan", vos: "oponé"})
+assert_TenseMood("oponer", "CmdNeg", {s1: null, s2: "opongas", s3: "oponga", p1: "opongamos", p2: "opongáis", p3: "opongan", vos: "opongas"})
 
 assert_TenseMood("poder", "PresInd", {s1:"puedo",s2:"puedes",s3:"puede",p1:"podemos",p2:"podéis",p3:"pueden",vos:"podés"})
 assert_TenseMood("poder", "PresSub", {s1:"pueda",s2:"puedas",s3:"pueda",p1:"podamos",p2:"podáis",p3:"puedan",vos:"puedas"})
@@ -287,7 +287,8 @@ assert_TenseMood("poner", "PastImp", {s1:"ponía",s2:"ponías",s3:"ponía",p1:"p
 assert_TenseMood("poner", "FutInd", {s1:"pondré",s2:"pondrás",s3:"pondrá",p1:"pondremos",p2:"pondréis",p3:"pondrán",vos:"pondrás"})
 assert_TenseMood("poner", "FutCond", {s1:"pondría",s2:"pondrías",s3:"pondría",p1:"pondríamos",p2:"pondríais",p3:"pondrían",vos:"pondrías"})
 assert_TenseMood("poner", "CmdPos", {s1:null,s2:"pon",s3:"ponga",p1:"pongamos",p2:"poned",p3:"pongan",vos:"poné"})
-assert_TenseMood("poner", "CmdNeg", {s1:null,s2:"pongas",s3:"ponga",p1:"pongamos",p2:"pongáis",p3:"pongan",vos:["pongas","*pongás"]})
+// add regionalism such as: vos: pongás
+assert_TenseMood("poner", "CmdNeg", {s1:null,s2:"pongas",s3:"ponga",p1:"pongamos",p2:"pongáis",p3:"pongan",vos:"pongas"})
 
 assert_TenseMood("querer", "PresInd", {s1:"quiero",s2:"quieres",s3:"quiere",p1:"queremos",p2:"queréis",p3:"quieren",vos:"querés"})
 assert_TenseMood("querer", "PresSub", {s1:"quiera",s2:"quieras",s3:"quiera",p1:"queramos",p2:"queráis",p3:"quieran",vos:"quieras"})

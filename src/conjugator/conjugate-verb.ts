@@ -1,7 +1,7 @@
-import { ConjugationRules, VerbConjugation, VerbConjugationAnnotated, VerbConjugationRules, VerbTenseMood } from ".";
+import { ConjugationRules, GrammaticalPerson, VerbConjugation, VerbConjugationAnnotated, VerbConjugationRules, VerbForms, VerbTenseMood } from ".";
 import { getChangedAccents } from "./accent_changes.js";
 import { getAnnotations, verb_conjugation_rules } from "./conjugation-rules-per-verb.js";
-import { applyIrregularConjugationRules, irregular_conjugations, VerbAspectConjugations } from "./irregular-conjugations.js";
+import { applyIrregularConjugationRules, DerivationRule, DerivationRules, irregular_conjugations, VerbAspectConjugations } from "./irregular-conjugations.js";
 import { conjugation_keys } from "./lib.js";
 import { getRegularSuffixes, doAddSuffixToInfinitive, getVerbFamily } from "./regular-verb-rules.js";
 import { getStemChanges } from "./stem-change-patterns.js";
@@ -181,13 +181,97 @@ function conjugateBase(infinitive: string, tense_mood: VerbTenseMood): VerbConju
 }
 
 
+const unaccented_vowels_to_accented = {
+  a: "á", e: "é", i: "í", o: "ó", u: "ú"
+}
+const accented_vowels_to_unaccented = {
+  á: "a", é: "e", í: "i", ó: "o", ú: "u"
+};
+
+
+
+function moveStress(word: string, from: number, to: number) {
+    function removeAccent(c: string) {
+        return accented_vowels_to_unaccented[<keyof typeof accented_vowels_to_unaccented> c] ?? c
+    } 
+    function addAccent(c: string) {
+        return unaccented_vowels_to_accented[<keyof typeof unaccented_vowels_to_accented> c] ?? c
+    } 
+    const chars = [...word]
+    chars[from] = removeAccent(chars[from])
+    chars[to] = addAccent(chars[to])
+    return chars.join("")
+}
+
+
+const stressed_regex = /[áéíóú]/
+const unstressed_regex = /[aeiou][bcdfghjklmnpqrstvwxyz]?$/
+function findIndexOfStress(verb_form: string) : number {
+    const match = verb_form.match(stressed_regex)
+    if (match) {
+        return match.index
+    } else {
+        const match = verb_form.match(unstressed_regex)
+        return match.index
+    }
+}
+
+
+function moveStressInVerbForm(verb_form: string, stress_index: number) : string {
+    const old_stress_index = findIndexOfStress(verb_form)
+    const moved = moveStress(verb_form, old_stress_index, stress_index)
+    return moved
+}
+
+
+function preserveStressFromBase(conjugation_class: ConjugationClass, conjugation: VerbConjugation, tense_mood: VerbTenseMood, grammatical_person: GrammaticalPerson, base_forms_for_person: VerbForms) : VerbForms {
+    const conjugated_form = conjugation[grammatical_person]
+    if (!conjugated_form) {
+        throw new Error(`A derivation rule exists for a conjugation that doesn't have a rule for that grammatical_person=${grammatical_person}: infinitive=${conjugation_class.infinitive}`)
+    }
+    if ((typeof conjugated_form !== "string") || (typeof base_forms_for_person !== "string")) {
+        throw new Error(`preserveStressFromBase() doesn't support arrays yet => must modify this code if needed for infinitive=${conjugation_class.infinitive} tense_mood=${tense_mood} grammatical_person=${grammatical_person} `)
+    }
+    const base_form_for_person = base_forms_for_person
+    const base_stress_index = findIndexOfStress(base_form_for_person)
+    // adjust stress_index for length of prefix
+    const stress_index = base_stress_index + (conjugated_form.length - base_form_for_person.length)
+    const moved_stress = moveStressInVerbForm(conjugated_form, stress_index)
+    return moved_stress
+}
+
+
+function applyIrregularDerivationsRule(conjugation_class: ConjugationClass, conjugation: VerbConjugation, tense_mood: VerbTenseMood, grammatical_person: GrammaticalPerson, base_form_for_person: VerbForms, irregular_derivation_rule: DerivationRule) {
+    if ((<DerivationRule>irregular_derivation_rule).preserve_stress_from_base) {
+        return preserveStressFromBase(conjugation_class, conjugation, tense_mood, grammatical_person, base_form_for_person)
+    }
+}
+
+
+function applyIrregularDerivationsRules(conjugation_class: ConjugationClass, conjugation: VerbConjugation, tense_mood: VerbTenseMood, irregular_rules: VerbAspectConjugations) : VerbConjugation {
+    const irregular_derivations: VerbConjugation = {}
+    if (irregular_rules?.derivations) {
+        for (const [grammatical_person, irregular_derivation_rule] of Object.entries(irregular_rules.derivations) as [GrammaticalPerson, DerivationRule][]) {
+            const base_form_for_person = irregular_rules.forms[grammatical_person]
+            const irregular_derivation = applyIrregularDerivationsRule(conjugation_class, conjugation, tense_mood, grammatical_person, base_form_for_person, irregular_derivation_rule)
+            irregular_derivations[grammatical_person] = irregular_derivation
+        }
+    }
+    return irregular_derivations
+}
+
+
+// FIX: use conjugation_class, don't recalculate
 function applyDerivations(conjugation_class: ConjugationClass, tense_mood: VerbTenseMood, conjugated_forms: VerbConjugation) : VerbConjugation {
     const derived_spelling_changes = getDerivedSpelling(conjugation_class.infinitive, conjugation_class.base, tense_mood, conjugated_forms)
-    const conjugated_forms_w_spelling = {...conjugated_forms, ...derived_spelling_changes}
+    const forms_w_spelling = {...conjugated_forms, ...derived_spelling_changes}
     const infinitive_rules = verb_conjugation_rules[conjugation_class.infinitive]
     const accent_changes = infinitive_rules?.individual_accents?.[tense_mood]
-    const conjugated_forms_w_spelling_w_accents = {...conjugated_forms_w_spelling, ...accent_changes}
-    return  conjugated_forms_w_spelling_w_accents
+    const forms_w_spelling_w_accents = {...forms_w_spelling, ...accent_changes}
+    const irregular_rules = conjugation_class.irregular_rules.aspects[tense_mood]
+    const irregular_derivations = applyIrregularDerivationsRules(conjugation_class, forms_w_spelling_w_accents, tense_mood, irregular_rules) 
+    const forms_w_spelling_w_accents_w_irregular = {...forms_w_spelling_w_accents, ...irregular_derivations}
+    return  forms_w_spelling_w_accents_w_irregular
 }
 
 
