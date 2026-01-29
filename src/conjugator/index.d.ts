@@ -2,17 +2,17 @@
 type VerbFamily = "ar" | "er" | "ir"
 type VerbMood = "Cnd" | "Imp" | "Ind" | "Sub"
 type VerbTense = "Fut" | "Imp" | "Past" | "Pres"
-type VerbTenseMood = "PresInd" | "PresSub" | "PastInd" | "PastImp" | "FutInd" | "FutCond" | "CmdPos" | "CmdNeg"
+type VerbTenseMood = "IndPres" | "SubPres" | "IndPret" | "IndImp" | "IndFut" | "IndCond" | "CmdPos" | "CmdNeg"
 
 interface AspectsT<T> {
-    PresInd?: T
-    PresSub?: T
+    IndPres?: T
+    SubPres?: T
 
-    PastInd?: T
-    PastImp?: T
+    IndPret?: T
+    IndImp?: T
 
-    FutInd?: T
-    FutCond?: T
+    IndFut?: T
+    IndCond?: T
 
     CmdPos?: T
     CmdNeg?: T
@@ -33,7 +33,7 @@ type VerbRules = GrammaticalPersons<string>
 
 // The conjugated forms of a verb
 // In a few cases for irregular verbs, there can be alternate forms for conjugation, e.g.:
-// - haber,PresInd,s2 has ["hay", "ha"]
+// - haber,IndPres,s2 has ["hay", "ha"]
 // - ir,CmdPos,p1 has ["vayamos", "vamos"]
 // Such verbs never have derived verbs. 
 // null indicates that the conjugation is disallowed, for example for weather verbs (llover) and commands, or the s1 forms of Commands.

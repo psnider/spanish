@@ -6,7 +6,7 @@ const verb_families = ["ar", "er", "ir"]
 
 
 
-// The rules for conjugating a single form of a verb, such as: "PresInd", "PastImp"
+// The rules for conjugating a single form of a verb, such as: "IndPres", "IndImp"
 interface VerbAspectSuffixRules {
     // A list of keys that lead to the base form of this conjugation
     // Normally, the verb form is shared, in which case, only a single key is specified.
@@ -25,42 +25,42 @@ export const regular_verb_suffixes: { [ending: string]: VerbConjugationRules<Ver
     ar: {    // ar: like "amar"
         conjugation_classes: [],
         aspects: {
-            PresInd: { suffixes: { s1: "o", s2: "as", s3: "a", p1: "amos", p2: "áis", p3: "an" } },
-            PresSub: { suffixes: { s1: "e", s2: "es", s3: "e", p1: "emos", p2: "éis", p3: "en" } },
-            PastInd: { suffixes: { s1: "é", s2: "aste", s3: "ó", p1: "amos", p2: "asteis", p3: "aron" } },
-            PastImp: { suffixes: { s1: "aba", s2: "abas", s3: "aba", p1: "ábamos", p2: "abais", p3: "aban" } },
-            FutInd: { add_suffix_to_infinitive: true, suffixes: { s1: "é", s2: "ás", s3: "á", p1: "emos", p2: "éis", p3: "án" } },
-            FutCond: { add_suffix_to_infinitive: true, suffixes: { s1: "ía", s2: "ías", s3: "ía", p1: "íamos", p2: "íais", p3: "ían" } },
+            IndPres: { suffixes: { s1: "o", s2: "as", s3: "a", p1: "amos", p2: "áis", p3: "an" } },
+            SubPres: { suffixes: { s1: "e", s2: "es", s3: "e", p1: "emos", p2: "éis", p3: "en" } },
+            IndPret: { suffixes: { s1: "é", s2: "aste", s3: "ó", p1: "amos", p2: "asteis", p3: "aron" } },
+            IndImp: { suffixes: { s1: "aba", s2: "abas", s3: "aba", p1: "ábamos", p2: "abais", p3: "aban" } },
+            IndFut: { add_suffix_to_infinitive: true, suffixes: { s1: "é", s2: "ás", s3: "á", p1: "emos", p2: "éis", p3: "án" } },
+            IndCond: { add_suffix_to_infinitive: true, suffixes: { s1: "ía", s2: "ías", s3: "ía", p1: "íamos", p2: "íais", p3: "ían" } },
             CmdPos: { suffixes: { s1: null, s2: "a", s3: "e", p1: "emos", p2: "ad", p3: "en" } },
-            CmdNeg: { base: "PresSub", suffixes: { s1: null } },
+            CmdNeg: { base: "SubPres", suffixes: { s1: null } },
         }
     },
     er: {   // er: like "temer"
         conjugation_classes: [],
         aspects: {
-            PresInd: { suffixes: { s1: "o", s2: "es", s3: "e", p1: "emos", p2: "éis", p3: "en" } },
-            PresSub: { suffixes: { s1: "a", s2: "as", s3: "a", p1: "amos", p2: "áis", p3: "an" } },
-            PastInd: { suffixes: { s1: "í", s2: "iste", s3: "ió", p1: "imos", p2: "isteis", p3: "ieron" } },
+            IndPres: { suffixes: { s1: "o", s2: "es", s3: "e", p1: "emos", p2: "éis", p3: "en" } },
+            SubPres: { suffixes: { s1: "a", s2: "as", s3: "a", p1: "amos", p2: "áis", p3: "an" } },
+            IndPret: { suffixes: { s1: "í", s2: "iste", s3: "ió", p1: "imos", p2: "isteis", p3: "ieron" } },
             //   spelling: {
             //     pattern: /eer$/,
             //     suffixes: { s1: "í", s2: "íste", s3: "yó", p1: "ímos", p2: "ísteis", p3: "yeron"}
             //  }},
-            PastImp: { suffixes: { s1: "ía", s2: "ías", s3: "ía", p1: "íamos", p2: "íais", p3: "ían" } },
-            FutInd: { base: "ar" },
-            FutCond: { base: "ar" },
+            IndImp: { suffixes: { s1: "ía", s2: "ías", s3: "ía", p1: "íamos", p2: "íais", p3: "ían" } },
+            IndFut: { base: "ar" },
+            IndCond: { base: "ar" },
             CmdPos: { suffixes: { s1: null, s2: "e", s3: "a", p1: "amos", p2: "ed", p3: "an" } },
-            CmdNeg: { base: "PresSub", suffixes: { s1: null } },
+            CmdNeg: { base: "SubPres", suffixes: { s1: null } },
         }
     },
     ir: {    // ir: like "partir"
         conjugation_classes: [],
         aspects: {
-            PresInd: { base: "er", suffixes: { p1: "imos", p2: "ís" } },
-            PresSub: { base: "er" },
-            PastInd: { base: "er" },
-            PastImp: { base: "er" },
-            FutInd: { base: "ar" },
-            FutCond: { base: "ar" },
+            IndPres: { base: "er", suffixes: { p1: "imos", p2: "ís" } },
+            SubPres: { base: "er" },
+            IndPret: { base: "er" },
+            IndImp: { base: "er" },
+            IndFut: { base: "ar" },
+            IndCond: { base: "ar" },
             CmdPos: { base: "er", suffixes: { p2: "id" } },
             CmdNeg: { base: "er" },
         }
@@ -123,7 +123,7 @@ export function doAddSuffixToInfinitive(infinitive: string, tense_mood: VerbTens
 
 // Get the suffixes for the given verb family, mood, and tense, applying a suffix change if one is given. 
 // @return The set of suffixes for all of the conjugated forms.
-// For example: getSuffixes("creer", "PastInd", "eer")
+// For example: getSuffixes("creer", "IndPret", "eer")
 //    {s1:"í", s2:"íste", s3:"yó", p1:"ímos", p2:"ísteis", p3:"yeron"}
 export function getRegularSuffixes(infinitive: string, tense_mood: VerbTenseMood /* , suffix_change_type?: SuffixChangeType */) : VerbConjugationChanges {
     // let spelling_change_rules: VerbAspectSuffixRules["spelling"]

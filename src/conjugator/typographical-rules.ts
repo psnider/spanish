@@ -36,34 +36,34 @@ const infinitive_endings_to_rules: {[ending: string]: string} = {
 // Verb changes made solely for phonetic reasons, and using changes in typography.
 const typographical_change_rules : {[rule_name: string]: TypographicalChangeRule} = {
     "preserve-soft-c-sound": {
-        // example: conocer,PresInd,s1: conoco => conozco
+        // example: conocer,IndPres,s1: conoco => conozco
         match_pattern: /c([aáoóuú])$/u, 
         replacement_pattern: "zc$1"
     },
     "preserve-hard-c-sound-of-c": {
-        // example: sacar,PastInd,s1: sacé => saqué
+        // example: sacar,IndPret,s1: sacé => saqué
         match_pattern: /c([eéií](s|mos|is|n)?)$/u,
         replacement_pattern: "qu$1"
     },
     "preserve-soft-g-sound": {
-        // example: elegir,PresInd,s1: eligo => elijo
+        // example: elegir,IndPres,s1: eligo => elijo
         match_pattern: /g([aáoóuú])$/u,
         replacement_pattern: "j$1"
     },
     "preserve-hard-g-sound": {
-        // example: llegar,PastInd,s1: llegé => llegué
+        // example: llegar,IndPret,s1: llegé => llegué
         match_pattern: /g([eéií])$/u,
         replacement_pattern: "gu$1"
     },
     "replace-disallowed-ze-zi": {
         // Spanish doesn't have "ze", or "zi"
         // It does have "za" (zanahoria), "zo" (zoo), "zu" (azul)
-        // example: empezar,PastInd,s1: empezé => empecé
+        // example: empezar,IndPret,s1: empezé => empecé
         match_pattern: /z([eéií])/u,
         replacement_pattern: "c$1"
     },
     "preserve-hard-c-sound-of-q": {
-        // example: delinquir,PresInd,s1: delinquo -> delinco
+        // example: delinquir,IndPres,s1: delinquo -> delinco
         match_pattern: /qu([o])/u,
         replacement_pattern: "c$1"
     }

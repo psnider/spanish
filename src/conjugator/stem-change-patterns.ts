@@ -16,37 +16,37 @@ export interface StemChangeRules extends AspectsT<VerbRules> {
 export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChangeRules} = {
     "e:i": {
         transforms: ["e:i"],
-        PresInd: {s1: "e:i", s2: "e:i", s3: "e:i",                             p3: "e:i"},
-        PastInd: {s3: "e:i", p3: "e:i"},
+        IndPres: {s1: "e:i", s2: "e:i", s3: "e:i",                             p3: "e:i"},
+        IndPret: {s3: "e:i", p3: "e:i"},
     },
     "e:ie": {
         transforms: ["e:ie", "e:i"],
-        PresInd: {s1: "e:ie", s2: "e:ie", s3: "e:ie", p3: "e:ie"},
-        PresSub: {s1: "e:ie", s2: "e:ie", s3: "e:ie", p3: "e:ie"},
-        PastInd: {s1: "e:i", s2: "e:i", s3: "e:i", p1: "e:i", p2: "e:i", p3: "e:i"},
-        FutInd:  {s1: "e:ie", s2: "e:ie", s3: "e:ie", p1: "e:ie", p2: "e:ie", p3: "e:ie"},
+        IndPres: {s1: "e:ie", s2: "e:ie", s3: "e:ie", p3: "e:ie"},
+        SubPres: {s1: "e:ie", s2: "e:ie", s3: "e:ie", p3: "e:ie"},
+        IndPret: {s1: "e:i", s2: "e:i", s3: "e:i", p1: "e:i", p2: "e:i", p3: "e:i"},
+        IndFut:  {s1: "e:ie", s2: "e:ie", s3: "e:ie", p1: "e:ie", p2: "e:ie", p3: "e:ie"},
         CmdPos:  {              s2: "e:ie", s3: "e:ie",                             p3: "e:ie"},
         CmdNeg:  {              s2: "e:ie", s3: "e:ie",                             p3: "e:ie"},
     },
     "o:ue": {
         transforms: ["o:ue", "o:u"],
-        PresInd: {s1: "o:ue", s2: "o:ue", s3: "o:ue",                          p3: "o:ue"},
-        PastInd: {                        s3: "o:u",                           p3: "o:u"},
-        PresSub: {s1: "o:ue", s2: "o:ue", s3: "o:ue",                          p3: "o:ue"},
+        IndPres: {s1: "o:ue", s2: "o:ue", s3: "o:ue",                          p3: "o:ue"},
+        IndPret: {                        s3: "o:u",                           p3: "o:u"},
+        SubPres: {s1: "o:ue", s2: "o:ue", s3: "o:ue",                          p3: "o:ue"},
         CmdPos:  {            s2: "o:ue", s3: "o:ue",                          p3: "o:ue"},
         CmdNeg:  {            s2: "o:ue", s3: "o:ue",                          p3: "o:ue"},
     },
     "u:ú": {
         transforms: ["u:ú"],
-        PresInd: {s1: "u:ú", s2: "u:ú", s3: "u:ú",                                  p3: "u:ú"},
-        PresSub: {s1: "u:ú", s2: "u:ú", s3: "u:ú",                                  p3: "u:ú",    vos: "u:ú"},
+        IndPres: {s1: "u:ú", s2: "u:ú", s3: "u:ú",                                  p3: "u:ú"},
+        SubPres: {s1: "u:ú", s2: "u:ú", s3: "u:ú",                                  p3: "u:ú",    vos: "u:ú"},
         CmdPos:  {s1: "u:ú", s2: "u:ú", s3: "u:ú",                                  p3: "u:ú"},
         CmdNeg:  {s1: "u:ú", s2: "u:ú", s3: "u:ú",                                  p3: "u:ú",    vos: "u:ú"},
     },
     "u:ue": {
         transforms: ["u:ue"],
-        PresInd: {s1: "u:ue", s2: "u:ue", s3: "u:ue", p3: "u:ue"},
-        PresSub: {s1: "u:ue", s2: "u:ue", s3: "u:ue", p3: "u:ue"},
+        IndPres: {s1: "u:ue", s2: "u:ue", s3: "u:ue", p3: "u:ue"},
+        SubPres: {s1: "u:ue", s2: "u:ue", s3: "u:ue", p3: "u:ue"},
         CmdPos:  {              s2: "u:ue", s3: "u:ue",                             p3: "u:ue"},
         CmdNeg:  {              s2: "u:ue", s3: "u:ue",                             p3: "u:ue"},
     },
@@ -55,7 +55,7 @@ export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChan
 
 // Get any stem change patterns for the given verb mood and tense.
 // @return Stem change patterns for those conjugated forms for which they exist.
-//   For example: getStemChanges("PresInd", {stem_change_type: "o:ue"}):
+//   For example: getStemChanges("IndPres", {stem_change_type: "o:ue"}):
 //     {s1: "o:ue", s2: "o:ue", s3: "o:ue", p3: "o:ue"},
 function getStemChangesFromRule(infinitive: string, mood_tense: VerbTenseMood, irregular_rules?: ConjugationRules) : VerbConjugation | undefined {
     const stem_change_type = irregular_rules?.stem_change_type

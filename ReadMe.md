@@ -10,7 +10,7 @@ The conjugated forms include each of the six common forms, which are the permuta
 
 For example:  
 ```typescript
- conjugateVerb("venir", "PresInd")
+ conjugateVerb("venir", "IndPres")
 ```
 returns:  
 ```json
@@ -33,7 +33,7 @@ The transforms are performed in this order:
 
 The remaining steps only affect those forms that are not correct yet.  
 - If the verb is irregular, apply the corresponding changes.  
-  For example, the **PresInd** conjugation of "dar" is irregular, but only for the "s1" and "p2" forms.  
+  For example, the **IndPres** conjugation of "dar" is irregular, but only for the "s1" and "p2" forms.  
   See: [getIrregularConjugations()](./src/conjugator/irregular-conjugations.ts)  
   The most common irregular verbs are all handled.  
 - Apply any rules for additional typographical (spelling) changes.  
@@ -66,15 +66,16 @@ You can find usage examples in the test file: [test.ts](./src/conjugator/test.ts
 #### Indicativo
 form | examples | common code | NLP coding  
 -----|-------------|-----|-----------
-indicativo presente     | amo, tengo          | PresInd | Mood=Ind,Tense=Pres
-indicativo imperfecto   | amaba, tenía        | PastImp  | Mood=Ind,Tense=Imp
-indicativo pretérito    | amé, tuve           | PastInd | Mood=Ind,Tense=Past
-indicativo futuro       | amaré, tendré       | FutInd  | Mood=Ind,Tense=Fut
+indicativo presente     | amo, tengo          | IndPres | Mood=Ind,Tense=Pres
+indicativo imperfecto   | amaba, tenía        | IndImp  | Mood=Ind,Tense=Imp
+indicativo pretérito    | amé, tuve           | IndPret | Mood=Ind,Tense=Past
+indicativo futuro       | amaré, tendré       | IndFut  | Mood=Ind,Tense=Fut
 indicativo condicional  | amaría, tendría     | CndInd  | Mood=Cnd
-pretérito perfecto      | he amado, he tenido | PresPerf | Mood=Ind,Tense=Pres of haber + Tense=Past,VerbForm=Part
-pluscuamperfecto        | había amado, había tenido | PastPerf | Mood=Ind,Tense=Imp of haber + Tense=Past,VerbForm=Part
-subjuntivo presente     | ame, tenga          | PresSub | Mood=Sub,Tense=Pres
+subjuntivo presente     | ame, tenga          | SubPres | Mood=Sub,Tense=Pres
 imperativo afirmativo   | ama, ten            | Cmd | Mood=Imp
 imperativo negativo     | no ames, no tengas  | Cmd | Mood=Imp
+-----|-------------|-----|-----------
+pretérito perfecto      | he amado, he tenido | PresPerf | Mood=Ind,Tense=Pres of haber + Tense=Past,VerbForm=Part
+pluscuamperfecto        | había amado, había tenido | PastPerf | Mood=Ind,Tense=Imp of haber + Tense=Past,VerbForm=Part
 
 

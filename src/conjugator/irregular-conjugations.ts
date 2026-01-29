@@ -11,7 +11,7 @@ export interface DerivationRule {
 export type DerivationRules = GrammaticalPersons<DerivationRule>
 
 
-// The rules for conjugating a single form of a verb, such as: "PresInd", "PastImp"
+// The rules for conjugating a single form of a verb, such as: "IndPres", "IndImp"
 export interface VerbAspectConjugations {
     // The aspect from which this one is derived.
     parent_tense_mood?: VerbTenseMood
@@ -33,48 +33,48 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
         conjugation_classes: ["presente: -go 1.ª p", "pretérito: raíz corta", "futuro: raíz especial"],
         aspects: {
             // similar a saber
-            PresInd: { forms: { s1: "quepo" } },
-            PresSub: { root: "quep" },
+            IndPres: { forms: { s1: "quepo" } },
+            SubPres: { root: "quep" },
             // stem change cab => cup
-            PastInd: { root: "cup",
+            IndPret: { root: "cup",
                        forms: { s1: "cupe",          s3: "cupo", } },
-            FutInd:  { root: "cabr"},
-            FutCond: { root: "cabr"},
+            IndFut:  { root: "cabr"},
+            IndCond: { root: "cabr"},
             CmdPos:  { forms: {                        s3: "quepa",      p1: "quepamos",                    p3: "quepan",      vos: "cabé" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },         
+            CmdNeg:  { parent_tense_mood: "SubPres" },         
         }
     },
     caer: {
         conjugation_classes: ["hiato → y (fonológico)"],
         participles: {pres: "cayendo", past: "caído"},
         aspects: {
-            PresInd: { forms: { s1: "caigo" } },
-            PresSub: { root: "caig" },
+            IndPres: { forms: { s1: "caigo" } },
+            SubPres: { root: "caig" },
             // There may be general rules that could be used, such as: 3-vowels
-            PastInd: { forms: {        s2: "caíste", s3: "cayó",   p1: "caímos", p2: "caísteis", p3: "cayeron" } },
+            IndPret: { forms: {        s2: "caíste", s3: "cayó",   p1: "caímos", p2: "caísteis", p3: "cayeron" } },
             CmdPos:  { forms: {                        s3: "caiga",  p1: "caigamos",                 p3: "caigan",      vos: "caé" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },         
+            CmdNeg:  { parent_tense_mood: "SubPres" },         
         }
     },
     conducir: {
         conjugation_classes: ["presente: -go 1.ª p", "pretérito: raíz corta"],
         aspects: {
-            PresSub: { root: "conduzc" },
+            SubPres: { root: "conduzc" },
             // stem change conduc => "conduj"
-            PastInd: { forms: { s1: "conduje", s2: "condujiste", s3: "condujo",      p1: "condujimos", p2: "condujisteis", p3: "condujeron" } },
+            IndPret: { forms: { s1: "conduje", s2: "condujiste", s3: "condujo",      p1: "condujimos", p2: "condujisteis", p3: "condujeron" } },
             CmdPos:  { forms: {                                      s3: "conduzca",     p1: "conduzcamos",                      p3: "conduzcan",     vos: "conducí" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     dar: {
         conjugation_classes: ["pretérito: raíz corta"],
         participles: { pres: "dando", past: "dado" },
         aspects: {
-            PresInd: { forms: { s1: "doy",                                              p2: "dais" } },
-            PresSub: { forms: { s1: "dé",                 s3: "dé",                   p2: "deis" } },
-            PastInd: { forms: { s1: "di", s2: "diste",  s3: "dio",   p1: "dimos", p2: "disteis", p3: "dieron" } },
+            IndPres: { forms: { s1: "doy",                                              p2: "dais" } },
+            SubPres: { forms: { s1: "dé",                 s3: "dé",                   p2: "deis" } },
+            IndPret: { forms: { s1: "di", s2: "diste",  s3: "dio",   p1: "dimos", p2: "disteis", p3: "dieron" } },
             CmdPos:  { forms: {                             s3: "dé" } },
-            CmdNeg:  { parent_tense_mood: "PresSub", 
+            CmdNeg:  { parent_tense_mood: "SubPres", 
                        forms: {                             s3: "dé" } },
         }
     },
@@ -82,124 +82,124 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
         conjugation_classes: ["presente: diptongo e → i", "presente: -go 1.ª p", "pretérito: raíz corta", "futuro: raíz especial"],
         participles: { pres: "diciendo", past: "dicho" },
         aspects: {
-            PresInd: { forms: { s1: "digo" } },
-            PresSub: { root: "dig" },
-            PastInd: { root: "dij",
+            IndPres: { forms: { s1: "digo" } },
+            SubPres: { root: "dig" },
+            IndPret: { root: "dij",
                        forms: { s1: "dije", s2: "dijiste", s3: "dijo", p1: "dijimos", p2: "dijisteis", p3: "dijeron" } },
-            FutInd:  { root: "dir"},
-            FutCond: { root: "dir"},
+            IndFut:  { root: "dir"},
+            IndCond: { root: "dir"},
             CmdPos:  { forms: {               s2: "di", s3: "diga",      p1: "digamos",                    p3: "digan" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     erguir: {
         conjugation_classes: ["presente: diptongo e → i", "u → ü (diéresis)"],
         aspects: {
-            PresInd: { forms: { s1: ["irgo", "yergo"], s2: ["irgues", "yergues"], s3: ["irgue", "yergue"], p1: "erguimos", p2: "erguís", p3: ["irguen", "yerguen"] } },
+            IndPres: { forms: { s1: ["irgo", "yergo"], s2: ["irgues", "yergues"], s3: ["irgue", "yergue"], p1: "erguimos", p2: "erguís", p3: ["irguen", "yerguen"] } },
             // TODO: perhaps this could be handled by allowing two roots?
-            PresSub: { forms: { s1:["irga","yerga"], s2:["irgas","yergas"], s3:["irga","yerga"],           p1:["irgamos","yergamos"], p2:["irgáis","yergáis"], p3:["irgan","yergan"], "vos":"yergas"}},
+            SubPres: { forms: { s1:["irga","yerga"], s2:["irgas","yergas"], s3:["irga","yerga"],           p1:["irgamos","yergamos"], p2:["irgáis","yergáis"], p3:["irgan","yergan"], "vos":"yergas"}},
 
-            PastInd: { forms: { s1: "erguí", s2: "erguiste", s3: "irguió",                       p1: "erguimos", p2: "erguisteis", p3: "irguieron" } },
+            IndPret: { forms: { s1: "erguí", s2: "erguiste", s3: "irguió",                       p1: "erguimos", p2: "erguisteis", p3: "irguieron" } },
             CmdPos:  { forms: {                s2:["irgue","yergue"],s3:["irga","yerga"],          p1:["irgamos","yergamos"],          p3:["irgan","yergan"],   "vos":"erguí"}},
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     estar: {
         conjugation_classes: ["presente: -oy 1.ª p", "pretérito: raíz corta"],
         aspects: {
             // other than s1, the only spelling difference is the accents
-            PresInd: { forms: { s1: "estoy", s2: "estás", s3: "está",                                    p3: "están" } },
-            PresSub: { forms: { s1: "esté", s2: "estés", s3: "esté",    p1: "estemos", p2: "estéis", p3: "estén" } },
+            IndPres: { forms: { s1: "estoy", s2: "estás", s3: "está",                                    p3: "están" } },
+            SubPres: { forms: { s1: "esté", s2: "estés", s3: "esté",    p1: "estemos", p2: "estéis", p3: "estén" } },
             // stem change est => "estuv"
-            PastInd: { root: "estuv", 
+            IndPret: { root: "estuv", 
                        forms: { s1: "estuve", s2: "estuviste", s3: "estuvo",    p1: "estuvimos", p2: "estuvisteis", p3: "estuvieron" } },
-            PastImp: { forms: {s1: "estaba", s2: "estabas", s3: "estaba",  p1: "estábamos", p2: "estabais", p3: "estaban" } },
-            // FutInd:  uses the regular form
-            // FutCond:  uses the regular form
+            IndImp: { forms: {s1: "estaba", s2: "estabas", s3: "estaba",  p1: "estábamos", p2: "estabais", p3: "estaban" } },
+            // IndFut:  uses the regular form
+            // IndCond:  uses the regular form
             CmdPos:  { forms: {                s2: "está", s3: "esté",                                            p3: "estén" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     haber: {
         conjugation_classes: ["atómico verdadero"],
         aspects: {
-            PresInd: { forms: { s1: "he", s2: "has", s3: ["hay", "ha"],     p1: "hemos",                     p3: "han" } },
-            PresSub: { forms: { s1: "haya", s2: "hayas", s3: "haya",        p1: "hayamos", p2: "hayáis", p3: "hayan" } },
-            PastInd: { root: "hub",
+            IndPres: { forms: { s1: "he", s2: "has", s3: ["hay", "ha"],     p1: "hemos",                     p3: "han" } },
+            SubPres: { forms: { s1: "haya", s2: "hayas", s3: "haya",        p1: "hayamos", p2: "hayáis", p3: "hayan" } },
+            IndPret: { root: "hub",
                        forms: { s1: "hube",                s3: "hubo",        }},
-            // PastImp uses regular conjugation
-            FutInd:  { root: "habr" },
-            FutCond: { root: "habr" },
+            // IndImp uses regular conjugation
+            IndFut:  { root: "habr" },
+            IndCond: { root: "habr" },
             CmdPos:  { forms: {             s2: ["habe", "he"], s3: "haya",   p1: "hayamos",                  p3: "hayan"                                                              } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     hacer: {      // ChatGPT says this is NOT irregular
         conjugation_classes: ["presente: -go 1.ª p", "pretérito: raíz corta", "futuro: raíz especial"],
         aspects: {
-            PresInd: { forms: { s1: "hago" } },
-            PresSub: { root: "hag" },
-            PastInd: { root: "hic",
+            IndPres: { forms: { s1: "hago" } },
+            SubPres: { root: "hag" },
+            IndPret: { root: "hic",
                        forms: { s1: "hice",               s3: "hizo",  } },
-            // PastImp uses regular conjugation
-            FutInd:  { root: "har" },
-            FutCond: { root: "har" },
+            // IndImp uses regular conjugation
+            IndFut:  { root: "har" },
+            IndCond: { root: "har" },
             CmdPos:  { forms: {             s2: "haz", s3: "haga",            p1: "hagamos",                  p3: "hagan"                                                              } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     huir: {      // ChatGPT says this is NOT irregular
         conjugation_classes: ["u → y (hiato)"],
         aspects: {
-            PresInd: { forms: { s1: "huyo", s2: "huyes", s3: "huye", p1: "huimos", p2: "huis", p3: "huyen" } },
-            PresSub: { root: "huy" },
-            PastInd: { forms: { s1: "hui", s2: "huiste", s3: "huyó", p1: "huimos", p2: "huisteis", p3: "huyeron" } },
+            IndPres: { forms: { s1: "huyo", s2: "huyes", s3: "huye", p1: "huimos", p2: "huis", p3: "huyen" } },
+            SubPres: { root: "huy" },
+            IndPret: { forms: { s1: "hui", s2: "huiste", s3: "huyó", p1: "huimos", p2: "huisteis", p3: "huyeron" } },
             CmdPos:  { forms: {             s2: "huye", s3: "huya",    p1: "huyamos",                  p3: "huyan",        vos: "hui" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     ir: {
         conjugation_classes: ["atómico verdadero"],
         aspects: {
-            PresInd: { forms: { s1: "voy", s2: "vas", s3: "va",         p1: "vamos", p2: "vais", p3: "van" } },
-            PresSub: { root: "vay" },
-            PastInd: { forms: { s1: "fui", s2: "fuiste", s3: "fue",     p1: "fuimos", p2: "fuisteis", p3: "fueron" } },
-            PastImp: { forms: { s1: "iba", s2: "ibas", s3: "iba",       p1: "íbamos", p2: "ibais", p3: "iban" } },
-            // FutInd: uses regular conjugation
-            // FutCond: uses regular conjugation
+            IndPres: { forms: { s1: "voy", s2: "vas", s3: "va",         p1: "vamos", p2: "vais", p3: "van" } },
+            SubPres: { root: "vay" },
+            IndPret: { forms: { s1: "fui", s2: "fuiste", s3: "fue",     p1: "fuimos", p2: "fuisteis", p3: "fueron" } },
+            IndImp: { forms: { s1: "iba", s2: "ibas", s3: "iba",       p1: "íbamos", p2: "ibais", p3: "iban" } },
+            // IndFut: uses regular conjugation
+            // IndCond: uses regular conjugation
             CmdPos:  { forms: { s1: null, s2: "ve", s3: "vaya",         p1: ["vayamos", "vamos"],         p3: "vayan" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     jugar: {
         conjugation_classes: ["presente: diptongo o → ue"],
         aspects: {
-            PastInd: { forms: { s1: "jugué", s2: "jugaste", s3: "jugó", p1: "jugamos", p2: "jugasteis", p3: "jugaron" } },
+            IndPret: { forms: { s1: "jugué", s2: "jugaste", s3: "jugó", p1: "jugamos", p2: "jugasteis", p3: "jugaron" } },
             // FIX: vos spelling differs by region: vos: ["juegues", "*jugués"]
-            PresSub: { root: "juegu",
+            SubPres: { root: "juegu",
                       forms: {                                          p1: "juguemos", p2: "juguéis",                       vos: "juegues"} },
             CmdPos:  { forms: { s1: null, s2: "juega", s3: "juegue",    p1: "juguemos",                   p3: "jueguen",     vos: "jugá" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     leer: {
         conjugation_classes: ["hiato → y (fonológico)"],
         aspects: {
             // TODO: consider using spelling rules and accent changes to generate these forms
-            PastInd: { forms: { s2: "leíste", s3: "leyó", p1: "leímos", p2: "leísteis", p3: "leyeron" } },
+            IndPret: { forms: { s2: "leíste", s3: "leyó", p1: "leímos", p2: "leísteis", p3: "leyeron" } },
         }
     },
     oír: {
         conjugation_classes: ["hiato → y (fonológico)", "presente: diptongo e → i"],
         aspects: {
             // FIX: can this be done with typographical rules?
-            PresInd: { forms: { s1: "oigo", s2: "oyes", s3: "oye",   p1: "oímos",                  p3: "oyen" } },
-            PresSub: { root: "oig" },
-            PastInd: { forms: {               s2: "oíste", s3: "oyó",  p1: "oímos", p2: "oísteis", p3: "oyeron" } },
-            FutInd:  { root: "oir" },
-            FutCond: { root: "oir" },
+            IndPres: { forms: { s1: "oigo", s2: "oyes", s3: "oye",   p1: "oímos",                  p3: "oyen" } },
+            SubPres: { root: "oig" },
+            IndPret: { forms: {               s2: "oíste", s3: "oyó",  p1: "oímos", p2: "oísteis", p3: "oyeron" } },
+            IndFut:  { root: "oir" },
+            IndCond: { root: "oir" },
             CmdPos:  { forms: {             s2: "oye", s3: "oiga",     p1: "oigamos", p2: "oíd",   p3: "oigan", vos: "oí"   } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     poder: {
@@ -207,30 +207,30 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
         aspects: {
             // "o:u"  FIX: use root
             // FIX: vos spelling differs by region: vos: ["puedas", "*podás"]
-            PresSub: { forms: { s1: "pueda", s2: "puedas", s3: "pueda",                                    p3: "puedan" , vos: "puedas"} },
-            PastInd: { root: "pud",
+            SubPres: { forms: { s1: "pueda", s2: "puedas", s3: "pueda",                                    p3: "puedan" , vos: "puedas"} },
+            IndPret: { root: "pud",
                        forms: { s1: "pude", s2: "pudiste", s3: "pudo", p1: "pudimos", p2: "pudisteis", p3: "pudieron" } },
-            FutInd:  { root: "podr" },
-            FutCond:  { root: "podr" }, 
+            IndFut:  { root: "podr" },
+            IndCond:  { root: "podr" }, 
             CmdPos:  { forms: { s1: null, s2: "puede", s3: "pueda",                                        p3: "puedan" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     poner: {
         conjugation_classes: ["presente: -go 1.ª p", "pretérito: raíz corta", "futuro: raíz especial"],
         aspects: {
-            PresInd: { forms: { s1: "pongo" } },
+            IndPres: { forms: { s1: "pongo" } },
             // FIX: vos spelling differs by region: vos: ["pongas", "*pongás"]
-            PresSub: { forms: { s1: "ponga", s2: "pongas", s3: "ponga",   p1: "pongamos", p2: "pongáis",  p3: "pongan" , vos: "pongas"} },
-            PastInd: { root: "pus",
+            SubPres: { forms: { s1: "ponga", s2: "pongas", s3: "ponga",   p1: "pongamos", p2: "pongáis",  p3: "pongan" , vos: "pongas"} },
+            IndPret: { root: "pus",
                        forms: { s1: "puse", s2: "pusiste", s3: "puso",    p1: "pusimos", p2: "pusisteis", p3: "pusieron" } },
-            FutInd:  { root: "pondr" },
-            FutCond: { root: "pondr" },
+            IndFut:  { root: "pondr" },
+            IndCond: { root: "pondr" },
             CmdPos:  {
                 forms: { s1: null, s2: "pon", s3: "ponga",         p1: "pongamos",           p3: "pongan" , vos: "poné"},
                 derivations: {s2: {preserve_stress_from_base: true}}
             },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     querer: {
@@ -238,120 +238,120 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
         participles: {pres: "queriendo", past: "querido"},
         aspects: {
             // stem change quer => quis
-            PastInd: { root: "quis",
+            IndPret: { root: "quis",
                        forms: { s1: "quise", s2: "quisiste", s3: "quiso", p1: "quisimos", p2: "quisisteis", p3: "quisieron" } },
-            FutInd:  { root: "querr" },
-            FutCond: { root: "querr" },
+            IndFut:  { root: "querr" },
+            IndCond: { root: "querr" },
         }
     },
     saber: {
         conjugation_classes: ["presente: -go 1.ª p", "pretérito: raíz corta"],
         aspects: {
             // similar a caber
-            PresInd: { forms: { s1: "sé" } },
-            PresSub:  { root: "sep" },
+            IndPres: { forms: { s1: "sé" } },
+            SubPres:  { root: "sep" },
             // stem change sab => sup
-            PastInd: { root: "sup",
+            IndPret: { root: "sup",
                        forms: { s1: "supe", s2: "supiste", s3: "supo", p1: "supimos", p2: "supisteis", p3: "supieron" } },
-            FutInd:  { root: "sabr" },
-            FutCond: { root: "sabr" },
+            IndFut:  { root: "sabr" },
+            IndCond: { root: "sabr" },
             CmdPos:  { forms: {                                s3:"sepa",  p1:"sepamos",                     p3:"sepan", "vos":"sabé" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     salir: {
         conjugation_classes: ["presente: -go 1.ª p", "pretérito: raíz corta", "futuro: raíz especial"],
         aspects: {
-            PresInd: { forms: { s1: "salgo" } },
-            PresSub: { root: "salg" },
-            FutInd:  { root: "saldr" },
-            FutCond: { root: "saldr" },
+            IndPres: { forms: { s1: "salgo" } },
+            SubPres: { root: "salg" },
+            IndFut:  { root: "saldr" },
+            IndCond: { root: "saldr" },
             CmdPos:  { forms: {                s2: "sal", s3:"salga",     p1:"salgamos",                     p3:"salgan", "vos":"salí" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     seguir: {
         conjugation_classes: ["presente: diptongo e → i", "presente: -go 1.ª p"],
         aspects: {
-            PresInd: { forms: { s1: "sigo" } },
-            PresSub: { root: "sig" },
+            IndPres: { forms: { s1: "sigo" } },
+            SubPres: { root: "sig" },
             CmdPos:  { forms: {                s2: "sigue", s3:"siga",     p1:"sigamos",                     p3:"sigan", "vos":"seguí" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     ser: {
         conjugation_classes: ["atómico verdadero"],
         aspects: {
-            PresInd: { forms: { s1: "soy", s2: "eres", s3: "es",        p1: "somos", p2: "sois", p3: "son" } },
-            PresSub: { root: "se" },
-            PastInd: { forms: { s1: "fui", s2: "fuiste", s3: "fue",     p1: "fuimos", p2: "fuisteis", p3: "fueron" } },
-            PastImp: { forms: { s1:"era", s2:"eras", s3:"era",           p1:"éramos", p2:"erais", p3:"eran",            "vos":"eras"}},
+            IndPres: { forms: { s1: "soy", s2: "eres", s3: "es",        p1: "somos", p2: "sois", p3: "son" } },
+            SubPres: { root: "se" },
+            IndPret: { forms: { s1: "fui", s2: "fuiste", s3: "fue",     p1: "fuimos", p2: "fuisteis", p3: "fueron" } },
+            IndImp: { forms: { s1:"era", s2:"eras", s3:"era",           p1:"éramos", p2:"erais", p3:"eran",            "vos":"eras"}},
             CmdPos:  { forms: {            s2:"sé",   s3:"sea",           p1:"seamos",               p3:"sean",            "vos":"sé" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     tener: {      // ChatGPT says this is NOT irregular
         conjugation_classes: ["presente: diptongo e → ie", "presente: -go 1.ª p", "pretérito: raíz corta", "futuro: raíz especial"],
         aspects: {
-            PresInd: { forms: { s1: "tengo" } },
-            PresSub: { root: "teng" },
-            PastInd: { root: "tuv",
+            IndPres: { forms: { s1: "tengo" } },
+            SubPres: { root: "teng" },
+            IndPret: { root: "tuv",
                        forms: { s1: "tuve", s2: "tuviste", s3: "tuvo", p1: "tuvimos", p2: "tuvisteis", p3: "tuvieron" } },
-            FutInd:  { root: "tendr" },
-            FutCond: { root: "tendr" },
+            IndFut:  { root: "tendr" },
+            IndCond: { root: "tendr" },
             CmdPos:  { forms: {            s2:"ten",   s3:"tenga",           p1:"tengamos",               p3:"tengan",            "vos":"tené" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     traer: {  // similar to "caer"
         conjugation_classes: ["pretérito: raíz corta"],
         aspects: {
-            PresInd: { forms: { s1: "traigo" } },
-            PresSub: { root: "traig" },
+            IndPres: { forms: { s1: "traigo" } },
+            SubPres: { root: "traig" },
             // There may be general rules that could be used, such as: 3-vowels
-            PastInd: { root: "traj",
+            IndPret: { root: "traj",
                        forms: { s1: "traje", s2: "trajiste", s3: "trajo", p1: "trajimos", p2: "trajisteis", p3: "trajeron" } },
             CmdPos:  { forms: {                                  s3:"traiga", p1:"traigamos",                     p3:"traigan",            "vos":"traé" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     vaciar: {
     conjugation_classes: ["hiato → y (fonológico)"],
         aspects: {
             // The accent is the only thing different from the regular forms
-            PresInd: {
+            IndPres: {
                 forms: { s1: "vacío", s2: "vacías", s3: "vacía",                          p3: "vacían" },
             },
-            PresSub: { root: "vací",
+            SubPres: { root: "vací",
                        forms: {                                              p1:"vaciemos", p2: "vaciéis" } },
             CmdPos:  { forms: {              s2: "vacía", s3:"vacíe",                                    p3:"vacíen",  "vos": "vaciá" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     venir: {
         conjugation_classes: ["presente: diptongo e → i", "presente: -go 1.ª p", "pretérito: raíz corta", "futuro: raíz especial"],
         aspects: {
-            PresInd: { forms: { s1: "vengo" } },
-            PresSub: { root: "veng" },
-            PastInd: { root: "vin",
+            IndPres: { forms: { s1: "vengo" } },
+            SubPres: { root: "veng" },
+            IndPret: { root: "vin",
                        forms: { s1: "vine",         s3: "vino",      } },
-            FutInd:  { root: "vendr" },
-            FutCond: { root: "vendr" },
+            IndFut:  { root: "vendr" },
+            IndCond: { root: "vendr" },
             CmdPos:  { forms: {            s2:"ven",   s3:"venga",           p1:"vengamos",               p3:"vengan",            "vos":"vení" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     ver: {
         conjugation_classes: ["pretérito: raíz corta"],
         aspects: {
             // p2 => accent dropped
-            PresInd: { forms: { s1: "veo", p2: "veis" } },
-            PresSub: { root: "ve" },
+            IndPres: { forms: { s1: "veo", p2: "veis" } },
+            SubPres: { root: "ve" },
             // accents dropped
-            PastInd: { forms: { s1: "vi", s3: "vio" } },
-            PastImp: { root: "ve" },
+            IndPret: { forms: { s1: "vi", s3: "vio" } },
+            IndImp: { root: "ve" },
             CmdPos:  { forms: {                      s3:"vea",           p1:"veamos",               p3:"vean",            "vos":"ve" } },
-            CmdNeg:  { parent_tense_mood: "PresSub" },
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
 }

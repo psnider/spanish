@@ -9,8 +9,8 @@ namespace accents {
 
     // based on model: vaciar
     export const criar: AccentChanges = {
-        PresInd: {p2: "á:a"},
-        PastInd: {s1: "é:e", s3: "ó:o"},
+        IndPres: {p2: "á:a"},
+        IndPret: {s1: "é:e", s3: "ó:o"},
     }
 
 }
