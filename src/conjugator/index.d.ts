@@ -2,17 +2,18 @@
 type VerbFamily = "ar" | "er" | "ir"
 type VerbMood = "Cnd" | "Imp" | "Ind" | "Sub"
 type VerbTense = "Fut" | "Imp" | "Past" | "Pres"
-type VerbTenseMood = "IndPres" | "SubPres" | "IndPret" | "IndImp" | "IndFut" | "IndCond" | "CmdPos" | "CmdNeg"
+type VerbTenseMood = "IndPres" | "IndImp" | "IndPret" | "IndFut" | "IndCond" | "SubPres"  | "SubImp"  | "SubFut" | "CmdPos" | "CmdNeg"
 
 interface AspectsT<T> {
     IndPres?: T
-    SubPres?: T
-
-    IndPret?: T
     IndImp?: T
-
+    IndPret?: T
     IndFut?: T
     IndCond?: T
+
+    SubPres?: T
+    SubImp?: T
+    SubFut?: T
 
     CmdPos?: T
     CmdNeg?: T
@@ -25,22 +26,21 @@ interface GrammaticalPersons<T> {
     p1?: T
     p2?: T
     p3?: T
+    // The absence of "vos" implies that it is the same as the "s2" form.
     vos?: T
 }
 
-
-type VerbRules = GrammaticalPersons<string>
 
 // The conjugated forms of a verb
 // In a few cases for irregular verbs, there can be alternate forms for conjugation, e.g.:
 // - haber,IndPres,s2 has ["hay", "ha"]
 // - ir,CmdPos,p1 has ["vayamos", "vamos"]
-// Such verbs never have derived verbs. 
+// And all forms of SubImp have two forms: -ra and -se 
+// - amar,SubImp,p1 has ["amara", "amase"]
 // null indicates that the conjugation is disallowed, for example for weather verbs (llover) and commands, or the s1 forms of Commands.
+type VerbForms = [string] | [string, string] | null
 
-type VerbForms = string | [string, string] | null
-interface VerbConjugation extends GrammaticalPersons<VerbForms>  {}
-
+type VerbConjugation = GrammaticalPersons<VerbForms>
 interface VerbConjugationAnnotation {
     // filled in for returned conjugations.
     tense_mood?: VerbTenseMood
@@ -90,6 +90,7 @@ export interface VerbConjugationRules<T> {
 type StemChangeType = "e:i" | "e:ie" | "o:u" | "o:ue" | "u:ú" | "u:ue"
 type SuffixChangeType = "eer"
 
+// This must match conjugation_keys[]
 type GrammaticalPerson = "s1" | "s2" | "s3" | "p1" | "p2" | "p3" | "vos"
 
 
@@ -116,7 +117,7 @@ interface ConjugationRules {
     // Only specified for the canonical verb, to which all others in the family refer.
     conjugation_family?: string
     irregular?: IrregularBase
-    individual_accents?: AspectsT<GrammaticalPersons<string>>
+    individual_accents?: AspectsT<GrammaticalPersons<VerbForms>>
 }
 
 

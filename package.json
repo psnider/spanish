@@ -5,6 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "version": "tsc --version",
     "build": "tsc -P .",
     "test": "node generated/src/conjugator/test.js"
   },
@@ -12,7 +13,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/node": "^20.3.3",
-    "typescript": "^5.1.3"
+    "typescript": "^5.9.3"
   },
   "repository": {
     "type": "git",

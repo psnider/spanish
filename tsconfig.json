@@ -3,9 +3,8 @@
     "compilerOptions": {
 		"target": "es2020", // Node.js 14
         "module": "ES2020",
-		"lib": [
-			"es2020"
-		],
+        "lib": ["es2020"],
+        "types": ["node"],
         "typeRoots" : ["./node_modules/@types"],
         "noImplicitAny": true,
         "noUnusedLocals": false,

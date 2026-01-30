@@ -12,8 +12,12 @@ interface VerbAspectSuffixRules {
     // Normally, the verb form is shared, in which case, only a single key is specified.
     // But in cases in which the shared conjugation is found in a different verb form, then both are provided. 
     base?: VerbFamily | VerbTenseMood
-    // true if the suffixes should be appended to the infinitive form, otherwise they are appended to the root/stem.
+    // The default behavior is to append the 'suffixes' to the root or stem.
+    // The next two fields can change that behavior.
+    // true if the suffixes should be appended to the infinitive form.
     add_suffix_to_infinitive?: boolean
+    // true if the suffixes should be appended to the stem of the 3rd-person plural preterite form.
+    add_suffix_to_preterite_3p_stem?: boolean
     suffixes?: VerbConjugationChanges
 }
 
@@ -25,43 +29,42 @@ export const regular_verb_suffixes: { [ending: string]: VerbConjugationRules<Ver
     ar: {    // ar: like "amar"
         conjugation_classes: [],
         aspects: {
-            IndPres: { suffixes: { s1: "o", s2: "as", s3: "a", p1: "amos", p2: "áis", p3: "an" } },
-            SubPres: { suffixes: { s1: "e", s2: "es", s3: "e", p1: "emos", p2: "éis", p3: "en" } },
-            IndPret: { suffixes: { s1: "é", s2: "aste", s3: "ó", p1: "amos", p2: "asteis", p3: "aron" } },
-            IndImp: { suffixes: { s1: "aba", s2: "abas", s3: "aba", p1: "ábamos", p2: "abais", p3: "aban" } },
-            IndFut: { add_suffix_to_infinitive: true, suffixes: { s1: "é", s2: "ás", s3: "á", p1: "emos", p2: "éis", p3: "án" } },
-            IndCond: { add_suffix_to_infinitive: true, suffixes: { s1: "ía", s2: "ías", s3: "ía", p1: "íamos", p2: "íais", p3: "ían" } },
-            CmdPos: { suffixes: { s1: null, s2: "a", s3: "e", p1: "emos", p2: "ad", p3: "en" } },
+            IndPres: { suffixes: { s1: ["o"], s2: ["as"], s3: ["a"], p1: ["amos"], p2: ["áis"], p3: ["an"], vos: ["ás"] } },
+            IndImp: { suffixes: { s1: ["aba"], s2: ["abas"], s3: ["aba"], p1: ["ábamos"], p2: ["abais"], p3: ["aban"] } },
+            IndPret: { suffixes: { s1: ["é"], s2: ["aste"], s3: ["ó"], p1: ["amos"], p2: ["asteis"], p3: ["aron"] } },
+            IndFut: { add_suffix_to_infinitive: true, suffixes: { s1: ["é"], s2: ["ás"], s3: ["á"], p1: ["emos"], p2: ["éis"], p3: ["án"] } },
+            IndCond: { add_suffix_to_infinitive: true, suffixes: { s1: ["ía"], s2: ["ías"], s3: ["ía"], p1: ["íamos"], p2: ["íais"], p3: ["ían"] } },
+            SubPres: { suffixes: { s1: ["e"], s2: ["es"], s3: ["e"], p1: ["emos"], p2: ["éis"], p3: ["en"] } },
+            SubImp: { add_suffix_to_preterite_3p_stem: true, suffixes: { s1: ["ra","se"], s2: ["ras","ses"], s3: ["ra","se"], p1: ["ramos","semos"], p2: ["rais","seis"], p3: ["ran","sen"]} },
+            CmdPos: { suffixes: { s1: null, s2: ["a"], s3: ["e"], p1: ["emos"], p2: ["ad"], p3: ["en"], vos: ["á"] } },
             CmdNeg: { base: "SubPres", suffixes: { s1: null } },
         }
     },
     er: {   // er: like "temer"
         conjugation_classes: [],
         aspects: {
-            IndPres: { suffixes: { s1: "o", s2: "es", s3: "e", p1: "emos", p2: "éis", p3: "en" } },
-            SubPres: { suffixes: { s1: "a", s2: "as", s3: "a", p1: "amos", p2: "áis", p3: "an" } },
-            IndPret: { suffixes: { s1: "í", s2: "iste", s3: "ió", p1: "imos", p2: "isteis", p3: "ieron" } },
-            //   spelling: {
-            //     pattern: /eer$/,
-            //     suffixes: { s1: "í", s2: "íste", s3: "yó", p1: "ímos", p2: "ísteis", p3: "yeron"}
-            //  }},
-            IndImp: { suffixes: { s1: "ía", s2: "ías", s3: "ía", p1: "íamos", p2: "íais", p3: "ían" } },
+            IndPres: { suffixes: { s1: ["o"], s2: ["es"], s3: ["e"], p1: ["emos"], p2: ["éis"], p3: ["en"], vos: ["és"] } },
+            IndImp: { suffixes: { s1: ["ía"], s2: ["ías"], s3: ["ía"], p1: ["íamos"], p2: ["íais"], p3: ["ían"] } },
+            IndPret: { suffixes: { s1: ["í"], s2: ["iste"], s3: ["ió"], p1: ["imos"], p2: ["isteis"], p3: ["ieron"] } },
             IndFut: { base: "ar" },
             IndCond: { base: "ar" },
-            CmdPos: { suffixes: { s1: null, s2: "e", s3: "a", p1: "amos", p2: "ed", p3: "an" } },
+            SubPres: { suffixes: { s1: ["a"], s2: ["as"], s3: ["a"], p1: ["amos"], p2: ["áis"], p3: ["an"] } },
+            SubImp: { base: "ar" },
+            CmdPos: { suffixes: { s1: null, s2: ["e"], s3: ["a"], p1: ["amos"], p2: ["ed"], p3: ["an"], vos: ["é"] } },
             CmdNeg: { base: "SubPres", suffixes: { s1: null } },
         }
     },
     ir: {    // ir: like "partir"
         conjugation_classes: [],
         aspects: {
-            IndPres: { base: "er", suffixes: { p1: "imos", p2: "ís" } },
-            SubPres: { base: "er" },
-            IndPret: { base: "er" },
+            IndPres: { base: "er", suffixes: { p1: ["imos"], p2: ["ís"], vos: ["ís"] } },
             IndImp: { base: "er" },
+            IndPret: { base: "er" },
             IndFut: { base: "ar" },
             IndCond: { base: "ar" },
-            CmdPos: { base: "er", suffixes: { p2: "id" } },
+            SubPres: { base: "er" },
+            SubImp: { base: "er" },
+            CmdPos: { base: "er", suffixes: { p2: ["id"], vos: ["í"] } },
             CmdNeg: { base: "er" },
         }
     }
@@ -121,10 +124,16 @@ export function doAddSuffixToInfinitive(infinitive: string, tense_mood: VerbTens
 }
 
 
+export function doUsePreteriteStem(infinitive: string, tense_mood: VerbTenseMood) {
+    const rule_sets = getAncestorRuleSets(infinitive, tense_mood)
+    return rule_sets[0].add_suffix_to_preterite_3p_stem
+}
+
+
 // Get the suffixes for the given verb family, mood, and tense, applying a suffix change if one is given. 
 // @return The set of suffixes for all of the conjugated forms.
 // For example: getSuffixes("creer", "IndPret", "eer")
-//    {s1:"í", s2:"íste", s3:"yó", p1:"ímos", p2:"ísteis", p3:"yeron"}
+//    {s1: ["í"], s2: ["íste"], s3: ["yó"], p1: ["ímos"], p2: ["ísteis"], p3: ["yeron"]}
 export function getRegularSuffixes(infinitive: string, tense_mood: VerbTenseMood /* , suffix_change_type?: SuffixChangeType */) : VerbConjugationChanges {
     // let spelling_change_rules: VerbAspectSuffixRules["spelling"]
     const rule_sets = getAncestorRuleSets(infinitive, tense_mood)
@@ -139,12 +148,13 @@ export function getRegularSuffixes(infinitive: string, tense_mood: VerbTenseMood
                     suffixes[conjugation_key] = null
                 } else if (suffixes[conjugation_key] == null) {
                     suffixes[conjugation_key] = <any> rule_set.suffixes[conjugation_key]
-                } else if (typeof suffixes[conjugation_key] === "string") {
-                    if (typeof rule_set.suffixes[conjugation_key] === "string") {
-                        suffixes[conjugation_key] = <string> rule_set.suffixes[conjugation_key]
-                    } else {
-                        throw new Error(`mixed types string != ? for suffixes[conjugation_key]=${suffixes[conjugation_key]} and rule_set.suffixes[conjugation_key]=${rule_set.suffixes[conjugation_key]}`)
-                    }
+                // } else if (typeof suffixes[conjugation_key] === "string") {
+                //     if (typeof rule_set.suffixes[conjugation_key] === "string") {
+                //         const suffix = <string> rule_set.suffixes[conjugation_key]
+                //         suffixes[conjugation_key] = [suffix]
+                //     } else {
+                //         throw new Error(`mixed types string != ? for suffixes[conjugation_key]=${suffixes[conjugation_key]} and rule_set.suffixes[conjugation_key]=${rule_set.suffixes[conjugation_key]}`)
+                //     }
                 } else if (Array.isArray(suffixes[conjugation_key])) {
                     if (Array.isArray(rule_set.suffixes[conjugation_key])) {
                         suffixes[conjugation_key] = <any> rule_set.suffixes[conjugation_key]

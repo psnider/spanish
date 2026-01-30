@@ -1,8 +1,8 @@
-import { AspectsT, VerbConjugation, VerbTenseMood } from "."
+import { AspectsT, GrammaticalPersons, VerbConjugation, VerbTenseMood } from "."
 import { applyToVerbForms } from "./lib.js"
 
 
-type AccentChanges = AspectsT<VerbConjugation>
+type AccentChanges = AspectsT< GrammaticalPersons<string> >
 
 
 namespace accents {
@@ -31,7 +31,7 @@ export function getChangedAccents(infinitive: string, tense_mood: VerbTenseMood,
     let accent_changes: VerbConjugation = {}
     const accent_change_rules = accent_changes_by_infinitive[infinitive]?.[tense_mood]
     if (accent_change_rules) {
-        Object.keys(accent_change_rules).forEach((key: keyof VerbConjugation) => {
+        Object.keys(accent_change_rules).forEach((key: keyof GrammaticalPersons<string>) => {
             const accent_change_pattern = accent_change_rules[key]
             const conjugated_form = conjugation[key]
             if (typeof accent_change_pattern !== "string") {
@@ -43,7 +43,7 @@ export function getChangedAccents(infinitive: string, tense_mood: VerbTenseMood,
                 throw new Error(`can't apply accent_change_pattern=${accent_change_pattern} to conjugated_form=${conjugated_form}`)
             }
             const changed_form = conjugated_form.slice(0,i) + changed + conjugated_form.slice(i + unchanged.length)
-            accent_changes[key] = changed_form
+            accent_changes[key] = [changed_form]
         })
     } else {
         accent_changes = {...conjugation}

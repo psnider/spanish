@@ -1,38 +1,61 @@
 import { ConjugationRules, GrammaticalPerson, VerbConjugation, VerbConjugationAnnotated, VerbConjugationRules, VerbForms, VerbTenseMood } from ".";
 import { getChangedAccents } from "./accent_changes.js";
 import { getAnnotations, verb_conjugation_rules } from "./conjugation-rules-per-verb.js";
-import { applyIrregularConjugationRules, DerivationRule, DerivationRules, irregular_conjugations, VerbAspectConjugations } from "./irregular-conjugations.js";
+import { applyIrregularConjugationRules, DerivationRule, irregular_conjugations, VerbAspectConjugations } from "./irregular-conjugations.js";
 import { conjugation_keys } from "./lib.js";
-import { getRegularSuffixes, doAddSuffixToInfinitive, getVerbFamily } from "./regular-verb-rules.js";
+import { getRegularSuffixes, doAddSuffixToInfinitive, getVerbFamily, doUsePreteriteStem } from "./regular-verb-rules.js";
 import { getStemChanges } from "./stem-change-patterns.js";
 import { getTypographicChanges } from "./typographical-rules.js";
 import { findPrefixOfIrregularVerb } from "./find-prefix-of-irregular-verb.js";
 
 
+function getPreterite3PStem(infinitive: string) {
+    const conjugated_forms = conjugateVerb(infinitive, "IndPret")
+    // TODO: is this correct? assuming that there is only ONE form
+    const ustedes_form = conjugated_forms.forms["p3"][0]
+    const stem = ustedes_form.slice(0, -3)
+    return stem
+}
+
+
 export function combineRegularSuffixesAndStemChanges(infinitive: string, tense_mood: VerbTenseMood) : VerbConjugation {
     const regular_suffixes = getRegularSuffixes(infinitive, tense_mood)
     const add_suffix_to_infinitive = doAddSuffixToInfinitive(infinitive, tense_mood)
+    const add_suffix_to_preterite_3p_stem = doUsePreteriteStem(infinitive, tense_mood)
+    const preterite_3p_stem = (add_suffix_to_preterite_3p_stem ? getPreterite3PStem(infinitive) : undefined)
     const stem_changes = getStemChanges({infinitive, tense_mood})
     const verb_root = infinitive.slice(0, -2)
     let conjugation: VerbConjugation = {}
     conjugation_keys.forEach((key) => {
-        const suffix = regular_suffixes[key]
-        if (suffix != null) {
-            if (typeof suffix !== "string") {
-                throw new Error(`unexpected non-string suffix=${suffix} for infinitive=${infinitive}, tense_mood=${tense_mood}`)
-            }    
-            if (add_suffix_to_infinitive) {
-                conjugation[key] = infinitive + suffix
-            } else {
-                const stem_change = stem_changes[key]
-                if ((stem_change === undefined) || (typeof stem_change === "string")) {
-                    conjugation[key] = (stem_change || verb_root) + suffix
+        const suffixes = regular_suffixes[key]
+        if (suffixes != null) {
+            suffixes.forEach((suffix) => {
+                if (add_suffix_to_infinitive) {
+                    const conjugated = infinitive + suffix
+                    conjugation[key] = conjugation[key] || <VerbForms><unknown> []
+                    conjugation[key].push(conjugated)
+                } else if (add_suffix_to_preterite_3p_stem) {
+                    let conjugated = preterite_3p_stem + suffix
+                    if (key === "p1") {
+                        const index = preterite_3p_stem.length - 1
+                        conjugated = moveStress(conjugated, {to: index})
+                    }
+                    conjugation[key] = conjugation[key] || <VerbForms><unknown> []
+                    conjugation[key].push(conjugated)
                 } else {
-                    throw new Error(`unexpected non-string stem_change=${stem_change} for infinitive=${infinitive}, tense_mood=${tense_mood}`)
-                }    
-            }
+                    const stem_change = stem_changes[key]
+                    const conjugated = (stem_change || verb_root) + suffix
+                    conjugation[key] = conjugation[key] || <VerbForms><unknown> []
+                    conjugation[key].push(conjugated)
+                }
+            })
         }
     })
+    if (conjugation.vos) {
+        if (conjugation.vos === conjugation.s2) {
+            throw new Error(`The form for vos should not be populated if it matches that of s2: infinitive=${infinitive} infinitive=${infinitive}`)
+        }
+    }
     return conjugation
 }
 
@@ -51,19 +74,21 @@ function getDerivedSpelling(infinitive: string, base_infinitive: string, tense_m
     }
     const derived_spelling: VerbConjugation = {}
     Object.keys(base_conjugation).forEach((conjugation_key: keyof VerbConjugation) => {
-        const irregular_base_form = base_conjugation[conjugation_key]
-        if (Array.isArray(irregular_base_form)) {
-            throw new Error(`require single form for infinitive=${infinitive} tense_mood=${tense_mood} irregular_base_conjugated[${conjugation_key}]=${irregular_base_form}`)
+        const irregular_base_forms = base_conjugation[conjugation_key]
+        if (irregular_base_forms) {
+            irregular_base_forms.forEach((irregular_base_form) => {
+                let irregular_derived_conjugated: string = irregular_base_form
+                if (base_prefix) {
+                    if (!irregular_derived_conjugated.startsWith(base_prefix)) {
+                        throw new Error (`irregular_base_form=${irregular_base_form} from infinitive=${infinitive} doesn't start with irregular_rules.irregular.remove=${base_prefix}"`)
+                    }
+                    irregular_derived_conjugated = irregular_base_form.slice(base_prefix.length)
+                }
+                irregular_derived_conjugated = infinitive_prefix + irregular_derived_conjugated
+                derived_spelling[conjugation_key] = derived_spelling[conjugation_key] || <VerbForms><unknown> []
+                derived_spelling[conjugation_key].push(irregular_derived_conjugated)
+            })
         }
-        let irregular_derived_conjugated: string = irregular_base_form
-        if (base_prefix) {
-            if (!irregular_derived_conjugated.startsWith(base_prefix)) {
-                throw new Error (`irregular_base_form=${irregular_base_form} from infinitive=${infinitive} doesn't start with irregular_rules.irregular.remove=${base_prefix}"`)
-            }
-            irregular_derived_conjugated = irregular_base_form.slice(base_prefix.length)
-        }
-        irregular_derived_conjugated = infinitive_prefix + irregular_derived_conjugated
-        derived_spelling[conjugation_key] = irregular_derived_conjugated
     })
     return derived_spelling
 }
@@ -190,7 +215,7 @@ const accented_vowels_to_unaccented = {
 
 
 
-function moveStress(word: string, from: number, to: number) {
+function moveStress(word: string, move: {from?: number, to?: number}) {
     function removeAccent(c: string) {
         return accented_vowels_to_unaccented[<keyof typeof accented_vowels_to_unaccented> c] ?? c
     } 
@@ -198,8 +223,12 @@ function moveStress(word: string, from: number, to: number) {
         return unaccented_vowels_to_accented[<keyof typeof unaccented_vowels_to_accented> c] ?? c
     } 
     const chars = [...word]
-    chars[from] = removeAccent(chars[from])
-    chars[to] = addAccent(chars[to])
+    if (move.from != null) {
+        chars[move.from] = removeAccent(chars[move.from])
+    }
+    if (move.to != null) {
+        chars[move.to] = addAccent(chars[move.to])
+    }
     return chars.join("")
 }
 
@@ -217,27 +246,33 @@ function findIndexOfStress(verb_form: string) : number {
 }
 
 
-function moveStressInVerbForm(verb_form: string, stress_index: number) : string {
+function placeStressInVerbForm(verb_form: string, stress_index: number) : string {
     const old_stress_index = findIndexOfStress(verb_form)
-    const moved = moveStress(verb_form, old_stress_index, stress_index)
+    const moved = moveStress(verb_form, {from: old_stress_index, to: stress_index})
     return moved
 }
 
 
 function preserveStressFromBase(conjugation_class: ConjugationClass, conjugation: VerbConjugation, tense_mood: VerbTenseMood, grammatical_person: GrammaticalPerson, base_forms_for_person: VerbForms) : VerbForms {
-    const conjugated_form = conjugation[grammatical_person]
-    if (!conjugated_form) {
+    const conjugated_forms = conjugation[grammatical_person]
+    if (!conjugated_forms) {
         throw new Error(`A derivation rule exists for a conjugation that doesn't have a rule for that grammatical_person=${grammatical_person}: infinitive=${conjugation_class.infinitive}`)
     }
-    if ((typeof conjugated_form !== "string") || (typeof base_forms_for_person !== "string")) {
-        throw new Error(`preserveStressFromBase() doesn't support arrays yet => must modify this code if needed for infinitive=${conjugation_class.infinitive} tense_mood=${tense_mood} grammatical_person=${grammatical_person} `)
+    if (base_forms_for_person) {
+        if (base_forms_for_person.length != conjugated_forms.length) {
+            throw new Error(`A derivation rule exists for a conjugation that doesn't have the same number of conjugated and base forms: grammatical_person=${grammatical_person}: infinitive=${conjugation_class.infinitive}`)
+        }
+        const moved_stress_forms = <VerbForms><unknown> []
+        base_forms_for_person.forEach((base_form, i) => {
+            const base_stress_index = findIndexOfStress(base_form)
+            const conjugated_form = conjugated_forms[i]
+            // adjust stress_index for length of prefix
+            const stress_index = base_stress_index + (conjugated_form.length - base_form.length)
+            const moved_stress = placeStressInVerbForm(conjugated_form, stress_index)
+            moved_stress_forms.push(moved_stress)
+        })
+        return moved_stress_forms
     }
-    const base_form_for_person = base_forms_for_person
-    const base_stress_index = findIndexOfStress(base_form_for_person)
-    // adjust stress_index for length of prefix
-    const stress_index = base_stress_index + (conjugated_form.length - base_form_for_person.length)
-    const moved_stress = moveStressInVerbForm(conjugated_form, stress_index)
-    return moved_stress
 }
 
 

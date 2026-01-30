@@ -1,10 +1,11 @@
-import { AspectsT, ConjugationRules, VerbConjugation, VerbRules, VerbTenseMood } from ".";
+import { AspectsT, ConjugationRules, GrammaticalPersons, VerbConjugation, VerbTenseMood } from ".";
 import { verb_conjugation_rules } from "./conjugation-rules-per-verb.js";
 import { conjugation_keys } from "./lib.js";
 
 
+type StemChangesForMoodTense = GrammaticalPersons<string>
 
-export interface StemChangeRules extends AspectsT<VerbRules> {
+export interface StemChangeRules extends AspectsT<StemChangesForMoodTense> {
     // Used only for spelling change transforms
     transforms?: string[]
 }
@@ -57,7 +58,7 @@ export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChan
 // @return Stem change patterns for those conjugated forms for which they exist.
 //   For example: getStemChanges("IndPres", {stem_change_type: "o:ue"}):
 //     {s1: "o:ue", s2: "o:ue", s3: "o:ue", p3: "o:ue"},
-function getStemChangesFromRule(infinitive: string, mood_tense: VerbTenseMood, irregular_rules?: ConjugationRules) : VerbConjugation | undefined {
+function getStemChangesFromRule(infinitive: string, mood_tense: VerbTenseMood, irregular_rules?: ConjugationRules) : StemChangesForMoodTense | undefined {
     const stem_change_type = irregular_rules?.stem_change_type
     if (stem_change_type) {
         const stem_changes_for_type = stem_change_patterns[<keyof StemChangeRules> stem_change_type]
@@ -79,7 +80,7 @@ export function getStemChanges(args: {infinitive: string, tense_mood: VerbTenseM
     const {infinitive, tense_mood} = args
     const verb_root = infinitive.slice(0, -2)
     let conjugated_stems: VerbConjugation = {}
-    conjugation_keys.forEach((key: keyof VerbConjugation) => {conjugated_stems[key] = verb_root})
+    conjugation_keys.forEach((key: keyof VerbConjugation) => {conjugated_stems[key] = [verb_root]})
     let conjugation_rules = verb_conjugation_rules[infinitive]
     if (conjugation_rules) {
         const stem_changes = getStemChangesFromRule(infinitive, tense_mood, conjugation_rules)
@@ -87,17 +88,16 @@ export function getStemChanges(args: {infinitive: string, tense_mood: VerbTenseM
         conjugation_keys.forEach((conjugation_key: keyof(VerbConjugation)) => {
             const stem_change = stem_changes[conjugation_key]
             if (stem_change && valid_conjugation_keys.includes(conjugation_key)) {
-                if (typeof stem_change == "string") {
-                    const [unchanged, changed] = stem_change.split(":")
-                    const i = verb_root.lastIndexOf(unchanged)
-                    if (i === -1) {
-                        throw new Error(`can't apply stem_change=${stem_change} to verb_root=${verb_root}`)
-                    }
-                    const changed_root = verb_root.slice(0,i) + changed + verb_root.slice(i + unchanged.length)
-                    conjugated_stems[conjugation_key] = changed_root
-                } else {
-                    throw new Error(`unexpect stem_change=${stem_change} for verb_root=${verb_root} conjugation_key=${conjugation_key}`)
+                // if (stem_change.length != 1) {
+                //     throw new Error(`unexpect stem_change=${stem_change} for verb_root=${verb_root} conjugation_key=${conjugation_key}`)
+                // }
+                const [unchanged, changed] = stem_change.split(":")
+                const i = verb_root.lastIndexOf(unchanged)
+                if (i === -1) {
+                    throw new Error(`can't apply stem_change=${stem_change} to verb_root=${verb_root}`)
                 }
+                const changed_root = verb_root.slice(0,i) + changed + verb_root.slice(i + unchanged.length)
+                conjugated_stems[conjugation_key] = [changed_root]
             }
         })            
     }
