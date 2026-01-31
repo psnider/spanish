@@ -3,7 +3,7 @@ import { getChangedAccents } from "./accent_changes.js";
 import { getAnnotations, verb_conjugation_rules } from "./conjugation-rules-per-verb.js";
 import { applyIrregularConjugationRules, DerivationRule, irregular_conjugations, VerbAspectConjugations } from "./irregular-conjugations.js";
 import { conjugation_keys } from "./lib.js";
-import { getRegularSuffixes, doAddSuffixToInfinitive, getVerbFamily, doUsePreteriteStem } from "./regular-verb-rules.js";
+import { getRegularSuffixes, doAddSuffixToInfinitive, getVerbFamily, doUsePreteriteP3Stem, doStressLastSylableOfP1Stem } from "./regular-verb-rules.js";
 import { getStemChanges } from "./stem-change-patterns.js";
 import { getTypographicChanges } from "./typographical-rules.js";
 import { findPrefixOfIrregularVerb } from "./find-prefix-of-irregular-verb.js";
@@ -21,8 +21,9 @@ function getPreterite3PStem(infinitive: string) {
 export function combineRegularSuffixesAndStemChanges(infinitive: string, tense_mood: VerbTenseMood) : VerbConjugation {
     const regular_suffixes = getRegularSuffixes(infinitive, tense_mood)
     const add_suffix_to_infinitive = doAddSuffixToInfinitive(infinitive, tense_mood)
-    const add_suffix_to_preterite_3p_stem = doUsePreteriteStem(infinitive, tense_mood)
-    const preterite_3p_stem = (add_suffix_to_preterite_3p_stem ? getPreterite3PStem(infinitive) : undefined)
+    const add_suffix_to_preterite_p3_stem = doUsePreteriteP3Stem(infinitive, tense_mood)
+    const stress_last_sylable_of_p1_stem = doStressLastSylableOfP1Stem(infinitive, tense_mood)
+    const preterite_p3_stem = (add_suffix_to_preterite_p3_stem ? getPreterite3PStem(infinitive) : undefined)
     const stem_changes = getStemChanges({infinitive, tense_mood})
     const verb_root = infinitive.slice(0, -2)
     let conjugation: VerbConjugation = {}
@@ -30,24 +31,26 @@ export function combineRegularSuffixesAndStemChanges(infinitive: string, tense_m
         const suffixes = regular_suffixes[key]
         if (suffixes != null) {
             suffixes.forEach((suffix) => {
+                let conjugated: string
                 if (add_suffix_to_infinitive) {
-                    const conjugated = infinitive + suffix
-                    conjugation[key] = conjugation[key] || <VerbForms><unknown> []
-                    conjugation[key].push(conjugated)
-                } else if (add_suffix_to_preterite_3p_stem) {
-                    let conjugated = preterite_3p_stem + suffix
-                    if (key === "p1") {
-                        const index = preterite_3p_stem.length - 1
+                    conjugated = infinitive + suffix
+                } else if (add_suffix_to_preterite_p3_stem) {
+                    conjugated = preterite_p3_stem + suffix
+                    if (stress_last_sylable_of_p1_stem && (key === "p1")) {
+                        const index = preterite_p3_stem.length - 1
                         conjugated = moveStress(conjugated, {to: index})
                     }
-                    conjugation[key] = conjugation[key] || <VerbForms><unknown> []
-                    conjugation[key].push(conjugated)
                 } else {
                     const stem_change = stem_changes[key]
-                    const conjugated = (stem_change || verb_root) + suffix
-                    conjugation[key] = conjugation[key] || <VerbForms><unknown> []
-                    conjugation[key].push(conjugated)
+                    let stem = (stem_change || verb_root)
+                    if (stress_last_sylable_of_p1_stem && (key === "p1")) {
+                        const index = stem.length - 1
+                        conjugated = moveStress(conjugated, {to: index})
+                    }
+                    conjugated = stem + suffix
                 }
+                conjugation[key] = conjugation[key] || <VerbForms><unknown> []
+                conjugation[key].push(conjugated)
             })
         }
     })

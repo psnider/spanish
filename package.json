@@ -10,7 +10,7 @@
     "test": "node generated/src/conjugator/test.js"
   },
   "author": "Peter Snider",
-  "license": "Apache-2.0",
+  "license": "CC-BY-NC-4.0",
   "devDependencies": {
     "@types/node": "^20.3.3",
     "typescript": "^5.9.3"

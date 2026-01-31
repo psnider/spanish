@@ -3,7 +3,7 @@ import { conjugateVerb } from "./conjugate-verb.js";
 
 
 
-let infinitive = "dar"
+let infinitive = "elegir"
 let mood_tense: VerbTenseMood = "CmdPos"
 
 

@@ -19,6 +19,11 @@ export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChan
         transforms: ["e:i"],
         IndPres: {s1: "e:i", s2: "e:i", s3: "e:i",                             p3: "e:i"},
         IndPret: {s3: "e:i", p3: "e:i"},
+        SubPres: {s1: "e:i", s2: "e:i", s3: "e:i", p1: "e:i", p2: "e:i", p3: "e:i"},
+        SubImp:  {s1: "e:i", s2: "e:i", s3: "e:i", p1: "e:i", p2: "e:i", p3: "e:i"},
+        SubFut:  {s1: "e:i", s2: "e:i", s3: "e:i", p1: "e:i", p2: "e:i", p3: "e:i"},
+        CmdPos:  {           s2: "e:i", s3: "e:i", p1: "e:i",            p3: "e:i", vos: null},
+        CmdNeg:  {           s2: "e:i", s3: "e:i", p1: "e:i", p2: "e:i", p3: "e:i"},
     },
     "e:ie": {
         transforms: ["e:ie", "e:i"],

@@ -16,8 +16,10 @@ interface VerbAspectSuffixRules {
     // The next two fields can change that behavior.
     // true if the suffixes should be appended to the infinitive form.
     add_suffix_to_infinitive?: boolean
-    // true if the suffixes should be appended to the stem of the 3rd-person plural preterite form.
-    add_suffix_to_preterite_3p_stem?: boolean
+    // true if the stress should be placed on the last sylable of the stem of the 3rd-person plural form.
+    add_suffix_to_preterite_p3_stem?: boolean
+    // true if the last sylable of the 1st-person plural form a verb stem must be accented.
+    stress_last_sylable_of_p1_stem?: boolean
     suffixes?: VerbConjugationChanges
 }
 
@@ -30,14 +32,17 @@ export const regular_verb_suffixes: { [ending: string]: VerbConjugationRules<Ver
         conjugation_classes: [],
         aspects: {
             IndPres: { suffixes: { s1: ["o"], s2: ["as"], s3: ["a"], p1: ["amos"], p2: ["áis"], p3: ["an"], vos: ["ás"] } },
-            IndImp: { suffixes: { s1: ["aba"], s2: ["abas"], s3: ["aba"], p1: ["ábamos"], p2: ["abais"], p3: ["aban"] } },
+            IndImp:  { suffixes: { s1: ["aba"], s2: ["abas"], s3: ["aba"], p1: ["ábamos"], p2: ["abais"], p3: ["aban"] } },
             IndPret: { suffixes: { s1: ["é"], s2: ["aste"], s3: ["ó"], p1: ["amos"], p2: ["asteis"], p3: ["aron"] } },
-            IndFut: { add_suffix_to_infinitive: true, suffixes: { s1: ["é"], s2: ["ás"], s3: ["á"], p1: ["emos"], p2: ["éis"], p3: ["án"] } },
+            IndFut:  { add_suffix_to_infinitive: true, suffixes: { s1: ["é"], s2: ["ás"], s3: ["á"], p1: ["emos"], p2: ["éis"], p3: ["án"] } },
             IndCond: { add_suffix_to_infinitive: true, suffixes: { s1: ["ía"], s2: ["ías"], s3: ["ía"], p1: ["íamos"], p2: ["íais"], p3: ["ían"] } },
             SubPres: { suffixes: { s1: ["e"], s2: ["es"], s3: ["e"], p1: ["emos"], p2: ["éis"], p3: ["en"] } },
-            SubImp: { add_suffix_to_preterite_3p_stem: true, suffixes: { s1: ["ra","se"], s2: ["ras","ses"], s3: ["ra","se"], p1: ["ramos","semos"], p2: ["rais","seis"], p3: ["ran","sen"]} },
-            CmdPos: { suffixes: { s1: null, s2: ["a"], s3: ["e"], p1: ["emos"], p2: ["ad"], p3: ["en"], vos: ["á"] } },
-            CmdNeg: { base: "SubPres", suffixes: { s1: null } },
+            SubImp:  { add_suffix_to_preterite_p3_stem: true, stress_last_sylable_of_p1_stem: true,
+                       suffixes: { s1: ["ra","se"], s2: ["ras","ses"], s3: ["ra","se"], p1: ["ramos","semos"], p2: ["rais","seis"], p3: ["ran","sen"]} },
+            SubFut:  { add_suffix_to_preterite_p3_stem: true, stress_last_sylable_of_p1_stem: true,
+                       suffixes: { s1: ["re"], s2: ["res"], s3: ["re"], p1: ["remos"], p2: ["reis"], p3: ["ren"]} },
+            CmdPos:  { suffixes: { s1: null, s2: ["a"], s3: ["e"], p1: ["emos"], p2: ["ad"], p3: ["en"], vos: ["á"] } },
+            CmdNeg:  { base: "SubPres", suffixes: { s1: null } },
         }
     },
     er: {   // er: like "temer"
@@ -50,6 +55,7 @@ export const regular_verb_suffixes: { [ending: string]: VerbConjugationRules<Ver
             IndCond: { base: "ar" },
             SubPres: { suffixes: { s1: ["a"], s2: ["as"], s3: ["a"], p1: ["amos"], p2: ["áis"], p3: ["an"] } },
             SubImp: { base: "ar" },
+            SubFut: { base: "ar" },
             CmdPos: { suffixes: { s1: null, s2: ["e"], s3: ["a"], p1: ["amos"], p2: ["ed"], p3: ["an"], vos: ["é"] } },
             CmdNeg: { base: "SubPres", suffixes: { s1: null } },
         }
@@ -63,7 +69,8 @@ export const regular_verb_suffixes: { [ending: string]: VerbConjugationRules<Ver
             IndFut: { base: "ar" },
             IndCond: { base: "ar" },
             SubPres: { base: "er" },
-            SubImp: { base: "er" },
+            SubImp: { base: "ar" },
+            SubFut: { base: "ar" },
             CmdPos: { base: "er", suffixes: { p2: ["id"], vos: ["í"] } },
             CmdNeg: { base: "er" },
         }
@@ -124,9 +131,15 @@ export function doAddSuffixToInfinitive(infinitive: string, tense_mood: VerbTens
 }
 
 
-export function doUsePreteriteStem(infinitive: string, tense_mood: VerbTenseMood) {
+export function doUsePreteriteP3Stem(infinitive: string, tense_mood: VerbTenseMood) {
     const rule_sets = getAncestorRuleSets(infinitive, tense_mood)
-    return rule_sets[0].add_suffix_to_preterite_3p_stem
+    return rule_sets[0].add_suffix_to_preterite_p3_stem
+}
+
+
+export function doStressLastSylableOfP1Stem(infinitive: string, tense_mood: VerbTenseMood) {
+    const rule_sets = getAncestorRuleSets(infinitive, tense_mood)
+    return rule_sets[0].stress_last_sylable_of_p1_stem
 }
 
 

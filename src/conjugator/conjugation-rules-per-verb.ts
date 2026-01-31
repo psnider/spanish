@@ -164,7 +164,7 @@ export const verb_conjugation_rules: {[infinitive: string]: ConjugationRules | n
     // disfrazar: null,
     // duchar: null,
     duplicar: {model: "sacar"},
-    elegir: {stem_change_type: "e:i", stem_change_inclusions: ["IndPres","IndPret"]},
+    elegir: {stem_change_type: "e:i", stem_change_inclusions: ["IndPres","IndPret","SubPres","SubImp","SubFut","CmdPos","CmdNeg"]},
     // emparejar: null,
     // empatar: null,
     // empatizar: null,

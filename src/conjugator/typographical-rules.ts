@@ -47,12 +47,12 @@ const typographical_change_rules : {[rule_name: string]: TypographicalChangeRule
     },
     "preserve-soft-g-sound": {
         // example: elegir,IndPres,s1: eligo => elijo
-        match_pattern: /g([aáoóuú])$/u,
+        match_pattern: /g([aáoóuú])/u,
         replacement_pattern: "j$1"
     },
     "preserve-hard-g-sound": {
         // example: llegar,IndPret,s1: llegé => llegué
-        match_pattern: /g([eéií])$/u,
+        match_pattern: /g([eéií])/u,
         replacement_pattern: "gu$1"
     },
     "replace-disallowed-ze-zi": {
