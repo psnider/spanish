@@ -127,7 +127,6 @@ export function getTypographicChanges(infinitive: string, conjugation: VerbConju
     const rule_name = findMatchingRuleName(infinitive)
     if (rule_name) {
         const rule = typographical_change_rules[rule_name]
-        // FIX: copy the 
         const filtered_keys: Array<keyof VerbConjugation> = <Array<keyof VerbConjugation>> Object.keys(conjugation).filter((key: keyof VerbConjugation) => {
             return conjugation_keys.includes(key)
         })

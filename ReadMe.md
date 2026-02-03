@@ -46,7 +46,7 @@ The remaining steps only affect those forms that are not correct yet.
 
 There is also a list of the verbs that have been verified to conjugate correctly with this method.  
 The list contains the most common verbs, as well as some that are less common but that are similar to other irregular verbs.  
-See: [verb_conjugation_rules](./src/conjugator/conjugation-rules-per-verb.ts)  
+See: [morphophonemic_verb_conjugation_rules](./src/conjugator/conjugation-rules-per-verb.ts)  
 
 
 ### Usage

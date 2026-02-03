@@ -1,13 +1,14 @@
-import { assert_TenseMood, assert_typographicalChange } from "./test-support.js"
+import { assert_Participles, assert_TenseMood, assert_typographicalChange } from "./test-support.js"
 
 
 // -ar
+assert_Participles("amar", {pres: "amando", past: "amado"})
 assert_TenseMood("amar", "IndPres", {s1: "amo", s2: "amas", s3: "ama", p1: "amamos", p2: "amáis", p3: "aman", vos: "amás"})
 assert_TenseMood("amar", "IndImp", {s1: "amaba", s2: "amabas", s3: "amaba", p1: "amábamos", p2: "amabais", p3: "amaban"})
 assert_TenseMood("amar", "IndPret", {s1: "amé", s2: "amaste", s3: "amó", p1: "amamos", p2: "amasteis", p3: "amaron"})
 assert_TenseMood("amar", "IndFut", {s1: "amaré", s2: "amarás", s3: "amará", p1: "amaremos", p2: "amaréis", p3: "amarán"})
 assert_TenseMood("amar", "IndCond", {s1: "amaría", s2: "amarías", s3: "amaría", p1: "amaríamos", p2: "amaríais", p3: "amarían"})
-// FIX: SubPres,vos has 2nd form, C.Am regional: amés
+// TODO: SubPres,vos has 2nd form, C.Am regional: amés
 assert_TenseMood("amar", "SubPres", {s1: "ame", s2: "ames", s3: "ame", p1: "amemos", p2: "améis", p3: "amen"})
 assert_TenseMood("amar", "SubImp", {s1: ["amara","amase"], s2: ["amaras","amases"], s3: ["amara","amase"], p1: ["amáramos", "amásemos"], p2: ["amarais", "amaseis"], p3: ["amaran", "amasen"]})
 assert_TenseMood("amar", "SubFut", {s1:"amare",s2:"amares",s3:"amare",p1:"amáremos",p2:"amareis",p3:"amaren"})
@@ -16,6 +17,7 @@ assert_TenseMood("amar", "CmdNeg", {s1: null, s2: "ames", s3: "ame", p1: "amemos
 
 
 // -er
+assert_Participles("beber", { pres: "bebiendo", past: "bebido" })
 assert_TenseMood("beber", "IndPres", {s1: "bebo", s2: "bebes", s3: "bebe", p1: "bebemos", p2: "bebéis", p3: "beben", vos: "bebés"})
 assert_TenseMood("beber", "IndImp", {s1: "bebía", s2: "bebías", s3: "bebía",  p1: "bebíamos", p2: "bebíais", p3: "bebían"})
 assert_TenseMood("beber", "IndPret", {s1: "bebí", s2: "bebiste", s3: "bebió", p1: "bebimos", p2: "bebisteis", p3: "bebieron"})
@@ -29,6 +31,7 @@ assert_TenseMood("beber", "CmdNeg", {s1: null, s2: "bebas", s3: "beba", p1: "beb
 
 
 // -ir
+assert_Participles("partir", { pres: "partiendo", past: "partido" })
 assert_TenseMood("partir", "IndPres", {s1: "parto", s2: "partes", s3: "parte", p1: "partimos", p2: "partís", p3: "parten", vos: "partís"})
 assert_TenseMood("partir", "IndImp", {s1: "partía", s2: "partías", s3: "partía",  p1: "partíamos", p2: "partíais", p3: "partían"})
 assert_TenseMood("partir", "IndPret", {s1: "partí", s2: "partiste", s3: "partió", p1: "partimos", p2: "partisteis", p3: "partieron"})
@@ -42,6 +45,7 @@ assert_TenseMood("partir", "CmdNeg", {s1: null, s2: "partas", s3: "parta", p1: "
 
 // all other verbs
 
+assert_Participles("acertar", { pres: "acertando", past: "acertado" })
 assert_TenseMood("acertar", "IndPres", {s1: "acierto", s2: "aciertas", s3: "acierta", p1: "acertamos", p2: "acertáis", p3: "aciertan", vos: "acertás"})
 assert_TenseMood("acertar", "IndImp", {s1: "acertaba", s2: "acertabas", s3: "acertaba", p1: "acertábamos", p2: "acertabais", p3: "acertaban"})
 assert_TenseMood("acertar", "IndPret", {s1: "acerté", s2: "acertaste", s3: "acertó", p1: "acertamos", p2: "acertasteis", p3: "acertaron"})
@@ -53,6 +57,7 @@ assert_TenseMood("acertar","SubFut",{s1:"acertare",s2:"acertares",s3:"acertare",
 assert_TenseMood("acertar", "CmdPos", {s1:null, s2: "acierta", s3: "acierte", p1: "acertemos", p2: "acertad", p3: "acierten", vos: "acertá"})
 assert_TenseMood("acertar", "CmdNeg", {s1:null, s2: "aciertes", s3: "acierte", p1: "acertemos", p2: "acertéis", p3: "acierten"})
 
+assert_Participles("acordar", { pres: "acordando", past: "acordado" })
 assert_TenseMood("acordar", "IndPres", {s1: "acuerdo", s2: "acuerdas", s3: "acuerda", p1: "acordamos", p2: "acordáis", p3: "acuerdan", vos: "acordás"})
 assert_TenseMood("acordar", "IndPret", {s1: "acordé", s2: "acordaste", s3: "acordó", p1: "acordamos", p2: "acordasteis", p3: "acordaron"})
 assert_TenseMood("acordar", "IndImp", {s1: "acordaba", s2: "acordabas", s3: "acordaba", p1: "acordábamos", p2: "acordabais", p3: "acordaban"})
@@ -64,6 +69,7 @@ assert_TenseMood("acordar","SubFut",{s1:"acordare",s2:"acordares",s3:"acordare",
 assert_TenseMood("acordar", "CmdPos",  {s1:null, s2: "acuerda", s3: "acuerde", p1: "acordemos", p2: "acordad", p3: "acuerden", vos: "acordá"})
 assert_TenseMood("acordar", "CmdNeg",  {s1:null, s2: "acuerdes", s3: "acuerde", p1: "acordemos", p2: "acordéis", p3: "acuerden"})
 
+assert_Participles("almorzar", { pres: "almorzando", past: "almorzado" })
 assert_TenseMood("almorzar", "IndPres", {s1: "almuerzo", s2: "almuerzas", s3: "almuerza", p1: "almorzamos", p2: "almorzáis", p3: "almuerzan", vos: "almorzás"})
 assert_TenseMood("almorzar", "IndImp", {s1: "almorzaba", s2: "almorzabas", s3: "almorzaba", p1: "almorzábamos", p2: "almorzabais", p3: "almorzaban"})
 assert_TenseMood("almorzar", "IndPret", {s1: "almorcé", s2: "almorzaste", s3: "almorzó", p1: "almorzamos", p2: "almorzasteis", p3: "almorzaron"})
@@ -75,6 +81,7 @@ assert_TenseMood("almorzar","SubFut",{s1:"almorzare",s2:"almorzares",s3:"almorza
 assert_TenseMood("almorzar", "CmdPos", {s1:null, s2: "almuerza", s3: "almuerce", p1: "almorcemos", p2: "almorzad", p3: "almuercen", vos: "almorzá"})
 assert_TenseMood("almorzar", "CmdNeg", {s1:null, s2: "almuerces", s3: "almuerce", p1: "almorcemos", p2: "almorcéis", p3: "almuercen"})
 
+assert_Participles("andar", { pres: "andando", past: "andado" })
 assert_TenseMood("andar", "IndPres", {s1: "ando", s2: "andas", s3: "anda", p1: "andamos", p2: "andáis", p3: "andan", vos: "andás"})
 assert_TenseMood("andar", "IndImp", {s1: "andaba", s2: "andabas", s3: "andaba", p1: "andábamos", p2: "andabais", p3: "andaban"})
 assert_TenseMood("andar", "IndPret", {s1: "anduve", s2: "anduviste", s3: "anduvo", p1: "anduvimos", p2: "anduvisteis", p3: "anduvieron"})
@@ -87,6 +94,7 @@ assert_TenseMood("andar", "CmdPos", {s1: null, s2: "anda", s3: "ande", p1: "ande
 assert_TenseMood("andar", "CmdNeg", {s1: null, s2: "andes", s3: "ande", p1: "andemos", p2: "andéis", p3: "anden"})
 
 // "-üir" family of typographic changes
+assert_Participles("argüir", { pres: "arguyendo", past: "argüido" })
 assert_TenseMood("argüir","IndPres",{s1: "arguyo",s2: "arguyes",s3: "arguye",p1: "argüimos",p2: "argüís",p3: "arguyen",vos: "argüís"})
 assert_TenseMood("argüir","IndImp",{s1: "argüía",s2: "argüías",s3: "argüía",p1: "argüíamos",p2: "argüíais",p3: "argüían"})
 assert_TenseMood("argüir","IndPret",{s1: "argüí",s2: "argüiste",s3: "arguyó",p1: "argüimos",p2: "argüisteis",p3: "arguyeron"})
@@ -98,6 +106,7 @@ assert_TenseMood("argüir","SubFut",{s1:"arguyere",s2:"arguyeres",s3:"arguyere",
 assert_TenseMood("argüir","CmdPos",{s1:null,s2: "arguye",s3: "arguya",p1: "arguyamos",p2: "argüid",p3: "arguyan",vos: "argüí"})
 assert_TenseMood("argüir","CmdNeg",{s1:null,s2: "arguyas",s3: "arguya",p1: "arguyamos",p2: "arguyáis",p3: "arguyan"})
 
+assert_Participles("caber", { pres: "cabiendo", past: "cabido" })
 assert_TenseMood("caber", "IndPres", {s1: "quepo",s2: "cabes",s3: "cabe",p1: "cabemos",p2: "cabéis",p3: "caben",vos: "cabés"})
 assert_TenseMood("caber", "IndImp", {s1: "cabía",s2: "cabías",s3: "cabía",p1: "cabíamos",p2: "cabíais",p3: "cabían"})
 assert_TenseMood("caber", "IndPret", {s1: "cupe",s2: "cupiste",s3: "cupo",p1: "cupimos",p2: "cupisteis",p3: "cupieron"})
@@ -109,6 +118,7 @@ assert_TenseMood("caber","SubFut",{s1:"cupiere",s2:"cupieres",s3:"cupiere",p1:"c
 assert_TenseMood("caber", "CmdPos", {s1:null,s2: "cabe",s3: "quepa",p1: "quepamos",p2: "cabed",p3: "quepan",vos: "cabé"})
 assert_TenseMood("caber", "CmdNeg", {s1:null,s2: "quepas",s3: "quepa",p1: "quepamos",p2: "quepáis",p3: "quepan"})
 
+assert_Participles("caer", { pres: "cayendo", past: "caído" })
 assert_TenseMood("caer", "IndPres", {s1: "caigo",s2: "caes",s3: "cae",p1: "caemos",p2: "caéis",p3: "caen",vos: "caés"})
 assert_TenseMood("caer", "IndImp", {s1: "caía",s2: "caías",s3: "caía",p1: "caíamos",p2: "caíais",p3: "caían"})
 assert_TenseMood("caer", "IndPret", {s1: "caí",s2: "caíste",s3: "cayó",p1: "caímos",p2: "caísteis",p3: "cayeron"})
@@ -120,6 +130,7 @@ assert_TenseMood("caer","SubFut",{s1:"cayere",s2:"cayeres",s3:"cayere",p1:"cayé
 assert_TenseMood("caer", "CmdPos", {s1:null,s2: "cae",s3: "caiga",p1: "caigamos",p2: "caed",p3: "caigan",vos: "caé"})
 assert_TenseMood("caer", "CmdNeg", {s1:null,s2: "caigas",s3: "caiga",p1: "caigamos",p2: "caigáis",p3: "caigan"})
 
+assert_Participles("conducir", { pres: "conduciendo", past: "conducido" })
 assert_TenseMood("conducir", "IndPres", {s1: "conduzco",s2: "conduces",s3: "conduce",p1: "conducimos",p2: "conducís",p3: "conducen",vos: "conducís"})
 assert_TenseMood("conducir", "IndImp", {s1: "conducía",s2: "conducías",s3: "conducía",p1: "conducíamos",p2: "conducíais",p3: "conducían"})
 assert_TenseMood("conducir", "IndPret", {s1: "conduje",s2: "condujiste",s3: "condujo",p1: "condujimos",p2: "condujisteis",p3: "condujeron"})
@@ -131,7 +142,9 @@ assert_TenseMood("conducir","SubFut",{s1:"condujere",s2:"condujeres",s3:"conduje
 assert_TenseMood("conducir", "CmdPos", {s1:null,s2: "conduce",s3: "conduzca",p1: "conduzcamos",p2: "conducid",p3: "conduzcan",vos: "conducí"})
 assert_TenseMood("conducir", "CmdNeg", {s1:null,s2: "conduzcas",s3: "conduzca",p1: "conduzcamos",p2: "conduzcáis",p3: "conduzcan"})
 
+
 // test prefix + irregular base: 'co-' + 'ser'
+assert_Participles("coser", { pres: "cosiendo", past: "cosido" })
 assert_TenseMood("coser", "IndPres", {s1: "coso", s2: "coses", s3: "cose",     p1: "cosemos",  p2: "coséis",    p3: "cosen", vos: "cosés"})
 assert_TenseMood("coser", "IndImp", {s1: "cosía", s2: "cosías", s3: "cosía",  p1: "cosíamos", p2: "cosíais",  p3: "cosían"})
 assert_TenseMood("coser", "IndPret", {s1: "cosí", s2: "cosiste", s3: "cosió",   p1: "cosimos",  p2: "cosisteis", p3: "cosieron"})
@@ -143,6 +156,7 @@ assert_TenseMood("coser","SubFut",{s1:"cosiere",s2:"cosieres",s3:"cosiere",p1:"c
 assert_TenseMood("coser", "CmdPos",  {s1:null, s2: "cose", s3: "cosa",        p1: "cosamos",  p2: "cosed",    p3: "cosan", vos: "cosé"})
 assert_TenseMood("coser", "CmdNeg",  {s1:null, s2: "cosas", s3: "cosa",       p1: "cosamos",  p2: "cosáis",   p3: "cosan"})
 
+assert_Participles("creer", { pres: "creyendo", past: "creído" })
 assert_TenseMood("creer", "IndPres", {s1: "creo",s2: "crees",s3: "cree",p1: "creemos",p2: "creéis",p3: "creen",vos: "creés"})
 assert_TenseMood("creer", "IndImp", {s1: "creía",s2: "creías",s3: "creía",p1: "creíamos",p2: "creíais",p3: "creían"})
 assert_TenseMood("creer", "IndPret", {s1: "creí",s2: "creíste",s3: "creyó",p1: "creímos",p2: "creísteis",p3: "creyeron"})
@@ -154,6 +168,7 @@ assert_TenseMood("creer","SubFut",{s1:"creyere",s2:"creyeres",s3:"creyere",p1:"c
 assert_TenseMood("creer", "CmdPos",  {s1:null,s2: "cree",s3: "crea",p1: "creamos",p2: "creed",p3: "crean",vos: "creé"})
 assert_TenseMood("creer", "CmdNeg",  {s1:null,s2: "creas",s3: "crea",p1: "creamos",p2: "creáis",p3: "crean"})
 
+assert_Participles("dar", { pres: "dando", past: "dado" })
 assert_TenseMood("dar", "IndPres", {s1: "doy", s2: "das", s3: "da", p1: "damos", p2: "dais", p3: "dan"})
 assert_TenseMood("dar", "IndImp", {s1: "daba", s2: "dabas", s3: "daba",  p1: "dábamos", p2: "dabais", p3: "daban"})
 assert_TenseMood("dar", "IndPret", {s1: "di", s2: "diste", s3: "dio",  p1: "dimos", p2: "disteis", p3: "dieron"})
@@ -165,6 +180,7 @@ assert_TenseMood("dar","SubFut",{s1:"diere",s2:"dieres",s3:"diere",p1:"diéremos
 assert_TenseMood("dar", "CmdPos", {s1: null, s2: "da", s3: "dé", p1: "demos", p2: "dad", p3: "den"})
 assert_TenseMood("dar", "CmdNeg", {s1: null, s2: "des", s3: "dé", p1: "demos", p2: "deis", p3: "den"})
 
+assert_Participles("decir", { pres: "diciendo", past: "dicho" })
 assert_TenseMood("decir", "IndPres", {s1: "digo", s2: "dices", s3: "dice",     p1: "decimos", p2: "decís", p3: "dicen",    vos: "decís"})
 assert_TenseMood("decir", "IndImp",  {s1: "decía", s2: "decías", s3: "decía",  p1: "decíamos", p2: "decíais", p3: "decían"})
 assert_TenseMood("decir", "IndPret", {s1: "dije", s2: "dijiste", s3: "dijo",   p1: "dijimos", p2: "dijisteis", p3: "dijeron"})
@@ -177,6 +193,7 @@ assert_TenseMood("decir", "CmdPos",  {s1: null,   s2: "di", s3: "diga",        p
 assert_TenseMood("decir", "CmdNeg",  {s1: null,   s2: "digas", s3: "diga",     p1: "digamos",  p2: "digáis", p3: "digan" })
 
 // regular but with a unique "-quir" ending that requires spelling changes
+assert_Participles("delinquir", { pres: "delinquiendo", past: "delinquido" })
 assert_TenseMood("delinquir", "IndPres", {s1: "delinco",s2: "delinques",s3: "delinque",p1: "delinquimos",p2: "delinquís",p3: "delinquen",vos: "delinquís"})
 assert_TenseMood("delinquir", "IndImp", {s1: "delinquía",s2: "delinquías",s3: "delinquía",p1: "delinquíamos",p2: "delinquíais",p3: "delinquían"})
 assert_TenseMood("delinquir", "IndPret", {s1: "delinquí",s2: "delinquiste",s3: "delinquió",p1: "delinquimos",p2: "delinquisteis",p3: "delinquieron"})
@@ -188,7 +205,21 @@ assert_TenseMood("delinquir","SubFut",{s1:"delinquiere",s2:"delinquieres",s3:"de
 assert_TenseMood("delinquir", "CmdPos",  {s1:null,s2: "delinque",s3: "delinqua",p1: "delinquamos",p2: "delinquid",p3: "delinquan",vos: "delinquí"})
 assert_TenseMood("delinquir", "CmdNeg",  {s1:null,s2: "delinquas",s3: "delinqua",p1: "delinquamos",p2: "delinquáis",p3: "delinquan"})
 
+// descreer: prefix 'des' + conjugation_family_prefix 'cr' + '-eer'
+assert_Participles("descreer", { pres: "descreyendo", past: "descreído" })
+assert_TenseMood("descreer", "IndPres", {s1: "descreo",s2: "descrees",s3: "descree",p1: "descreemos",p2: "descreéis",p3: "descreen",vos: "descreés"})
+assert_TenseMood("descreer", "IndImp", {s1: "descreía",s2: "descreías",s3: "descreía",p1: "descreíamos",p2: "descreíais",p3: "descreían"})
+assert_TenseMood("descreer", "IndPret", {s1: "descreí",s2: "descreíste",s3: "descreyó",p1: "descreímos",p2: "descreísteis",p3: "descreyeron"})
+assert_TenseMood("descreer", "IndFut", {s1: "descreeré",s2: "descreerás",s3: "descreerá",p1: "descreeremos",p2: "descreeréis",p3: "descreerán"})
+assert_TenseMood("descreer", "IndCond", {s1: "descreería",s2: "descreerías",s3: "descreería",p1: "descreeríamos",p2: "descreeríais",p3: "descreerían"})
+assert_TenseMood("descreer", "SubPres", {s1: "descrea",s2: "descreas",s3: "descrea",p1: "descreamos",p2: "descreáis",p3: "descrean"})
+assert_TenseMood("descreer", "SubImp", {s1:["descreyera","descreyese"],s2:["descreyeras","descreyeses"],s3:["descreyera","descreyese"],p1:["descreyéramos","descreyésemos"],p2:["descreyerais","descreyeseis"],p3:["descreyeran","descreyesen"]})
+assert_TenseMood("descreer", "SubFut", {s1:"descreyere",s2:"descreyeres",s3:"descreyere",p1:"descreyéremos",p2:"descreyereis",p3:"descreyeren"})
+assert_TenseMood("descreer", "CmdPos", {s1:null,s2: "descree",s3: "descrea",p1: "descreamos",p2: "descreed",p3: "descrean",vos: "descreé"})
+assert_TenseMood("descreer", "CmdNeg", {s1:null,s2: "descreas",s3: "descrea",p1: "descreamos",p2: "descreáis",p3: "descrean"})
+
 // tests prefix 'de' + 'tener'
+assert_Participles("detener", { pres: "deteniendo", past: "detenido" })
 assert_TenseMood("detener", "IndPres", {s1: "detengo",s2: "detienes",s3: "detiene",p1: "detenemos",p2: "detenéis",p3: "detienen",vos: "detenés"})
 assert_TenseMood("detener", "IndImp", {s1: "detenía",s2: "detenías",s3: "detenía",p1: "deteníamos",p2: "deteníais",p3: "detenían"})
 assert_TenseMood("detener", "IndPret", {s1: "detuve",s2: "detuviste",s3: "detuvo",p1: "detuvimos",p2: "detuvisteis",p3: "detuvieron"})
@@ -200,6 +231,20 @@ assert_TenseMood("detener","SubFut",{s1:"detuviere",s2:"detuvieres",s3:"detuvier
 assert_TenseMood("detener", "CmdPos", {s1:null,s2: "detén",s3: "detenga",p1: "detengamos",p2: "detened",p3: "detengan",vos: "detené"})
 assert_TenseMood("detener", "CmdNeg", {s1:null,s2: "detengas",s3: "detenga",p1: "detengamos",p2: "detengáis",p3: "detengan"})
 
+// o:ue
+assert_Participles("dormir", { pres: "durmiendo", past: "dormido" })
+assert_TenseMood("dormir", "IndPres", { s1: "duermo", s2: "duermes", s3: "duerme", p1: "dormimos", p2: "dormís", p3: "duermen", vos: "dormís" })
+assert_TenseMood("dormir", "IndImp", { s1: "dormía", s2: "dormías", s3: "dormía", p1: "dormíamos", p2: "dormíais", p3: "dormían" })
+assert_TenseMood("dormir", "IndPret", { s1: "dormí", s2: "dormiste", s3: "durmió", p1: "dormimos", p2: "dormisteis", p3: "durmieron" })
+assert_TenseMood("dormir", "IndFut", { s1: "dormiré", s2: "dormirás", s3: "dormirá", p1: "dormiremos", p2: "dormiréis", p3: "dormirán" })
+assert_TenseMood("dormir", "IndCond", { s1: "dormiría", s2: "dormirías", s3: "dormiría", p1: "dormiríamos", p2: "dormiríais", p3: "dormirían" })
+assert_TenseMood("dormir", "SubPres", { s1: "duerma", s2: "duermas", s3: "duerma", p1: "durmamos", p2: "durmáis", p3: "duerman" })
+assert_TenseMood("dormir", "SubImp", { s1: ["durmiera","durmiese"], s2: ["durmieras","durmieses"], s3: ["durmiera","durmiese"], p1: ["durmiéramos","durmiésemos"], p2: ["durmierais","durmieseis"], p3: ["durmieran","durmiesen"] })
+assert_TenseMood("dormir","SubFut",{ s1:"durmiere", s2:"durmieres", s3:"durmiere", p1:"durmiéremos", p2:"durmiereis", p3:"durmieren" })
+assert_TenseMood("dormir", "CmdPos", { s1: null, s2: "duerme", s3: "duerma", p1: "durmamos", p2: "dormid", p3: "duerman", vos: "dormí" })
+assert_TenseMood("dormir", "CmdNeg", { s1: null, s2: "duermas", s3: "duerma", p1: "durmamos", p2: "durmáis", p3: "duerman" })
+
+assert_Participles("elegir", { pres: "eligiendo", past: "elegido" })
 assert_TenseMood("elegir","IndPres",{s1:"elijo",s2:"eliges",s3:"elige",p1:"elegimos",p2:"elegís",p3:"eligen",vos:"elegís"})
 assert_TenseMood("elegir","IndImp",{s1:"elegía",s2:"elegías",s3:"elegía",p1:"elegíamos",p2:"elegíais",p3:"elegían"})
 assert_TenseMood("elegir","IndPret",{s1:"elegí",s2:"elegiste",s3:"eligió",p1:"elegimos",p2:"elegisteis",p3:"eligieron"})
@@ -211,6 +256,7 @@ assert_TenseMood("elegir","SubFut",{s1:"eligiere",s2:"eligieres",s3:"eligiere",p
 assert_TenseMood("elegir","CmdPos",{s1:null,s2:"elige",s3:"elija",p1:"elijamos",p2:"elegid",p3:"elijan",vos:"elegí"})
 assert_TenseMood("elegir","CmdNeg",{s1:null,s2:"elijas",s3:"elija",p1:"elijamos",p2:"elijáis",p3:"elijan"})
 
+assert_Participles("erguir", { pres: "irguiendo", past: "erguido" })
 assert_TenseMood("erguir", "IndPres", {s1:["irgo","yergo"],s2:["irgues","yergues"],s3:["irgue","yergue"],p1: "erguimos",p2: "erguís",p3:["irguen","yerguen"],vos: "erguís"})
 assert_TenseMood("erguir", "IndImp", {s1: "erguía",s2: "erguías",s3: "erguía",p1: "erguíamos",p2: "erguíais",p3: "erguían"})
 assert_TenseMood("erguir", "IndPret", {s1: "erguí",s2: "erguiste",s3: "irguió",p1: "erguimos",p2: "erguisteis",p3: "irguieron"})
@@ -222,6 +268,7 @@ assert_TenseMood("erguir", "SubFut",{s1:"irguiere",s2:"irguieres",s3:"irguiere",
 assert_TenseMood("erguir", "CmdPos", {s1:null,s2:["irgue","yergue"],s3:["irga","yerga"],p1:["irgamos","yergamos"],p2: "erguid",p3:["irgan","yergan"],vos: "erguí"})
 assert_TenseMood("erguir", "CmdNeg", {s1:null,s2:["irgas","yergas"],s3:["irga","yerga"],p1:["irgamos","yergamos"],p2:["irgáis","yergáis"],p3:["irgan","yergan"],vos: "yergas"})
 
+assert_Participles("estar", { pres: "estando", past: "estado" })
 assert_TenseMood("estar", "IndPres", {s1: "estoy", s2: "estás", s3: "está",         p1: "estamos", p2: "estáis", p3: "están" })
 assert_TenseMood("estar", "IndImp",  {s1: "estaba", s2: "estabas", s3: "estaba",    p1: "estábamos", p2: "estabais", p3: "estaban"})
 assert_TenseMood("estar", "IndPret", {s1: "estuve", s2: "estuviste", s3: "estuvo",  p1: "estuvimos", p2: "estuvisteis", p3: "estuvieron"})
@@ -234,6 +281,7 @@ assert_TenseMood("estar", "CmdPos",  {s1: null,   s2: "está", s3: "esté",     
 assert_TenseMood("estar", "CmdNeg",  {s1: null,   s2: "estés", s3: "esté",          p1: "estemos", p2: "estéis", p3: "estén" })
 
 // conjugation_families["uir"]
+assert_Participles("fluir", { pres: "fluyendo", past: "fluido" })
 assert_TenseMood("fluir", "IndPres", {s1: "fluyo",s2: "fluyes",s3: "fluye",p1: "fluimos",p2: "fluis",p3: "fluyen",vos: "fluis"})
 assert_TenseMood("fluir", "IndImp", {s1: "fluía",s2: "fluías",s3: "fluía",p1: "fluíamos",p2: "fluíais",p3: "fluían"})
 assert_TenseMood("fluir", "IndPret", {s1: "flui",s2: "fluiste",s3: "fluyó",p1: "fluimos",p2: "fluisteis",p3: "fluyeron"})
@@ -246,6 +294,7 @@ assert_TenseMood("fluir", "CmdPos", {s1:null,s2: "fluye",s3: "fluya",p1: "fluyam
 assert_TenseMood("fluir", "CmdNeg", {s1:null,s2: "fluyas",s3: "fluya",p1: "fluyamos",p2: "fluyáis",p3: "fluyan"})
 
 // based on "vaciar", but has changes to the accents
+assert_Participles("guiar", { pres: "guiando", past: "guiado" })
 assert_TenseMood("guiar", "IndPres", {s1: "guío",s2: "guías",s3: "guía",p1: "guiamos",p2: "guiais",p3: "guían",vos: "guias"})
 assert_TenseMood("guiar", "IndImp", {s1: "guiaba",s2: "guiabas",s3: "guiaba",p1: "guiábamos",p2: "guiabais",p3: "guiaban"})
 assert_TenseMood("guiar", "IndPret", {s1: "guie",s2: "guiaste",s3: "guio",p1: "guiamos",p2: "guiasteis",p3: "guiaron"})
@@ -258,6 +307,7 @@ assert_TenseMood("guiar", "CmdPos", {s1:null,s2: "guía",s3: "guíe",p1: "guiemo
 assert_TenseMood("guiar", "CmdNeg", {s1:null,s2: "guíes",s3: "guíe",p1: "guiemos",p2: "guieis",p3: "guíen"})
 
 // NOTE: supports alternate form for s3 => impersonal: hay
+assert_Participles("haber", { pres: "habiendo", past: "habido" })
 assert_TenseMood("haber", "IndPres", {s1: "he", s2: "has", s3: ["hay", "ha"],     p1: "hemos", p2: "habéis", p3: "han"})
 assert_TenseMood("haber", "IndImp",  {s1: "había", s2: "habías", s3: "había",     p1: "habíamos", p2: "habíais", p3: "habían"})
 assert_TenseMood("haber", "IndPret", {s1: "hube", s2: "hubiste", s3: "hubo",      p1: "hubimos", p2: "hubisteis", p3: "hubieron"})
@@ -269,6 +319,7 @@ assert_TenseMood("haber","SubFut",{s1:"hubiere",s2:"hubieres",s3:"hubiere",p1:"h
 assert_TenseMood("haber", "CmdPos",  {s1: null,   s2: ["habe", "he"], s3: "haya", p1: "hayamos",  p2: "habed", p3: "hayan" })
 assert_TenseMood("haber", "CmdNeg",  {s1: null,   s2: "hayas", s3: "haya",        p1: "hayamos",  p2: "hayáis", p3: "hayan" })
 
+assert_Participles("hacer", { pres: "haciendo", past: "hecho" })
 assert_TenseMood("hacer", "IndPres", {s1: "hago", s2: "haces", s3: "hace",        p1: "hacemos", p2: "hacéis", p3: "hacen", vos: "hacés"})
 assert_TenseMood("hacer", "IndImp",  {s1: "hacía", s2: "hacías", s3: "hacía",     p1: "hacíamos", p2: "hacíais", p3: "hacían"})
 assert_TenseMood("hacer", "IndPret", {s1: "hice", s2: "hiciste", s3: "hizo",      p1: "hicimos", p2: "hicisteis", p3: "hicieron"})
@@ -280,6 +331,7 @@ assert_TenseMood("hacer","SubFut",{s1:"hiciere",s2:"hicieres",s3:"hiciere",p1:"h
 assert_TenseMood("hacer", "CmdPos",  {s1: null,   s2: "haz", s3: "haga",          p1: "hagamos",  p2: "haced", p3: "hagan", vos: "hacé" })
 assert_TenseMood("hacer", "CmdNeg",  {s1: null,   s2: "hagas", s3: "haga",        p1: "hagamos",  p2: "hagáis", p3: "hagan" })
 
+assert_Participles("huir", { pres: "huyendo", past: "huido" })
 assert_TenseMood("huir", "IndPres", {s1: "huyo",s2: "huyes",s3: "huye",       p1: "huimos",p2: "huis",p3: "huyen",vos: "huis"})
 assert_TenseMood("huir", "IndImp",  {s1: "huía",s2: "huías",s3: "huía",       p1: "huíamos",p2: "huíais",p3: "huían"})
 assert_TenseMood("huir", "IndPret", {s1: "hui",s2: "huiste",s3: "huyó",       p1: "huimos",p2: "huisteis",p3: "huyeron"})
@@ -291,6 +343,7 @@ assert_TenseMood("huir","SubFut",{s1:"huyere",s2:"huyeres",s3:"huyere",p1:"huyé
 assert_TenseMood("huir", "CmdPos",  {s1:null,s2: "huye",s3: "huya",          p1: "huyamos",p2: "huid",p3: "huyan",vos: "hui"})
 assert_TenseMood("huir", "CmdNeg",  {s1:null,s2: "huyas",s3: "huya",         p1: "huyamos",p2: "huyáis",p3: "huyan"})
 
+assert_Participles("ir", { pres: "yendo", past: "ido" })
 assert_TenseMood("ir", "IndPres", {s1: "voy", s2: "vas", s3: "va",                p1: "vamos", p2: "vais", p3: "van"})
 assert_TenseMood("ir", "IndImp",  {s1: "iba", s2: "ibas", s3: "iba",              p1: "íbamos", p2: "ibais", p3: "iban"})
 assert_TenseMood("ir", "IndPret", {s1: "fui", s2: "fuiste", s3: "fue",            p1: "fuimos", p2: "fuisteis", p3: "fueron"})
@@ -302,6 +355,7 @@ assert_TenseMood("ir","SubFut",{s1:"fuere",s2:"fueres",s3:"fuere",p1:"fuéremos"
 assert_TenseMood("ir", "CmdPos",  {s1: null, s2: "ve", s3: "vaya",                p1: ["vayamos", "vamos"], p2: "id", p3: "vayan", vos: "andá"})
 assert_TenseMood("ir", "CmdNeg",  {s1: null, s2: "vayas", s3: "vaya",             p1: "vayamos", p2: "vayáis", p3: "vayan"})
 
+assert_Participles("jugar", { pres: "jugando", past: "jugado" })
 assert_TenseMood("jugar", "IndPres", {s1: "juego",s2: "juegas",s3: "juega",p1: "jugamos",p2: "jugáis",p3: "juegan",vos: "jugás"})
 assert_TenseMood("jugar", "IndImp", {s1: "jugaba",s2: "jugabas",s3: "jugaba",p1: "jugábamos",p2: "jugabais",p3: "jugaban"})
 assert_TenseMood("jugar", "IndPret", {s1: "jugué",s2: "jugaste",s3: "jugó",p1: "jugamos",p2: "jugasteis",p3: "jugaron"})
@@ -313,17 +367,19 @@ assert_TenseMood("jugar","SubFut",{s1:"jugare",s2:"jugares",s3:"jugare",p1:"jug�
 assert_TenseMood("jugar", "CmdPos", {s1:null,s2: "juega",s3: "juegue",p1: "juguemos",p2: "jugad",p3: "jueguen",vos: "jugá"})
 assert_TenseMood("jugar", "CmdNeg", {s1:null,s2: "juegues",s3: "juegue",p1: "juguemos",p2: "juguéis",p3: "jueguen"})
 
+assert_Participles("leer", { pres: "leyendo", past: "leído" })
 assert_TenseMood("leer", "IndPres", {s1: "leo", s2: "lees", s3: "lee",            p1: "leemos", p2: "leéis", p3: "leen", vos: "leés"})
-assert_TenseMood("leer", "IndImp", {s1: "leía", s2: "leías", s3: "leía",         p1: "leíamos", p2: "leíais", p3: "leían"})
+assert_TenseMood("leer", "IndImp", {s1: "leía", s2: "leías", s3: "leía",          p1: "leíamos", p2: "leíais", p3: "leían"})
 assert_TenseMood("leer", "IndPret", {s1: "leí", s2: "leíste", s3: "leyó",         p1: "leímos", p2: "leísteis", p3: "leyeron"})
 assert_TenseMood("leer", "IndFut", {s1: "leeré", s2: "leerás", s3: "leerá",       p1: "leeremos", p2: "leeréis", p3: "leerán"})
 assert_TenseMood("leer", "IndCond", {s1: "leería", s2: "leerías", s3: "leería",   p1: "leeríamos", p2: "leeríais", p3: "leerían"})
 assert_TenseMood("leer", "SubPres", {s1: "lea", s2: "leas", s3: "lea",            p1: "leamos", p2: "leáis", p3: "lean"})
-assert_TenseMood("leer","SubImp",{s1:["leyera","leyese"],s2:["leyeras","leyeses"],s3:["leyera","leyese"],p1:["leyéramos","leyésemos"],p2:["leyerais","leyeseis"],p3:["leyeran","leyesen"]})
-assert_TenseMood("leer","SubFut",{s1:"leyere",s2:"leyeres",s3:"leyere",p1:"leyéremos",p2:"leyereis",p3:"leyeren"})
+assert_TenseMood("leer", "SubImp",{s1:["leyera","leyese"],s2:["leyeras","leyeses"],s3:["leyera","leyese"],p1:["leyéramos","leyésemos"],p2:["leyerais","leyeseis"],p3:["leyeran","leyesen"]})
+assert_TenseMood("leer", "SubFut",{s1:"leyere",s2:"leyeres",s3:"leyere",p1:"leyéremos",p2:"leyereis",p3:"leyeren"})
 assert_TenseMood("leer", "CmdPos", {s1: null, s2: "lee", s3: "lea",               p1: "leamos", p2: "leed", p3: "lean", vos: "leé"})
 assert_TenseMood("leer", "CmdNeg", {s1: null, s2: "leas", s3: "lea",              p1: "leamos", p2: "leáis", p3: "lean"})
 
+assert_Participles("llegar", { pres: "llegando", past: "llegado" })
 assert_TenseMood("llegar", "IndPres", {s1: "llego", s2: "llegas", s3: "llega", p1: "llegamos", p2: "llegáis", p3: "llegan", vos: "llegás"})
 assert_TenseMood("llegar", "IndImp", {s1:"llegaba",s2:"llegabas",s3:"llegaba",p1:"llegábamos",p2:"llegabais",p3:"llegaban"})
 assert_TenseMood("llegar", "IndPret", {s1: "llegué", s2: "llegaste", s3: "llegó",  p1: "llegamos", p2: "llegasteis", p3: "llegaron"})
@@ -335,6 +391,7 @@ assert_TenseMood("llegar","SubFut",{s1:"llegare",s2:"llegares",s3:"llegare",p1:"
 assert_TenseMood("llegar", "CmdPos", {s1:null,s2:"llega",s3:"llegue",p1:"lleguemos",p2:"llegad",p3:"lleguen",vos:"llegá"})
 assert_TenseMood("llegar", "CmdNeg", {s1:null,s2:"llegues",s3:"llegue",p1:"lleguemos",p2:"lleguéis",p3:"lleguen"})
 
+assert_Participles("oír", { pres: "oyendo", past: "oído" })
 assert_TenseMood("oír", "IndPres", {s1: "oigo",s2: "oyes",s3: "oye",p1: "oímos",p2: "oís",p3: "oyen",vos: "oís"})
 assert_TenseMood("oír", "IndImp", {s1: "oía",s2: "oías",s3: "oía",p1: "oíamos",p2: "oíais",p3: "oían"})
 assert_TenseMood("oír", "IndPret", {s1: "oí",s2: "oíste",s3: "oyó",p1: "oímos",p2: "oísteis",p3: "oyeron"})
@@ -346,6 +403,7 @@ assert_TenseMood("oír","SubFut",{s1:"oyere",s2:"oyeres",s3:"oyere",p1:"oyéremo
 assert_TenseMood("oír", "CmdPos", {s1:null,s2: "oye",s3: "oiga",p1: "oigamos",p2: "oíd",p3: "oigan",vos: "oí"})
 assert_TenseMood("oír", "CmdNeg", {s1:null,s2: "oigas",s3: "oiga",p1: "oigamos",p2: "oigáis",p3: "oigan"})
 
+assert_Participles("oponer", { pres: "oponiendo", past: "opuesto" })
 assert_TenseMood("oponer", "IndPres", {s1: "opongo", s2: "opones", s3: "opone", p1: "oponemos", p2: "oponéis", p3: "oponen", vos: "oponés"})
 assert_TenseMood("oponer", "IndImp", {s1: "oponía", s2: "oponías", s3: "oponía", p1: "oponíamos", p2: "oponíais", p3: "oponían"})
 assert_TenseMood("oponer", "IndPret", {s1: "opuse", s2: "opusiste", s3: "opuso", p1: "opusimos", p2: "opusisteis", p3: "opusieron"})
@@ -357,6 +415,7 @@ assert_TenseMood("oponer","SubFut",{s1:"opusiere",s2:"opusieres",s3:"opusiere",p
 assert_TenseMood("oponer", "CmdPos", {s1: null, s2: "opón", s3: "oponga", p1: "opongamos", p2: "oponed", p3: "opongan", vos: "oponé"})
 assert_TenseMood("oponer", "CmdNeg", {s1: null, s2: "opongas", s3: "oponga", p1: "opongamos", p2: "opongáis", p3: "opongan"})
 
+assert_Participles("poder", { pres: "pudiendo", past: "podido" })
 assert_TenseMood("poder", "IndPres", {s1: "puedo",s2: "puedes",s3: "puede",p1: "podemos",p2: "podéis",p3: "pueden",vos: "podés"})
 assert_TenseMood("poder", "IndImp", {s1: "podía",s2: "podías",s3: "podía",p1: "podíamos",p2: "podíais",p3: "podían"})
 assert_TenseMood("poder", "IndPret", {s1: "pude",s2: "pudiste",s3: "pudo",p1: "pudimos",p2: "pudisteis",p3: "pudieron"})
@@ -368,6 +427,7 @@ assert_TenseMood("poder","SubFut",{s1:"pudiere",s2:"pudieres",s3:"pudiere",p1:"p
 assert_TenseMood("poder", "CmdPos", {s1:null,s2: "puede",s3: "pueda",p1: "podamos",p2: "poded",p3: "puedan",vos: "podé"})
 assert_TenseMood("poder", "CmdNeg", {s1:null,s2: "puedas",s3: "pueda",p1: "podamos",p2: "podáis",p3: "puedan"})
 
+assert_Participles("poner", { pres: "poniendo", past: "puesto" })
 assert_TenseMood("poner", "IndPres", {s1: "pongo",s2: "pones",s3: "pone",p1: "ponemos",p2: "ponéis",p3: "ponen",vos: "ponés"})
 assert_TenseMood("poner", "IndImp", {s1: "ponía",s2: "ponías",s3: "ponía",p1: "poníamos",p2: "poníais",p3: "ponían"})
 assert_TenseMood("poner", "IndPret", {s1: "puse",s2: "pusiste",s3: "puso",p1: "pusimos",p2: "pusisteis",p3: "pusieron"})
@@ -380,6 +440,20 @@ assert_TenseMood("poner", "CmdPos", {s1:null,s2: "pon",s3: "ponga",p1: "pongamos
 // add regionalism such as: Central American spelling of vos: pongás
 assert_TenseMood("poner", "CmdNeg", {s1:null,s2: "pongas",s3: "ponga",p1: "pongamos",p2: "pongáis",p3: "pongan"})
 
+// "prever", a prefix "pre" + a 3-char base infinitive "ver"
+assert_Participles("prever", { pres: "previendo", past: "previsto" })
+assert_TenseMood("prever", "IndPres", {s1: "preveo",s2: "prevés",s3: "prevé",p1: "prevemos",p2: "prevéis",p3: "prevén"})
+assert_TenseMood("prever", "IndImp", {s1: "preveía",s2: "preveías",s3: "preveía",p1: "preveíamos",p2: "preveíais",p3: "preveían"})
+assert_TenseMood("prever", "IndPret", {s1: "preví",s2: "previste",s3: "previó",p1: "previmos",p2: "previsteis",p3: "previeron"})
+assert_TenseMood("prever", "IndFut", {s1: "preveré",s2: "preverás",s3: "preverá",p1: "preveremos",p2: "preveréis",p3: "preverán"})
+assert_TenseMood("prever", "IndCond", {s1: "prevería",s2: "preverías",s3: "prevería",p1: "preveríamos",p2: "preveríais",p3: "preverían"})
+assert_TenseMood("prever", "SubPres", {s1: "prevea",s2: "preveas",s3: "prevea",p1: "preveamos",p2: "preveáis",p3: "prevean"})
+assert_TenseMood("prever", "SubImp", {s1:["previera","previese"],s2:["previeras","previeses"],s3:["previera","previese"],p1:["previéramos","previésemos"],p2:["previerais","previeseis"],p3:["previeran","previesen"]})
+assert_TenseMood("prever","SubFut",{s1:"previere",s2:"previeres",s3:"previere",p1:"previéremos",p2:"previereis",p3:"previeren"})
+assert_TenseMood("prever", "CmdPos", {s1:null,s2: "prevé",s3: "prevea",p1: "preveamos",p2: "preved",p3: "prevean"})
+assert_TenseMood("prever", "CmdNeg", {s1:null,s2: "preveas",s3: "prevea",p1: "preveamos",p2: "preveáis",p3: "prevean"})
+
+assert_Participles("querer", { pres: "queriendo", past: "querido" })
 assert_TenseMood("querer", "IndPres", {s1: "quiero",s2: "quieres",s3: "quiere",p1: "queremos",p2: "queréis",p3: "quieren",vos: "querés"})
 assert_TenseMood("querer", "IndImp",  {s1: "quería",s2: "querías",s3: "quería",p1: "queríamos",p2: "queríais",p3: "querían"})
 assert_TenseMood("querer", "IndPret", {s1: "quise",s2: "quisiste",s3: "quiso",p1: "quisimos",p2: "quisisteis",p3: "quisieron"})
@@ -391,6 +465,7 @@ assert_TenseMood("querer","SubFut",{s1:"quisiere",s2:"quisieres",s3:"quisiere",p
 assert_TenseMood("querer", "CmdPos",  {s1:null,s2: "quiere",s3: "quiera",p1: "queramos",p2: "quered",p3: "quieran",vos: "queré"})
 assert_TenseMood("querer", "CmdNeg",  {s1:null,s2: "quieras",s3: "quiera",p1: "queramos",p2: "queráis",p3: "quieran"})
 
+assert_Participles("reunir", { pres: "reuniendo", past: "reunido" })
 assert_TenseMood("reunir", "IndPres", {s1: "reúno", s2: "reúnes", s3: "reúne", p1: "reunimos", p2: "reunís", p3: "reúnen", vos: "reunís"})
 assert_TenseMood("reunir", "IndImp",  {s1: "reunía", s2: "reunías", s3: "reunía", p1: "reuníamos", p2: "reuníais", p3: "reunían"})
 assert_TenseMood("reunir", "IndPret", {s1: "reuní", s2: "reuniste", s3: "reunió", p1: "reunimos", p2: "reunisteis", p3: "reunieron"})
@@ -402,7 +477,7 @@ assert_TenseMood("reunir","SubFut",{s1:"reuniere",s2:"reunieres",s3:"reuniere",p
 assert_TenseMood("reunir", "CmdPos",  {s1:null, s2: "reúne", s3: "reúna", p1: "reunamos", p2: "reunid", p3: "reúnan", vos: "reuní"})
 assert_TenseMood("reunir", "CmdNeg",  {s1:null, s2: "reúnas", s3: "reúna", p1: "reunamos", p2: "reunáis", p3: "reúnan"})
 
-
+assert_Participles("saber", { pres: "sabiendo", past: "sabido" })
 assert_TenseMood("saber", "IndPres", {s1: "sé",s2: "sabes",s3: "sabe",p1: "sabemos",p2: "sabéis",p3: "saben",vos: "sabés"})
 assert_TenseMood("saber", "IndImp", {s1: "sabía",s2: "sabías",s3: "sabía",p1: "sabíamos",p2: "sabíais",p3: "sabían"})
 assert_TenseMood("saber", "IndPret", {s1: "supe",s2: "supiste",s3: "supo",p1: "supimos",p2: "supisteis",p3: "supieron"})
@@ -414,6 +489,7 @@ assert_TenseMood("saber", "SubFut",{s1:"supiere",s2:"supieres",s3:"supiere",p1:"
 assert_TenseMood("saber", "CmdPos", {s1:null,s2: "sabe",s3: "sepa",p1: "sepamos",p2: "sabed",p3: "sepan",vos: "sabé"})
 assert_TenseMood("saber", "CmdNeg", {s1:null,s2: "sepas",s3: "sepa",p1: "sepamos",p2: "sepáis",p3: "sepan"})
 
+assert_Participles("sacar", { pres: "sacando", past: "sacado" })
 assert_TenseMood("sacar", "IndPres", {s1: "saco",s2: "sacas",s3: "saca",p1: "sacamos",p2: "sacáis",p3: "sacan",vos: "sacás"})
 assert_TenseMood("sacar", "IndImp",  {s1: "sacaba",s2: "sacabas",s3: "sacaba",p1: "sacábamos",p2: "sacabais",p3: "sacaban"})
 assert_TenseMood("sacar", "IndPret", {s1: "saqué",s2: "sacaste",s3: "sacó",p1: "sacamos",p2: "sacasteis",p3: "sacaron"})
@@ -425,6 +501,7 @@ assert_TenseMood("sacar","SubFut",{s1:"sacare",s2:"sacares",s3:"sacare",p1:"sac�
 assert_TenseMood("sacar", "CmdPos",  {s1:null,s2: "saca",s3: "saque",p1: "saquemos",p2: "sacad",p3: "saquen",vos: "sacá"})
 assert_TenseMood("sacar", "CmdNeg",  {s1:null,s2: "saques",s3: "saque",p1: "saquemos",p2: "saquéis",p3: "saquen"})
 
+assert_Participles("salir", { pres: "saliendo", past: "salido" })
 assert_TenseMood("salir", "IndPres", {s1: "salgo",s2: "sales",s3: "sale",p1: "salimos",p2: "salís",p3: "salen",vos: "salís"})
 assert_TenseMood("salir", "IndImp", {s1: "salía",s2: "salías",s3: "salía",p1: "salíamos",p2: "salíais",p3: "salían"})
 assert_TenseMood("salir", "IndPret", {s1: "salí",s2: "saliste",s3: "salió",p1: "salimos",p2: "salisteis",p3: "salieron"})
@@ -436,6 +513,7 @@ assert_TenseMood("salir","SubFut",{s1:"saliere",s2:"salieres",s3:"saliere",p1:"s
 assert_TenseMood("salir", "CmdPos", {s1:null,s2: "sal",s3: "salga",p1: "salgamos",p2: "salid",p3: "salgan",vos: "salí"})
 assert_TenseMood("salir", "CmdNeg", {s1:null,s2: "salgas",s3: "salga",p1: "salgamos",p2: "salgáis",p3: "salgan"})
 
+assert_Participles("seguir", { pres: "siguiendo", past: "seguido" })
 assert_TenseMood("seguir", "IndPres", {s1: "sigo",s2: "sigues",s3: "sigue",p1: "seguimos",p2: "seguís",p3: "siguen",vos: "seguís"})
 assert_TenseMood("seguir", "IndImp", {s1: "seguía",s2: "seguías",s3: "seguía",p1: "seguíamos",p2: "seguíais",p3: "seguían"})
 assert_TenseMood("seguir", "IndPret", {s1: "seguí",s2: "seguiste",s3: "siguió",p1: "seguimos",p2: "seguisteis",p3: "siguieron"})
@@ -447,6 +525,7 @@ assert_TenseMood("seguir","SubFut",{s1:"siguiere",s2:"siguieres",s3:"siguiere",p
 assert_TenseMood("seguir", "CmdPos", {s1:null,s2: "sigue",s3: "siga",p1: "sigamos",p2: "seguid",p3: "sigan",vos: "seguí"})
 assert_TenseMood("seguir", "CmdNeg", {s1:null,s2: "sigas",s3: "siga",p1: "sigamos",p2: "sigáis",p3: "sigan"})
 
+assert_Participles("ser", { pres: "siendo", past: "sido" })
 assert_TenseMood("ser", "IndPres", {s1: "soy",s2: "eres",s3: "es",p1: "somos",p2: "sois",p3: "son",vos: "sos"})
 assert_TenseMood("ser", "IndImp", {s1: "era",s2: "eras",s3: "era",p1: "éramos",p2: "erais",p3: "eran"})
 assert_TenseMood("ser", "IndPret", {s1: "fui",s2: "fuiste",s3: "fue",p1: "fuimos",p2: "fuisteis",p3: "fueron"})
@@ -458,6 +537,7 @@ assert_TenseMood("ser","SubFut",{s1:"fuere",s2:"fueres",s3:"fuere",p1:"fuéremos
 assert_TenseMood("ser", "CmdPos",  {s1:null,s2: "sé",s3: "sea",p1: "seamos",p2: "sed",p3: "sean",vos: "sé"})
 assert_TenseMood("ser", "CmdNeg",  {s1:null,s2: "seas",s3: "sea",p1: "seamos",p2: "seáis",p3: "sean"})
 
+assert_Participles("tener", { pres: "teniendo", past: "tenido" })
 assert_TenseMood("tener", "IndPres", {s1: "tengo",s2: "tienes",s3: "tiene",p1: "tenemos",p2: "tenéis",p3: "tienen",vos: "tenés"})
 assert_TenseMood("tener", "IndImp", {s1: "tenía",s2: "tenías",s3: "tenía",p1: "teníamos",p2: "teníais",p3: "tenían"})
 assert_TenseMood("tener", "IndPret", {s1: "tuve",s2: "tuviste",s3: "tuvo",p1: "tuvimos",p2: "tuvisteis",p3: "tuvieron"})
@@ -469,6 +549,7 @@ assert_TenseMood("tener","SubFut",{s1:"tuviere",s2:"tuvieres",s3:"tuviere",p1:"t
 assert_TenseMood("tener", "CmdPos",  {s1:null,s2: "ten",s3: "tenga",p1: "tengamos",p2: "tened",p3: "tengan",vos: "tené"})
 assert_TenseMood("tener", "CmdNeg",  {s1:null,s2: "tengas",s3: "tenga",p1: "tengamos",p2: "tengáis",p3: "tengan"})
 
+assert_Participles("traer", { pres: "trayendo", past: "traído" })
 assert_TenseMood("traer", "IndPres", {s1: "traigo",s2: "traes",s3: "trae",p1: "traemos",p2: "traéis",p3: "traen",vos: "traés"})
 assert_TenseMood("traer", "IndImp", {s1: "traía",s2: "traías",s3: "traía",p1: "traíamos",p2: "traíais",p3: "traían"})
 assert_TenseMood("traer", "IndPret", {s1: "traje",s2: "trajiste",s3: "trajo",p1: "trajimos",p2: "trajisteis",p3: "trajeron"})
@@ -480,6 +561,7 @@ assert_TenseMood("traer","SubFut",{s1:"trajere",s2:"trajeres",s3:"trajere",p1:"t
 assert_TenseMood("traer", "CmdPos", {s1:null,s2: "trae",s3: "traiga",p1: "traigamos",p2: "traed",p3: "traigan",vos: "traé"})
 assert_TenseMood("traer", "CmdNeg", {s1:null,s2: "traigas",s3: "traiga",p1: "traigamos",p2: "traigáis",p3: "traigan"})
 
+assert_Participles("vaciar", { pres: "vaciando", past: "vaciado" })
 assert_TenseMood("vaciar", "IndPres", {s1: "vacío",s2: "vacías",s3: "vacía",p1: "vaciamos",p2: "vaciáis",p3: "vacían",vos: "vaciás"})
 assert_TenseMood("vaciar", "IndImp",  {s1: "vaciaba",s2: "vaciabas",s3: "vaciaba",p1: "vaciábamos",p2: "vaciabais",p3: "vaciaban"})
 assert_TenseMood("vaciar", "IndPret", {s1: "vacié",s2: "vaciaste",s3: "vació",p1: "vaciamos",p2: "vaciasteis",p3: "vaciaron"})
@@ -491,6 +573,7 @@ assert_TenseMood("vaciar","SubFut",{s1:"vaciare",s2:"vaciares",s3:"vaciare",p1:"
 assert_TenseMood("vaciar", "CmdPos",  {s1:null,s2: "vacía",s3: "vacíe",p1: "vaciemos",p2: "vaciad",p3: "vacíen",vos: "vaciá"})
 assert_TenseMood("vaciar", "CmdNeg",  {s1:null,s2: "vacíes",s3: "vacíe",p1: "vaciemos",p2: "vaciéis",p3: "vacíen"})
 
+assert_Participles("venir", { pres: "viniendo", past: "venido" })
 assert_TenseMood("venir", "IndPres", {s1: "vengo",s2: "vienes",s3: "viene",p1: "venimos",p2: "venís",p3: "vienen",vos: "venís"})
 assert_TenseMood("venir", "IndImp", {s1: "venía",s2: "venías",s3: "venía",p1: "veníamos",p2: "veníais",p3: "venían"})
 assert_TenseMood("venir", "IndPret", {s1: "vine",s2: "viniste",s3: "vino",p1: "vinimos",p2: "vinisteis",p3: "vinieron"})
@@ -502,6 +585,7 @@ assert_TenseMood("venir","SubFut",{s1:"viniere",s2:"vinieres",s3:"viniere",p1:"v
 assert_TenseMood("venir", "CmdPos",  {s1:null,s2: "ven",s3: "venga",p1: "vengamos",p2: "venid",p3: "vengan",vos: "vení"})
 assert_TenseMood("venir", "CmdNeg",  {s1:null,s2: "vengas",s3: "venga",p1: "vengamos",p2: "vengáis",p3: "vengan"})
 
+assert_Participles("ver", { pres: "viendo", past: "visto" })
 assert_TenseMood("ver", "IndPres", {s1: "veo",s2: "ves",s3: "ve",p1: "vemos",p2: "veis",p3: "ven"})
 assert_TenseMood("ver", "IndImp", {s1: "veía",s2: "veías",s3: "veía",p1: "veíamos",p2: "veíais",p3: "veían"})
 assert_TenseMood("ver", "IndPret", {s1: "vi",s2: "viste",s3: "vio",p1: "vimos",p2: "visteis",p3: "vieron"})

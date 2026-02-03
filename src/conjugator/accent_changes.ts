@@ -22,12 +22,14 @@ const accent_changes_by_infinitive: {[base_infinitive: string]: AccentChanges} =
 }
 
 
+export function correctDiéresis(conjugation: string) {
+    // argüó
+    conjugation = conjugation.replace(/üi?([aáeéoó])/, "uy$1")
+    return conjugation.replace(/gu([ií])/, "gü$1")
+}
+
+
 export function getChangedAccents(infinitive: string, tense_mood: VerbTenseMood, conjugation: VerbConjugation) : VerbConjugation {
-    function correctDiéresis(conjugation: string) {
-        // argüó
-        conjugation = conjugation.replace(/üi?([aáeéoó])/, "uy$1")
-        return conjugation.replace(/gu([ií])/, "gü$1")
-    }
     let accent_changes: VerbConjugation = {}
     const accent_change_rules = accent_changes_by_infinitive[infinitive]?.[tense_mood]
     if (accent_change_rules) {

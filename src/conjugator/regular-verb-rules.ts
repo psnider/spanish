@@ -1,8 +1,4 @@
-import { VerbConjugation, VerbConjugationChanges, VerbTenseMood, VerbConjugationRules } from ".";
-
-
-type VerbFamily = "ar" | "er" | "ir"
-const verb_families = ["ar", "er", "ir"]
+import { VerbConjugation, VerbConjugationChanges, VerbTenseMood, VerbConjugationRules, VerbFamily } from ".";
 
 
 
@@ -28,8 +24,9 @@ interface VerbAspectSuffixRules {
 // That is, those that are not irregular.
 // Note that even irregular verbs often use these suffixes for most forms.
 export const regular_verb_suffixes: { [ending: string]: VerbConjugationRules<VerbAspectSuffixRules> } = {
-    ar: {    // ar: like "amar"
-        conjugation_classes: [],
+    "-ar": {    // ar: like "amar"
+        conjugation_classes: ["-ar"],
+        participle_rules: { pres: {suffix: "ando"}, past: {suffix: "ado"}},
         aspects: {
             IndPres: { suffixes: { s1: ["o"], s2: ["as"], s3: ["a"], p1: ["amos"], p2: ["áis"], p3: ["an"], vos: ["ás"] } },
             IndImp:  { suffixes: { s1: ["aba"], s2: ["abas"], s3: ["aba"], p1: ["ábamos"], p2: ["abais"], p3: ["aban"] } },
@@ -45,50 +42,62 @@ export const regular_verb_suffixes: { [ending: string]: VerbConjugationRules<Ver
             CmdNeg:  { base: "SubPres", suffixes: { s1: null } },
         }
     },
-    er: {   // er: like "temer"
-        conjugation_classes: [],
+    "-er": {   // er: like "temer"
+        conjugation_classes: ["-er"],
+        participle_rules: { pres: {suffix: "iendo"}, past: {suffix: "ido"}},
         aspects: {
             IndPres: { suffixes: { s1: ["o"], s2: ["es"], s3: ["e"], p1: ["emos"], p2: ["éis"], p3: ["en"], vos: ["és"] } },
             IndImp: { suffixes: { s1: ["ía"], s2: ["ías"], s3: ["ía"], p1: ["íamos"], p2: ["íais"], p3: ["ían"] } },
             IndPret: { suffixes: { s1: ["í"], s2: ["iste"], s3: ["ió"], p1: ["imos"], p2: ["isteis"], p3: ["ieron"] } },
-            IndFut: { base: "ar" },
-            IndCond: { base: "ar" },
+            IndFut: { base: "-ar" },
+            IndCond: { base: "-ar" },
             SubPres: { suffixes: { s1: ["a"], s2: ["as"], s3: ["a"], p1: ["amos"], p2: ["áis"], p3: ["an"] } },
-            SubImp: { base: "ar" },
-            SubFut: { base: "ar" },
+            SubImp: { base: "-ar" },
+            SubFut: { base: "-ar" },
             CmdPos: { suffixes: { s1: null, s2: ["e"], s3: ["a"], p1: ["amos"], p2: ["ed"], p3: ["an"], vos: ["é"] } },
             CmdNeg: { base: "SubPres", suffixes: { s1: null } },
         }
     },
-    ir: {    // ir: like "partir"
-        conjugation_classes: [],
+    "-ir": {    // ir: like "partir"
+        conjugation_classes: ["-ir"],
+        // participle_rules: { base: "-er" },
+        participle_rules: { pres: {suffix: "iendo"}, past: {suffix: "ido"}},
         aspects: {
-            IndPres: { base: "er", suffixes: { p1: ["imos"], p2: ["ís"], vos: ["ís"] } },
-            IndImp: { base: "er" },
-            IndPret: { base: "er" },
-            IndFut: { base: "ar" },
-            IndCond: { base: "ar" },
-            SubPres: { base: "er" },
-            SubImp: { base: "ar" },
-            SubFut: { base: "ar" },
-            CmdPos: { base: "er", suffixes: { p2: ["id"], vos: ["í"] } },
-            CmdNeg: { base: "er" },
+            IndPres: { base: "-er", suffixes: { p1: ["imos"], p2: ["ís"], vos: ["ís"] } },
+            IndImp: { base: "-er" },
+            IndPret: { base: "-er" },
+            IndFut: { base: "-ar" },
+            IndCond: { base: "-ar" },
+            SubPres: { base: "-er" },
+            SubImp: { base: "-ar" },
+            SubFut: { base: "-ar" },
+            CmdPos: { base: "-er", suffixes: { p2: ["id"], vos: ["í"] } },
+            CmdNeg: { base: "-er" },
         }
     }
 }
 
 
-export function getVerbFamily(infinitive: string) {
-    let verb_family = infinitive.slice(-2)
-    if (verb_family === "ír") {
-        verb_family = "ir"
+const verb_terminations = ["ar", "er", "ir"]
+
+
+export function getVerbFamily(infinitive: string) : VerbFamily {
+    let verb_termination = infinitive.slice(-2)
+    let verb_family: VerbFamily
+    if (verb_termination === "ír") {
+        verb_termination = "ir"
     }
-    if (verb_family !== "ar" && verb_family !== "er" && verb_family !== "ir") {
+    if (verb_terminations.includes(verb_termination)) {
+        verb_family = <VerbFamily> '-' + verb_termination
+    } else {
         console.log(`invalid infinitive=${infinitive}`)
         verb_family = undefined
     }
-    return <VerbFamily> verb_family
+    return verb_family
 }
+
+
+const verb_families = ["-ar", "-er", "-ir"]
 
 
 function getParentVerb(conjugation_rules: VerbAspectSuffixRules, verb_family: VerbFamily, tense_mood: VerbTenseMood) {

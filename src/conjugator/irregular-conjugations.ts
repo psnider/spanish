@@ -1,5 +1,5 @@
 import { GrammaticalPersons, VerbConjugation, VerbConjugationRules, VerbTenseMood } from ".";
-import { verb_conjugation_rules } from "./conjugation-rules-per-verb.js";
+import { morphophonemic_verb_conjugation_rules } from "./conjugation-rules-per-verb.js";
 import { getRegularSuffixes } from "./regular-verb-rules.js";
 
 
@@ -33,6 +33,7 @@ export interface VerbAspectConjugations {
 export const irregular_conjugations: { [infinitive: string]: VerbConjugationRules<VerbAspectConjugations> } = {
     andar: {
         conjugation_classes: ["pretérito: raíz corta", "futuro: raíz especial"],
+        participle_rules: { pres: {full: "andando"}, past: {full: "andado"} },
         aspects: {
             IndPret: { root: "anduv",
                        forms: { s1: ["anduve"], s2: ["anduviste"], s3: ["anduvo"], p1: ["anduvimos"], p2: ["anduvisteis"], p3: ["anduvieron"] }
@@ -41,6 +42,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     caber: {
         conjugation_classes: ["presente: -go 1.ª p", "pretérito: raíz corta", "futuro: raíz especial"],
+        participle_rules: { pres: {full: "cabiendo"}, past: {full: "cabido"} },
         aspects: {
             // similar a saber
             IndPres: { forms: { s1: ["quepo"] } },
@@ -56,7 +58,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     caer: {
         conjugation_classes: ["hiato → y (fonológico)"],
-        participles: {pres: "cayendo", past: "caído"},
+        participle_rules: { pres: {full: "cayendo"}, past: {full: "caído"} },
         aspects: {
             IndPres: { forms: { s1: ["caigo"] } },
             SubPres: { root: "caig" },
@@ -68,6 +70,8 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     conducir: {
         conjugation_classes: ["presente: -go 1.ª p", "pretérito: raíz corta"],
+        conjugation_family: "-ducir",
+        participle_rules: { pres: {full: "conduciendo"}, past: {full: "conducido"} },
         aspects: {
             SubPres: { root: "conduzc" },
             // stem change conduc => "conduj"
@@ -78,7 +82,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     dar: {
         conjugation_classes: ["pretérito: raíz corta"],
-        participles: { pres: "dando", past: "dado" },
+        participle_rules: { pres: {full: "dando"}, past: {full: "dado"} },
         aspects: {
             // The default "-ar" verb pattern of accent the last sylable doesn't apply to vos forms of "dar", since "dás" is only one sylable
             IndPres: { forms: { s1: ["doy"],                                              p2: ["dais"],                     vos: null } },
@@ -91,7 +95,8 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     decir: {
         conjugation_classes: ["presente: diptongo e → i", "presente: -go 1.ª p", "pretérito: raíz corta", "futuro: raíz especial"],
-        participles: { pres: "diciendo", past: "dicho" },
+        conjugation_family: "decir", 
+        participle_rules: { pres: {full: "diciendo"}, past: {full: "dicho"} },
         aspects: {
             IndPres: { forms: { s1: ["digo"] } },
             SubPres: { root: "dig" },
@@ -105,6 +110,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     erguir: {
         conjugation_classes: ["presente: diptongo e → i", "u → ü (diéresis)"],
+        participle_rules: { pres: {full: "irguiendo"}, past: {full: "erguido"} },
         aspects: {
             IndPres: { forms: { s1: ["irgo", "yergo"], s2: ["irgues", "yergues"], s3: ["irgue", "yergue"], p1: ["erguimos"], p2: ["erguís"], p3: ["irguen", "yerguen"] } },
             // TODO: perhaps this could be handled by allowing two roots?
@@ -117,6 +123,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     estar: {
         conjugation_classes: ["presente: -oy 1.ª p", "pretérito: raíz corta"],
+        participle_rules: { pres: {full: "estando"}, past: {full: "estado"} },
         aspects: {
             // other than s1, the only spelling difference is the accents
             // The "vos" form is that same as the "s2" form, so don't present it
@@ -135,6 +142,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     haber: {
         conjugation_classes: ["atómico verdadero"],
+        participle_rules: { pres: {full: "habiendo"}, past: {full: "habido"} },
         aspects: {
             // "haber" uses the "tú" form for vos, not the inherited regular "-er" form
             IndPres: { forms: { s1: ["he"], s2: ["has"], s3: ["hay", "ha"],     p1: ["hemos"],                     p3: ["han"],  vos: null} },
@@ -150,6 +158,8 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     hacer: {      // ChatGPT says this is NOT irregular
         conjugation_classes: ["presente: -go 1.ª p", "pretérito: raíz corta", "futuro: raíz especial"],
+        conjugation_family: "-acer",
+        participle_rules: { pres: {full: "haciendo"}, past: {full: "hecho"} },
         aspects: {
             IndPres: { forms: { s1: ["hago"] } },
             SubPres: { root: "hag" },
@@ -164,6 +174,8 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     huir: {      // ChatGPT says this is NOT irregular
         conjugation_classes: ["u → y (hiato)"],
+        conjugation_family: "-uir",
+        participle_rules: { pres: {full: "huyendo"}, past: {full: "huido"} },
         aspects: {
             IndPres: { forms: { s1: ["huyo"], s2: ["huyes"], s3: ["huye"], p1: ["huimos"], p2: ["huis"], p3: ["huyen"], vos: ["huis"] } },
             SubPres: { root: "huy" },
@@ -174,6 +186,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     ir: {
         conjugation_classes: ["atómico verdadero"],
+        participle_rules: { pres: {full: "yendo"}, past: {full: "ido"} },
         aspects: {
             // The default "-ir" verb pattern of accent the last sylable doesn't apply to vos forms of "ir", since "ir" is only one sylable
             IndPres: { forms: { s1: ["voy"], s2: ["vas"], s3: ["va"],         p1: ["vamos"], p2: ["vais"], p3: ["van"], vos: null } },
@@ -188,6 +201,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     jugar: {
         conjugation_classes: ["presente: diptongo o → ue"],
+        participle_rules: { pres: {full: "jugando"}, past: {full: "jugado"} },
         aspects: {
             IndPret: { forms: { s1: ["jugué"], s2: ["jugaste"], s3: ["jugó"], p1: ["jugamos"], p2: ["jugasteis"], p3: ["jugaron"] } },
             // FIX: vos spelling differs by region: vos: ["juegues", "*jugués"]
@@ -199,6 +213,8 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     leer: {
         conjugation_classes: ["hiato → y (fonológico)"],
+        conjugation_family: "-eer", 
+        participle_rules: { pres: {full: "leyendo"}, past: {full: "leído"} },
         aspects: {
             // TODO: consider using spelling rules and accent changes to generate these forms
             IndPret: { forms: { s2: ["leíste"], s3: ["leyó"], p1: ["leímos"], p2: ["leísteis"], p3: ["leyeron"] } },
@@ -206,6 +222,8 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     oír: {
         conjugation_classes: ["hiato → y (fonológico)", "presente: diptongo e → i"],
+        conjugation_family: "oír", 
+        participle_rules: { pres: {full: "oyendo"}, past: {full: "oído"} },
         aspects: {
             // FIX: can this be done with typographical rules?
             IndPres: { forms: { s1: ["oigo"], s2: ["oyes"], s3: ["oye"],   p1: ["oímos"],                  p3: ["oyen"] } },
@@ -219,6 +237,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     poder: {
         conjugation_classes: ["presente: diptongo o → ue", "futuro: raíz especial"],
+        participle_rules: { pres: {full: "pudiendo"}, past: {full: "podido"} },
         aspects: {
             // "o:u"  FIX: use root
             // FIX: vos spelling differs by region: vos: ["puedas", "*podás"]
@@ -233,6 +252,8 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     poner: {
         conjugation_classes: ["presente: -go 1.ª p", "pretérito: raíz corta", "futuro: raíz especial"],
+        conjugation_family: "poner",
+        participle_rules: { pres: {full: "poniendo"}, past: {full: "puesto"} },
         aspects: {
             IndPres: { forms: { s1: ["pongo"] } },
             // FIX: vos spelling differs by region: vos: ["pongas", "*pongás"]
@@ -241,16 +262,15 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
                        forms: { s1: ["puse"], s2: ["pusiste"], s3: ["puso"],    p1: ["pusimos"], p2: ["pusisteis"], p3: ["pusieron"] } },
             IndFut:  { root: "pondr" },
             IndCond: { root: "pondr" },
-            CmdPos:  {
-                forms: { s1: null, s2: ["pon"], s3: ["ponga"],         p1: ["pongamos"],           p3: ["pongan"]},
-                derivations: {s2: {preserve_stress_from_base: true}}
-            },
+            CmdPos:  { forms: { s1: null, s2: ["pon"], s3: ["ponga"],         p1: ["pongamos"],           p3: ["pongan"]},
+                       derivations: {s2: {preserve_stress_from_base: true}}
+                     },
             CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     querer: {
         conjugation_classes: ["presente: diptongo e → ie", "pretérito: raíz corta", "futuro: raíz especial"],
-        participles: {pres: "queriendo", past: "querido"},
+        participle_rules: { pres: {full: "queriendo"}, past: {full: "querido"} },
         aspects: {
             // stem change quer => quis
             IndPret: { root: "quis",
@@ -261,6 +281,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     saber: {
         conjugation_classes: ["presente: -go 1.ª p", "pretérito: raíz corta"],
+        participle_rules: { pres: {full: "sabiendo"}, past: {full: "sabido"} },
         aspects: {
             // similar a caber
             IndPres: { forms: { s1: ["sé"] } },
@@ -276,6 +297,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     salir: {
         conjugation_classes: ["presente: -go 1.ª p", "pretérito: raíz corta", "futuro: raíz especial"],
+        participle_rules: { pres: {full: "saliendo"}, past: {full: "salido"} },
         aspects: {
             IndPres: { forms: { s1: ["salgo"] } },
             SubPres: { root: "salg" },
@@ -287,6 +309,8 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     seguir: {
         conjugation_classes: ["presente: diptongo e → i", "presente: -go 1.ª p"],
+        conjugation_family: "seguir",
+        participle_rules: { pres: {full: "siguiendo"}, past: {full: "seguido"} },
         aspects: {
             IndPres: { forms: { s1: ["sigo"] } },
             SubPres: { root: "sig" },
@@ -296,17 +320,20 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     ser: {
         conjugation_classes: ["atómico verdadero"],
+        participle_rules: { pres: {full: "siendo"}, past: {full: "sido"} },
         aspects: {
             IndPres: { forms: { s1: ["soy"], s2: ["eres"], s3: ["es"],        p1: ["somos"], p2: ["sois"], p3: ["son"], vos: ["sos"] } },
             SubPres: { root: "se" },
             IndPret: { forms: { s1: ["fui"], s2: ["fuiste"], s3: ["fue"],     p1: ["fuimos"], p2: ["fuisteis"], p3: ["fueron"] } },
-            IndImp: { forms: { s1: ["era"], s2: ["eras"], s3: ["era"],           p1: ["éramos"], p2: ["erais"], p3: ["eran"]}},
+            IndImp:  { forms: { s1: ["era"], s2: ["eras"], s3: ["era"],           p1: ["éramos"], p2: ["erais"], p3: ["eran"]}},
             CmdPos:  { forms: {            s2: ["sé"],   s3: ["sea"],           p1: ["seamos"],               p3: ["sean"],            vos: ["sé"] } },
             CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     tener: {      // ChatGPT says this is NOT irregular
         conjugation_classes: ["presente: diptongo e → ie", "presente: -go 1.ª p", "pretérito: raíz corta", "futuro: raíz especial"],
+        conjugation_family: "tener", 
+        participle_rules: { pres: {full: "teniendo"}, past: {full: "tenido"} },
         aspects: {
             IndPres: { forms: { s1: ["tengo"] } },
             SubPres: { root: "teng" },
@@ -314,12 +341,16 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
                        forms: { s1: ["tuve"], s2: ["tuviste"], s3: ["tuvo"], p1: ["tuvimos"], p2: ["tuvisteis"], p3: ["tuvieron"] } },
             IndFut:  { root: "tendr" },
             IndCond: { root: "tendr" },
-            CmdPos:  { forms: {            s2: ["ten"],   s3: ["tenga"],           p1: ["tengamos"],               p3: ["tengan"],            vos: ["tené"] } },
+            CmdPos:  { forms: {            s2: ["ten"],   s3: ["tenga"],           p1: ["tengamos"],               p3: ["tengan"],            vos: ["tené"] },
+                       derivations: {s2: {preserve_stress_from_base: true}}
+                     },
             CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     traer: {  // similar to "caer"
         conjugation_classes: ["pretérito: raíz corta"],
+        conjugation_family: "traer",
+        participle_rules: { pres: {full: "trayendo"}, past: {full: "traído"} },
         aspects: {
             IndPres: { forms: { s1: ["traigo"] } },
             SubPres: { root: "traig" },
@@ -331,7 +362,9 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
         }
     },
     vaciar: {
-    conjugation_classes: ["hiato → y (fonológico)"],
+        conjugation_classes: ["hiato → y (fonológico)"],
+        conjugation_family: "-iar",
+        participle_rules: { pres: {full: "vaciando"}, past: {full: "vaciado"} },
         aspects: {
             // The accent is the only thing different from the regular forms
             IndPres: {
@@ -345,6 +378,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     venir: {
         conjugation_classes: ["presente: diptongo e → i", "presente: -go 1.ª p", "pretérito: raíz corta", "futuro: raíz especial"],
+        participle_rules: { pres: {full: "viniendo"}, past: {full: "venido"} },
         aspects: {
             IndPres: { forms: { s1: ["vengo"] } },
             SubPres: { root: "veng" },
@@ -358,15 +392,22 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
     },
     ver: {
         conjugation_classes: ["pretérito: raíz corta"],
+        participle_rules: { pres: {full: "viendo"}, past: {full: "visto"} },
         aspects: {
             // p2 => accent dropped
             // The default "-er" verb pattern of accent the last sylable doesn't apply to vos forms of "ver", since "vés" is only one sylable
-            IndPres: { forms: { s1: ["veo"], p2: ["veis"], vos: null } },
+            IndPres: { forms: { s1: ["veo"], p2: ["veis"], vos: null },
+                       derivations: {s2: {preserve_stress_from_base: true}, s3: {preserve_stress_from_base: true}, p2: {preserve_stress_from_base: true}, p3: {preserve_stress_from_base: true}}
+                     },
             SubPres: { root: "ve" },
             // accents dropped
-            IndPret: { forms: { s1: ["vi"], s3: ["vio"] } },
+            IndPret: { forms: { s1: ["vi"], s3: ["vio"] },
+                       derivations: {s1: {preserve_stress_from_base: true}, s3: {preserve_stress_from_base: true}}
+                     },
             IndImp: { root: "ve" },
-            CmdPos:  { forms: {                      s3: ["vea"],           p1: ["veamos"],               p3: ["vean"],            vos: null } },
+            CmdPos:  { forms: {                      s3: ["vea"],           p1: ["veamos"],               p3: ["vean"],            vos: null },
+                       derivations: {s2: {preserve_stress_from_base: true}}
+                     },
             CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
@@ -400,13 +441,13 @@ export function getTenseMoodLineage(infinitive: string, tense_mood: VerbTenseMoo
 // @return The conjugated forms for this irregular verb that differ from the regular forms.
 //  If there are no forms to replace the regular forms, then an empty object is returned.
 export function applyIrregularConjugationRules(infinitive: string, tense_mood: VerbTenseMood, regular_conjugation: VerbConjugation) : VerbConjugation {
-    let conjugation_rules = verb_conjugation_rules[infinitive]
+    let conjugation_rules = morphophonemic_verb_conjugation_rules[infinitive]
     const irregular_base_infinitive = conjugation_rules?.irregular?.base
     if (irregular_base_infinitive) {
         // from this point on, the infinitive is only used for error reporting, as the irregular_base_infinitive is what is used for conjugation
         const irregular_base = irregular_conjugations[irregular_base_infinitive]
         if (!irregular_base) {
-            throw new Error(`verb_conjugation_rules[${infinitive}].irregular.base=${irregular_base_infinitive} does not exist in verb_conjugation_rules`)
+            throw new Error(`morphophonemic_verb_conjugation_rules[${infinitive}].irregular.base=${irregular_base_infinitive} does not exist in morphophonemic_verb_conjugation_rules`)
         }
         let irregular_base_conjugated: VerbConjugation = {}
         const lineage = getTenseMoodLineage(irregular_base_infinitive, tense_mood)
