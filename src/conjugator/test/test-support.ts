@@ -1,7 +1,7 @@
 
-import {GrammaticalPersons, Participles, VerbConjugation, VerbForms, VerbTenseMood} from "."
-import { conjugateVerb, deriveParticiples } from "./conjugate-verb.js"
-import { test_applyTypographicalChange } from "./typographical-rules.js"
+import {GrammaticalPersons, Participles, VerbConjugation, VerbForms, TenseMood} from ".."
+import { conjugateVerb, deriveParticiples } from "../conjugate-verb.js"
+import { test_applyTypographicalChange } from "../typographical-rules.js"
 
 
 export function equal(lhs: string | [string] | [string, string] | undefined, rhs: string | [string, string] | undefined) {
@@ -26,21 +26,6 @@ export function equal(lhs: string | [string] | [string, string] | undefined, rhs
 }
 
 
-// export function assert_singleForm(infinitive: string, mood_tense: VerbTenseMood, form: string, expected: string) {
-//     const conjugation = conjugateVerb(infinitive, mood_tense)
-//     const actual = conjugation.forms[<keyof VerbConjugation> form]
-//     if ((actual != null) && (expected != null)) {
-//         if ((actual == null) || (expected == null)
-//          || (actual.length)) {
-//             throw new Error(`${infinitive},${mood_tense},${form}: ${actual} !== ${expected}`)
-//         }
-
-//         if (actual !== [expected]) {
-//         }
-//     }
-// }
-
-
 type VerbConjugationExpected = GrammaticalPersons<string | [string, string]>
 
 
@@ -60,7 +45,7 @@ export function assert_Participles(infinitive: string, expected: Participles) {
 }
 
 
-export function assert_TenseMood(infinitive: string, mood_tense: VerbTenseMood, expected: VerbConjugationExpected) {
+export function assert_TenseMood(infinitive: string, mood_tense: TenseMood, expected: VerbConjugationExpected) {
     const actual = conjugateVerb(infinitive, mood_tense)
     const forms = actual.forms
     const expected_keys = Object.keys(expected)

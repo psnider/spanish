@@ -1,5 +1,5 @@
 import { VerbConjugation, VerbConjugationAnnotated } from ".";
-import { applyToVerbForms, conjugation_keys } from "./lib.js";
+import { applyToVerbForms } from "./lib.js";
 
 
 
@@ -33,6 +33,7 @@ const infinitive_endings_to_rules: {[ending: string]: string} = {
 }
 
 
+// FIX: linguist are these patterns
 // Verb changes made solely for phonetic reasons, and using changes in typography.
 const typographical_change_rules : {[rule_name: string]: TypographicalChangeRule} = {
     "preserve-soft-c-sound": {
@@ -123,19 +124,22 @@ export function test_applyTypographicalChange(conjugated_form: string, infinitiv
 // @param @output rules_applied Contains the names of the rules that were applied to the input verb.
 export function getTypographicChanges(infinitive: string, conjugation: VerbConjugation) : VerbConjugation {
     // Apply the rule to the conjugated_form, if the rule matches the form.
-    let typographical_changes: {[key:string]: string} = {}
+    let typographical_changes: VerbConjugation = {}
     const rule_name = findMatchingRuleName(infinitive)
     if (rule_name) {
-        const rule = typographical_change_rules[rule_name]
-        const filtered_keys: Array<keyof VerbConjugation> = <Array<keyof VerbConjugation>> Object.keys(conjugation).filter((key: keyof VerbConjugation) => {
-            return conjugation_keys.includes(key)
-        })
-        filtered_keys.forEach((conjugation_key) => {
-            applyToVerbForms(conjugation, typographical_changes, conjugation_key, (conjugated_form: string) => {
-                const changed = applyTypographicalChange(conjugated_form, rule)
-                return changed
+        const rule = typographical_change_rules[rule_name]        
+        for (const key in conjugation) {
+            const gramatical_person = key as keyof typeof conjugation
+            let did_change = false
+            const changed_forms = applyToVerbForms(conjugation[gramatical_person], (form: string) => {
+                const changed = applyTypographicalChange(form, rule)
+                if (changed !== form) {
+                    did_change = true
+                    return changed
+                }
             })
-        })
+            typographical_changes[gramatical_person] = changed_forms
+        }
     }
     return typographical_changes
 }

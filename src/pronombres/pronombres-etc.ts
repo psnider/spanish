@@ -1,4 +1,4 @@
-import "./index"
+import "../conjugator/index"
 
 
 const pronombres_personales = {

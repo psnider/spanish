@@ -1,12 +1,12 @@
-import { VerbTenseMood } from ".";
-import { conjugateVerb, deriveParticiples } from "./conjugate-verb.js";
+import { TenseMood } from "..";
+import { conjugateVerb, deriveParticiples } from "../conjugate-verb.js";
 
 
 
-let infinitive = "prever"
-let mood_tense: VerbTenseMood = "IndPres"
+let infinitive = "dar"
+let mood_tense: TenseMood = "CmdNeg"
 
-
+ 
 let participles = deriveParticiples(infinitive)
 console.log(JSON.stringify(participles, null, 4))
 

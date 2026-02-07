@@ -1,35 +1,34 @@
-import { AspectsT, GrammaticalPersons, VerbConjugation, VerbTenseMood } from "."
+import { TenseMoodMap, GrammaticalPersons, VerbConjugation, TenseMood, GrammaticalPerson } from "."
 import { applyToVerbForms } from "./lib.js"
 
 
-type AccentChanges = AspectsT< GrammaticalPersons<string> >
+type AccentChangePattern = string  // "á:a"
+type AccentChanges = TenseMoodMap< GrammaticalPersons<AccentChangePattern> >
 
 
-namespace accents {
-
-    // based on model: vaciar
-    export const criar: AccentChanges = {
-        IndPres: {p2: "á:a"},
-        IndPret: {s1: "é:e", s3: "ó:o"},
-    }
-
+// based on model: vaciar
+// FIX: linguistics
+const accent_model_criar: AccentChanges = {
+    IndPres: {p2: "á:a"},
+    IndPret: {s1: "é:e", s3: "ó:o"},
 }
 
 
+// FIX: linguistics
 const accent_changes_by_infinitive: {[base_infinitive: string]: AccentChanges} = {
-    criar: accents.criar,
-    guiar: accents.criar,
+    criar: accent_model_criar,
+    guiar: accent_model_criar,
 }
 
 
 export function correctDiéresis(conjugation: string) {
-    // argüó
+    // Order matters here: first resolve üi/ü + vowel, thenrestore güi/güí
     conjugation = conjugation.replace(/üi?([aáeéoó])/, "uy$1")
     return conjugation.replace(/gu([ií])/, "gü$1")
 }
 
 
-export function getChangedAccents(infinitive: string, tense_mood: VerbTenseMood, conjugation: VerbConjugation) : VerbConjugation {
+export function getChangedAccents(infinitive: string, tense_mood: TenseMood, conjugation: VerbConjugation) : VerbConjugation {
     let accent_changes: VerbConjugation = {}
     const accent_change_rules = accent_changes_by_infinitive[infinitive]?.[tense_mood]
     if (accent_change_rules) {
@@ -47,13 +46,13 @@ export function getChangedAccents(infinitive: string, tense_mood: VerbTenseMood,
             const changed_form = conjugated_form.slice(0,i) + changed + conjugated_form.slice(i + unchanged.length)
             accent_changes[key] = [changed_form]
         })
-    } else {
-        accent_changes = {...conjugation}
     }
     // Apparently, the only verb that ends in "üir" is "argüir".
     if (infinitive.includes("ü")) {
-        for (const conjugation_key in accent_changes) {
-            applyToVerbForms(accent_changes, accent_changes, <keyof VerbConjugation> conjugation_key, correctDiéresis)
+        for (const conjugation_key in conjugation) {
+            // this alias obviates type casting in the following assignment
+            const gramatical_person = <GrammaticalPerson> conjugation_key
+            accent_changes[gramatical_person] = applyToVerbForms(conjugation[gramatical_person], correctDiéresis)
         }
     }
     return accent_changes

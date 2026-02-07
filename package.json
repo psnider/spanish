@@ -7,7 +7,7 @@
   "scripts": {
     "version": "tsc --version",
     "build": "tsc -P .",
-    "test": "node generated/src/conjugator/test.js"
+    "test": "node generated/src/conjugator/test/validate-stem-change-patterns.js && node generated/src/conjugator/test/test.js"
   },
   "author": "Peter Snider",
   "license": "CC-BY-NC-4.0",

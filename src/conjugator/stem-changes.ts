@@ -1,6 +1,6 @@
-import { AspectsT, ConjugationRules, GrammaticalPersons, Participles, VerbConjugation, VerbFamily, VerbTenseMood } from ".";
+import { TenseMoodMap, ConjugationRules, GrammaticalPersons, Participles, VerbConjugation, InfinitiveClass, TenseMood, GrammaticalPerson, VerbForms } from ".";
 import { morphophonemic_verb_conjugation_rules } from "./conjugation-rules-per-verb.js";
-import { conjugation_keys } from "./lib.js";
+import { applyToVerbForms } from "./lib.js";
 
 // e→ie, o→ue (sílabas tónicas)
 // e→i, o→u (solo -ir, sílaba átona)
@@ -17,6 +17,8 @@ export interface StemChangeDescription {
 
 
 export const stem_change_descriptions: Record<string, StemChangeDescription> = {
+    // FIX: linguist
+    // It appears that this regex picks out the "e:ie" verbs: /([bcfhlmnprstv]|qu)e(br|l|mbl|n|nd|ns|nt|nz|r|rd|rn|rr|rt|s|st|v|z)[aei]r$/
   "e:ie": { from: "e", to: "ie", kind: "diphthongization" },
   "o:ue": { from: "o", to: "ue", kind: "diphthongization" },
   "u:ue": { from: "u", to: "ue", kind: "diphthongization" },
@@ -31,9 +33,9 @@ type StemChangeRuleId = keyof typeof stem_change_descriptions
 
 type StemChangesForMoodTense = GrammaticalPersons<StemChangeRuleId>
 
-export interface StemChangeRules extends AspectsT<StemChangesForMoodTense> {
+export interface StemChangeRules extends TenseMoodMap<StemChangesForMoodTense> {
     // Used only for spelling change transforms
-    transforms: StemChangeRuleId[]
+    allowed_transforms: StemChangeRuleId[]
     gerund_rule?: StemChangeRuleId
 }
 
@@ -43,7 +45,7 @@ export interface StemChangeRules extends AspectsT<StemChangesForMoodTense> {
 // The changes apply to the last instance of the original_character in a verb stem (root form).
 export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChangeRules} = {
     "e:i": {
-        transforms: ["e:i"],
+        allowed_transforms: ["e:i"],
         gerund_rule: "e:i",
         IndPres: {s1: "e:i",  s2: "e:i",  s3: "e:i",                          p3: "e:i"},
         IndPret: {                        s3: "e:i",                          p3: "e:i"},
@@ -54,7 +56,7 @@ export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChan
         CmdNeg:  {            s2: "e:i",  s3: "e:i",  p1: "e:i",  p2: "e:i",  p3: "e:i"},
     },
     "e:ie": {
-        transforms: ["e:ie", "e:i"],
+        allowed_transforms: ["e:ie", "e:i"],
         gerund_rule: null,
         IndPres: {s1: "e:ie", s2: "e:ie", s3: "e:ie",                         p3: "e:ie"},
         SubPres: {s1: "e:ie", s2: "e:ie", s3: "e:ie",                         p3: "e:ie"},
@@ -66,7 +68,7 @@ export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChan
     },
     // "o:u" is only used for vowel raising wihin "o:ue" verbs, and is not a pattern for stem changes generally
     "o:ue": {
-        transforms: ["o:ue", "o:u"],
+        allowed_transforms: ["o:ue", "o:u"],
         gerund_rule: "o:u",
         IndPres: {s1: "o:ue", s2: "o:ue", s3: "o:ue",                         p3: "o:ue"},
         IndPret: {                        s3: "o:u",                          p3: "o:u"},
@@ -75,18 +77,19 @@ export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChan
         CmdNeg:  {            s2: "o:ue", s3: "o:ue", p1: "o:u", p2: "o:u",   p3: "o:ue"},
     },
     "u:ú": {
-        transforms: ["u:ú"],
+        allowed_transforms: ["u:ú"],
         gerund_rule: null,
         IndPres: {s1: "u:ú", s2: "u:ú", s3: "u:ú",                            p3: "u:ú"},
         SubPres: {s1: "u:ú", s2: "u:ú", s3: "u:ú",                            p3: "u:ú",    vos: "u:ú"},
         CmdPos:  {s1: "u:ú", s2: "u:ú", s3: "u:ú",                            p3: "u:ú"},
         CmdNeg:  {s1: "u:ú", s2: "u:ú", s3: "u:ú",                            p3: "u:ú",    vos: "u:ú"},
     },
+    // "jugar" is the only verb with this stem change
     "u:ue": {
-        transforms: ["u:ue"],
+        allowed_transforms: ["u:ue"],
         gerund_rule: null,
-        IndPres: {s1: "u:ue", s2: "u:ue", s3: "u:ue", p3: "u:ue"},
-        SubPres: {s1: "u:ue", s2: "u:ue", s3: "u:ue", p3: "u:ue"},
+        IndPres: {s1: "u:ue", s2: "u:ue", s3: "u:ue",                         p3: "u:ue"},
+        SubPres: {s1: "u:ue", s2: "u:ue", s3: "u:ue",                         p3: "u:ue"},
         CmdPos:  {            s2: "u:ue", s3: "u:ue",                         p3: "u:ue"},
         CmdNeg:  {            s2: "u:ue", s3: "u:ue",                         p3: "u:ue"},
     },
@@ -97,7 +100,7 @@ export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChan
 // @return Stem change patterns for those conjugated forms for which they exist.
 //   For example: getStemChanges("IndPres", {stem_change_type: "o:ue"}):
 //     {s1: "o:ue", s2: "o:ue", s3: "o:ue", p3: "o:ue"},
-function getStemChangesFromRule(infinitive: string, mood_tense: VerbTenseMood, morphophonemic_conjugation_rules?: ConjugationRules) : StemChangesForMoodTense | undefined {
+function getStemChangesFromRule(infinitive: string, mood_tense: TenseMood, morphophonemic_conjugation_rules?: ConjugationRules) : StemChangesForMoodTense | undefined {
     const stem_change_type = morphophonemic_conjugation_rules?.stem_change_rule_id
     if (stem_change_type) {
         const stem_changes_for_type = stem_change_patterns[<keyof StemChangeRules> stem_change_type]
@@ -110,7 +113,7 @@ function getStemChangesFromRule(infinitive: string, mood_tense: VerbTenseMood, m
 }
 
 
-function applyStemChangePattern(verb_part: string, verb_family: VerbFamily, stem_change_rule_id: StemChangeRuleId) : string {
+function applyStemChangePattern(verb_part: string, verb_family: InfinitiveClass, stem_change_rule_id: StemChangeRuleId) : string {
     const rule_description = stem_change_descriptions[stem_change_rule_id]
     if (rule_description.only_for_ir_verbs && verb_family !== "-ir") {
         return verb_part
@@ -127,26 +130,27 @@ function applyStemChangePattern(verb_part: string, verb_family: VerbFamily, stem
 
 // @return The root that should be used after applying any stem change.
 // This is the unchanged root if there is no stem change.
-export function getStemChanges(args: {conjugable_infinitive: string, verb_family: VerbFamily, tense_mood: VerbTenseMood}) : VerbConjugation {
-    const {conjugable_infinitive, verb_family, tense_mood} = args
+// regular_suffixes: provides the grammatical persons to be conjugated, as well as the number of forms for each
+export function getStems(args: {conjugable_infinitive: string, verb_family: InfinitiveClass, tense_mood: TenseMood, regular_suffixes: VerbConjugation}) : VerbConjugation {
+    const {conjugable_infinitive, verb_family, tense_mood, regular_suffixes} = args
     const verb_root = conjugable_infinitive.slice(0, -2)
-    let conjugated_stems: VerbConjugation = {}
-    conjugation_keys.forEach((key: keyof VerbConjugation) => {conjugated_stems[key] = [verb_root]})
-    let morphophonemic_conjugation_rules = morphophonemic_verb_conjugation_rules[conjugable_infinitive]
-    if (morphophonemic_conjugation_rules) {
-        const stem_change_rules = getStemChangesFromRule(conjugable_infinitive, tense_mood, morphophonemic_conjugation_rules)
-        if (stem_change_rules) {
-            const valid_conjugation_keys = morphophonemic_conjugation_rules?.conjugate_only || conjugation_keys
-            conjugation_keys.forEach((conjugation_key: keyof(VerbConjugation)) => {
-                const stem_change_rule = stem_change_rules[conjugation_key]
-                if (stem_change_rule && valid_conjugation_keys.includes(conjugation_key)) {
-                    // if (stem_change.length != 1) {
-                    //     throw new Error(`unexpect stem_change=${stem_change} for verb_root=${verb_root} conjugation_key=${conjugation_key}`)
-                    // }
-                    const changed_root = applyStemChangePattern(verb_root, verb_family, stem_change_rule)
-                    conjugated_stems[conjugation_key] = [changed_root]
-                }
-            })
+    const conjugated_stems: VerbConjugation = {}
+    const morphophonemic_conjugation_rules = morphophonemic_verb_conjugation_rules[conjugable_infinitive]
+    const stem_change_rules = (morphophonemic_conjugation_rules ? getStemChangesFromRule(conjugable_infinitive, tense_mood, morphophonemic_conjugation_rules) : undefined)
+    const conjugate_only = morphophonemic_conjugation_rules?.conjugate_only
+    for (const key in regular_suffixes) {
+        const gramatical_person = key as keyof typeof regular_suffixes
+        let stem: string
+        const stem_change_rule = stem_change_rules?.[gramatical_person]
+        const do_apply_stem_change =  !conjugate_only || conjugate_only.includes(gramatical_person)
+        if (stem_change_rule && do_apply_stem_change) {
+            stem = applyStemChangePattern(verb_root, verb_family, stem_change_rule)
+        } else {
+            stem = verb_root
+        }
+        const forms_count = regular_suffixes[gramatical_person]?.length
+        if (forms_count) {
+            conjugated_stems[gramatical_person] = <VerbForms> new Array(forms_count).fill(stem)
         }
     }
     return conjugated_stems
@@ -154,7 +158,7 @@ export function getStemChanges(args: {conjugable_infinitive: string, verb_family
 
 
 // Get gerund with any stem changes.
-export function applyStemChangeToGerundStem(args: {gerund_stem: string, verb_family: VerbFamily, stem_change_rule_id: StemChangeRuleId}): string {
+export function applyStemChangeToGerundStem(args: {gerund_stem: string, verb_family: InfinitiveClass, stem_change_rule_id: StemChangeRuleId}): string {
     const {verb_family, stem_change_rule_id} = args
     let gerund_stem = args.gerund_stem
     if (verb_family === "-ir") {

@@ -6,7 +6,7 @@
     "configurations": [
         {
             "name": "test",
-            "program": "${workspaceFolder}/src/conjugator/test.ts",
+            "program": "${workspaceFolder}/src/conjugator/test/test.ts",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
@@ -24,7 +24,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/src/conjugator/test-conjugate-verb.ts",
+            "program": "${workspaceFolder}/src/conjugator/test/test-conjugate-verb.ts",
             "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"

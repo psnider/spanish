@@ -1,8 +1,7 @@
 import { morphophonemic_verb_conjugation_rules } from "./conjugation-rules-per-verb.js"
-import { ConjugationFamily, ConjugationModel, ConjugationRules, VerbConjugationRules, VerbFamily } from "./index"
+import { ConjugationModel, ConjugationRules, VerbConjugationRules, InfinitiveClass } from "./index"
 import { irregular_conjugations, VerbAspectConjugations } from "./irregular-conjugations.js"
-import { MIN_BASE_VERB_LENGTH } from "./lib.js"
-import { getVerbFamily } from "./regular-verb-rules.js"
+import { getInfinitiveClass } from "./regular-verb-rules.js"
 
 
 // e.g.: descreer: {infinitive: "descreer", model: "leer", prefix: "des", conjugation_family_prefix: "cr", base_infinitive: "creer"}
@@ -13,7 +12,7 @@ export interface ConjugationAndDerivationRules {
     // Only specified if different from infinitive.
     // If the model is a conjugation family (it starts with a hyphen), then this is the infinitive that the conjugation family follows, e.g. "leer" for "-eer".
     conjugable_infinitive: string
-    verb_family: VerbFamily
+    verb_family: InfinitiveClass
     model: ConjugationModel
     // true if this verb is part of a productive conjugation family, that is, it has an ending that classifies its conjugation, e.g. "-eer".
     is_conjugation_family?: boolean
@@ -23,6 +22,13 @@ export interface ConjugationAndDerivationRules {
     morphophonemic_rules?: ConjugationRules  // from morphophonemic_verb_conjugation_rules[]: conjugation_family, irregular
     irregular_rules?: VerbConjugationRules<VerbAspectConjugations>  // from irregular_conjugations[]:
 }
+
+
+// The minimum length of a verb that might have prefixes.
+// Segun ChatGPT, hay solo un verbo de largo 2, "ir", que no puede tener prefijos.
+// y solo hay estos de largo 3: dar, ser, ver, oír
+const MIN_BASE_VERB_LENGTH = 3
+
 
 // Prefixes that precede irregular verbs.
 // This isn't a list of all known prefixes.
@@ -109,7 +115,7 @@ interface ConjugationFamilyMapping {
 
 
 // longer keys must appear before shorter ones that match as a suffix.
-const conjugation_families: {[ending: string]: ConjugationFamilyMapping} = {
+const conjugation_families: {[conjugation_family: string]: ConjugationFamilyMapping} = {
     delinquir: {model: "delinquir",  conjugable_infinitive: "delinquir"},  // prevents mismatch with "huir"
     erguir:    {model: "erguir",  conjugable_infinitive: "erguir"},        // prevents mismatch with "huir"
     seguir:    {model: "seguir",  conjugable_infinitive: "seguir"},        // prevents mismatch with "huir"
@@ -125,27 +131,23 @@ const conjugation_families: {[ending: string]: ConjugationFamilyMapping} = {
     uir:       {model: "-uir",   conjugable_infinitive: "huir"},           // ChatGPT said that all "-uir" verbs conjugate like huir
     // NOT valid conjugation families:
     // -iar NOT => vaciar, e.g.: cambiar, estudiar
-    // FIX: consider all of these
-        //     -aer / -oer
-        // -poner 
-        // -decir 
-        // -ducir
-        // NO -acer
-        // -acer / -ocer 
+    // FIX: linguistics: consider all of these
+    //     -aer / -oer
+    //     -acer / -ocer 
 }
 
 
-function detectMorphologicalModel(infinitive: string) {
+function detectConjugationFamilyByEnding(infinitive: string) {
     for (const conjugation_family in conjugation_families) {
         const conjugation_family_len = conjugation_family.length
-        if ((infinitive.length >= conjugation_family_len) && infinitive.endsWith(conjugation_family)) {
+        if (infinitive.endsWith(conjugation_family)) {
             const model_w_base = conjugation_families[conjugation_family]
             return model_w_base
         }
     }
 }
 
-interface MormorphophonemicRules_w_Prefixes {
+interface MorphophonemicRulesWithPrefixes {
     prefixes?: string[]
     base: string
     morphophonemic_rules?: ConjugationRules
@@ -161,7 +163,7 @@ export function resolveConjugationClass(infinitive: string): ConjugationAndDeriv
     // Separate any productive verb prefixes from this verb, and return the remainder as the base.
     // The base must be at least min_ending_length characters long as "ir" is the only shorter verb, and it cannot be previxed.
     // e.g. "prever" has a 3-char base infinitive.
-    function findProductiveVerbPrefix(verb_part: string, min_ending_length: number) : {prefix?: string, remainder: string} {
+    function findProductiveVerbPrefix(verb_part: string, min_ending_length: number) : {prefix?: string, remainder: string} | undefined{
         for (const prefix of verb_prefixes) {
             if (verb_part.startsWith(prefix)) {
               const tail = verb_part.slice(prefix.length)
@@ -171,7 +173,7 @@ export function resolveConjugationClass(infinitive: string): ConjugationAndDeriv
             }
         }
     }
-    function findProductiveVerbPrefixes(infinitive: string, model: ConjugationModel, is_conjugation_family: boolean) : MormorphophonemicRules_w_Prefixes {
+    function findProductiveVerbPrefixes(infinitive: string, model: ConjugationModel, is_conjugation_family: boolean) : MorphophonemicRulesWithPrefixes | undefined {
         let prefixes: string[]
         let base = infinitive
         // NOTE: in case of a productive ending (has a hyphen), at least one more character is needed, so length is correct.
@@ -191,7 +193,7 @@ export function resolveConjugationClass(infinitive: string): ConjugationAndDeriv
         }
         return {prefixes, base, morphophonemic_rules}
     }
-    const verb_family = getVerbFamily(infinitive)
+    const verb_family = getInfinitiveClass(infinitive)
     if (!verb_family) {
         return undefined
     }
@@ -203,7 +205,7 @@ export function resolveConjugationClass(infinitive: string): ConjugationAndDeriv
     let prefixes: string[]
     let morphophonemic_rules: ConjugationRules
     let is_conjugation_family: boolean
-    const model_w_base = detectMorphologicalModel(infinitive)
+    const model_w_base = detectConjugationFamilyByEnding(infinitive)
     if (model_w_base) {
         ;({model, conjugable_infinitive} = model_w_base)
         is_conjugation_family = (model[0] === "-")
@@ -212,10 +214,7 @@ export function resolveConjugationClass(infinitive: string): ConjugationAndDeriv
     let prefixes_found = findProductiveVerbPrefixes(infinitive, model, is_conjugation_family)
     prefixes = prefixes_found.prefixes
     let conjugation_family_prefix: string
-    if (!is_conjugation_family) {
-        conjugable_infinitive = prefixes_found.base
-        morphophonemic_rules = prefixes_found.morphophonemic_rules
-    } else {
+    if (is_conjugation_family) {
         if (prefixes) {
             const prefix = prefixes.join("")
             const remainder = infinitive.slice(prefix.length)
@@ -228,17 +227,20 @@ export function resolveConjugationClass(infinitive: string): ConjugationAndDeriv
         } else {
             conjugation_family_prefix = infinitive.slice(0, -(model.length - 1))
         }
+    } else {
+        conjugable_infinitive = prefixes_found.base
+        morphophonemic_rules = prefixes_found.morphophonemic_rules
     }
-    let irregular_rules = irregular_conjugations[morphophonemic_rules?.irregular?.base]
+    let irregular_rules = irregular_conjugations[morphophonemic_rules?.irregular_base]
     if (irregular_rules) {
-        model = irregular_rules.conjugation_family || <ConjugationModel>  morphophonemic_rules?.irregular?.base
+        model = irregular_rules.conjugation_family || <ConjugationModel>  morphophonemic_rules?.irregular_base
         if (!is_conjugation_family) {
             is_conjugation_family = (model[0] === "-")
             if (is_conjugation_family) {
                 conjugation_family_prefix = infinitive.slice(0, -(model.length - 1))
             }
         }
-        conjugable_infinitive = morphophonemic_rules?.irregular?.base
+        conjugable_infinitive = morphophonemic_rules?.irregular_base
     }
     return {infinitive, verb_family, model, is_conjugation_family, conjugable_infinitive, prefixes, conjugation_family_prefix, morphophonemic_rules, irregular_rules}
 }

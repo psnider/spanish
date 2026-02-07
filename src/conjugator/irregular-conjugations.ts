@@ -1,4 +1,4 @@
-import { GrammaticalPersons, VerbConjugation, VerbConjugationRules, VerbTenseMood } from ".";
+import { GrammaticalPersons, VerbConjugation, VerbConjugationRules, TenseMood, GrammaticalPerson } from ".";
 import { morphophonemic_verb_conjugation_rules } from "./conjugation-rules-per-verb.js";
 import { getRegularSuffixes } from "./regular-verb-rules.js";
 
@@ -13,29 +13,32 @@ export type DerivationRules = GrammaticalPersons<DerivationRule>
 
 // The rules for conjugating a single form of a verb, such as: "IndPres", "IndImp"
 export interface VerbAspectConjugations {
+    // If set, then this string replaces the root used in regular conjugation rules.
+    root?: string
     // The aspect from which this one is derived.
-    parent_tense_mood?: VerbTenseMood
+    // Note: there are no known conjugations that use both 'root' and 'parent_tense_mood'
+    parent_tense_mood?: TenseMood
     // The conjugated forms.
-    // If this is set, 'root' may not be set.
+    // If root is also set, then the regular forms with 'root' are generated first, and any forms in this list override those.
     // A particular form may be set to null, which indicates that that form should not be generated.
-    // For example, for the single sylable infinitive "dar", IndPres,vos and CmdPos,vos both share the "s2" form.
+    // For example, for the single sylable infinitive "dar", IndPres,vos and CmdPos,vos both share the "s2" form,
+    // so irregular_conjugations.dar.aspects.CmdPos.forms.vos == null
     forms?: VerbConjugation
     // Rules for modifying derived forms.
-    // If this is set, 'root' may not be set.
     derivations?: DerivationRules
-    // If set, then this string replaces the root used in regular conjugation rules.
-    // If this is set, 'forms' may not be set.
-    root?: string
 }
 
 
 // Contains just those forms that differ from the regular forms.
+// FIX: linguist: In general, I would like to replace specific spellings with general production rules, wherever possible.
 export const irregular_conjugations: { [infinitive: string]: VerbConjugationRules<VerbAspectConjugations> } = {
     andar: {
         conjugation_classes: ["pretérito: raíz corta", "futuro: raíz especial"],
         participle_rules: { pres: {full: "andando"}, past: {full: "andado"} },
         aspects: {
             IndPret: { root: "anduv",
+                       // FIX: linguist: This is the same pattern as in "estar". Are there some rules that could apply here instead of a list?
+                       //                  é:e             a:i                ó:o             a:i                a:i                  a:ie
                        forms: { s1: ["anduve"], s2: ["anduviste"], s3: ["anduvo"], p1: ["anduvimos"], p2: ["anduvisteis"], p3: ["anduvieron"] }
                      },
         }
@@ -53,7 +56,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
             IndFut:  { root: "cabr"},
             IndCond: { root: "cabr"},
             CmdPos:  { forms: {                        s3: ["quepa"],      p1: ["quepamos"],                    p3: ["quepan"],      vos: ["cabé"] } },
-            CmdNeg:  { parent_tense_mood: "SubPres" },         
+            CmdNeg:  { parent_tense_mood: "SubPres" },
         }
     },
     caer: {
@@ -131,7 +134,10 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
             SubPres: { forms: { s1: ["esté"], s2: ["estés"], s3: ["esté"],    p1: ["estemos"], p2: ["estéis"], p3: ["estén"] } },
             // stem change est => "estuv"
             IndPret: { root: "estuv", 
-                       forms: { s1: ["estuve"], s2: ["estuviste"], s3: ["estuvo"],    p1: ["estuvimos"], p2: ["estuvisteis"], p3: ["estuvieron"] } },
+                       // FIX: linguist: This is the same pattern as in "andar". Are there some rules that could apply here instead of a list?
+                       //                  é:e             a:i                ó:o             a:i                a:i                  a:ie
+                       forms: { s1: ["estuve"], s2: ["estuviste"], s3: ["estuvo"], p1: ["estuvimos"], p2: ["estuvisteis"], p3: ["estuvieron"] }
+                     },
             IndImp: { forms: {s1: ["estaba"], s2: ["estabas"], s3: ["estaba"],  p1: ["estábamos"], p2: ["estabais"], p3: ["estaban"] } },
             // IndFut:  uses the regular form
             // IndCond:  uses the regular form
@@ -148,6 +154,8 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
             IndPres: { forms: { s1: ["he"], s2: ["has"], s3: ["hay", "ha"],     p1: ["hemos"],                     p3: ["han"],  vos: null} },
             SubPres: { forms: { s1: ["haya"], s2: ["hayas"], s3: ["haya"],        p1: ["hayamos"], p2: ["hayáis"], p3: ["hayan"] } },
             IndPret: { root: "hub",
+                       // FIX: linguist: This is the same pattern as in "hacer", "poder", "poner", "saber". Are there some rules that could apply here instead of a list?
+                       //                í:e                          ió:o
                        forms: { s1: ["hube"],                s3: ["hubo"],        }},
             // IndImp uses regular conjugation
             IndFut:  { root: "habr" },
@@ -164,6 +172,8 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
             IndPres: { forms: { s1: ["hago"] } },
             SubPres: { root: "hag" },
             IndPret: { root: "hic",
+                       // FIX: linguist: This is the same pattern as in "haber", "poder", "poner", "saber". Are there some rules that could apply here instead of a list?
+                       //                í:e                         ió:o
                        forms: { s1: ["hice"],               s3: ["hizo"],  } },
             // IndImp uses regular conjugation
             IndFut:  { root: "har" },
@@ -204,9 +214,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
         participle_rules: { pres: {full: "jugando"}, past: {full: "jugado"} },
         aspects: {
             IndPret: { forms: { s1: ["jugué"], s2: ["jugaste"], s3: ["jugó"], p1: ["jugamos"], p2: ["jugasteis"], p3: ["jugaron"] } },
-            // FIX: vos spelling differs by region: vos: ["juegues", "*jugués"]
-            SubPres: { root: "juegu",
-                      forms: {                                          p1: ["juguemos"], p2: ["juguéis"]} },
+            // FIX: SubPres: vos spelling differs by region: vos: ["juegues", "*jugués"]
             CmdPos:  { forms: { s1: null, s2: ["juega"], s3: ["juegue"],    p1: ["juguemos"],                   p3: ["jueguen"],     vos: ["jugá"] } },
             CmdNeg:  { parent_tense_mood: "SubPres" },
         }
@@ -216,7 +224,7 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
         conjugation_family: "-eer", 
         participle_rules: { pres: {full: "leyendo"}, past: {full: "leído"} },
         aspects: {
-            // TODO: consider using spelling rules and accent changes to generate these forms
+            // TODO: consider using spelling rules and accent changes to generate these forms 
             IndPret: { forms: { s2: ["leíste"], s3: ["leyó"], p1: ["leímos"], p2: ["leísteis"], p3: ["leyeron"] } },
         }
     },
@@ -243,9 +251,11 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
             // FIX: vos spelling differs by region: vos: ["puedas", "*podás"]
             SubPres: { forms: { s1: ["pueda"], s2: ["puedas"], s3: ["pueda"],                                    p3: ["puedan"]} },
             IndPret: { root: "pud",
-                       forms: { s1: ["pude"], s2: ["pudiste"], s3: ["pudo"], p1: ["pudimos"], p2: ["pudisteis"], p3: ["pudieron"] } },
+                       // FIX: linguist: This is the same pattern as in "haber", "hacer", "poner", "saber". Are there some rules that could apply here instead of a list?
+                       //                í:e                          ió:o
+                       forms: { s1: ["pude"],                s3: ["pudo"] } },
             IndFut:  { root: "podr" },
-            IndCond:  { root: "podr" }, 
+            IndCond: { root: "podr" }, 
             CmdPos:  { forms: { s1: null, s2: ["puede"], s3: ["pueda"],                                        p3: ["puedan"], vos: ["podé"] } },
             CmdNeg:  { parent_tense_mood: "SubPres" },
         }
@@ -257,9 +267,12 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
         aspects: {
             IndPres: { forms: { s1: ["pongo"] } },
             // FIX: vos spelling differs by region: vos: ["pongas", "*pongás"]
+            // FIX: linguist: doesn't this use the root of IndPres.s1 ?
             SubPres: { forms: { s1: ["ponga"], s2: ["pongas"], s3: ["ponga"],   p1: ["pongamos"], p2: ["pongáis"],  p3: ["pongan"]} },
             IndPret: { root: "pus",
-                       forms: { s1: ["puse"], s2: ["pusiste"], s3: ["puso"],    p1: ["pusimos"], p2: ["pusisteis"], p3: ["pusieron"] } },
+                       // FIX: linguist: This is the same pattern as in "haber", "hacer", "poder", "saber". Are there some rules that could apply here instead of a list?
+                       //                í:e                         ió:o
+                       forms: { s1: ["puse"],               s3: ["puso"],  } },
             IndFut:  { root: "pondr" },
             IndCond: { root: "pondr" },
             CmdPos:  { forms: { s1: null, s2: ["pon"], s3: ["ponga"],         p1: ["pongamos"],           p3: ["pongan"]},
@@ -286,9 +299,11 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
             // similar a caber
             IndPres: { forms: { s1: ["sé"] } },
             SubPres:  { root: "sep" },
-            // stem change sab => sup
             IndPret: { root: "sup",
-                       forms: { s1: ["supe"], s2: ["supiste"], s3: ["supo"], p1: ["supimos"], p2: ["supisteis"], p3: ["supieron"] } },
+                       // FIX: linguist: This is the same pattern as in "haber","hacer","poder","poner". Are there some rules that could apply here instead of a list?
+                       //                í:e                         ió:o
+                       forms: { s1: ["supe"],                  s3: ["supo"] }
+                     },
             IndFut:  { root: "sabr" },
             IndCond: { root: "sabr" },
             CmdPos:  { forms: {                                s3: ["sepa"],  p1: ["sepamos"],                     p3: ["sepan"], vos: ["sabé"] } },
@@ -338,7 +353,10 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
             IndPres: { forms: { s1: ["tengo"] } },
             SubPres: { root: "teng" },
             IndPret: { root: "tuv",
-                       forms: { s1: ["tuve"], s2: ["tuviste"], s3: ["tuvo"], p1: ["tuvimos"], p2: ["tuvisteis"], p3: ["tuvieron"] } },
+                       // FIX: linguist: This is the same pattern as in "estar". Are there some rules that could apply here instead of a list?
+                       //                í:e                       ió:o
+                       forms: { s1: ["tuve"],             s3: ["tuvo"] }
+                     },
             IndFut:  { root: "tendr" },
             IndCond: { root: "tendr" },
             CmdPos:  { forms: {            s2: ["ten"],   s3: ["tenga"],           p1: ["tengamos"],               p3: ["tengan"],            vos: ["tené"] },
@@ -356,7 +374,9 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
             SubPres: { root: "traig" },
             // There may be general rules that could be used, such as: 3-vowels
             IndPret: { root: "traj",
-                       forms: { s1: ["traje"], s2: ["trajiste"], s3: ["trajo"], p1: ["trajimos"], p2: ["trajisteis"], p3: ["trajeron"] } },
+                       // FIX: linguist: This pattern is similiar to in "estar". Are there some rules that could apply here instead of a list?
+                       //                 í:e                              ió:o                                      ie:e
+                       forms: { s1: ["traje"],                   s3: ["trajo"],                            p3: ["trajeron"] } },
             CmdPos:  { forms: {                                  s3: ["traiga"], p1: ["traigamos"],                     p3: ["traigan"],            vos: ["traé"] } },
             CmdNeg:  { parent_tense_mood: "SubPres" },
         }
@@ -414,86 +434,69 @@ export const irregular_conjugations: { [infinitive: string]: VerbConjugationRule
 }
 
 
-function getParentVerbTenseMood(infinitive: string, tense_mood: VerbTenseMood) {
+// Get the lineage of TenseMood's that form the conjugation ancestry of this verb.
+export function getTenseMoodLineage(infinitive: string, tense_mood: TenseMood) : TenseMood[] {
     const rules = irregular_conjugations[infinitive]
-    const aspect = rules.aspects[tense_mood]
-    if (aspect?.parent_tense_mood) {
-        const parent_aspect = rules.aspects[aspect.parent_tense_mood]
-        return parent_aspect
-    }
-}
-
-
-// Get the lineage of VerbTenseMood's that form the conjugation ancestry of this verb.
-export function getTenseMoodLineage(infinitive: string, tense_mood: VerbTenseMood) : VerbTenseMood[] {
-    const rules = irregular_conjugations[infinitive]
-    const tense_mood_lineage: VerbTenseMood[] = [tense_mood]
-    let parent_tense_mood = rules.aspects[tense_mood]?.parent_tense_mood
+    const tense_mood_lineage: TenseMood[] = [tense_mood]
+    let parent_tense_mood = rules?.aspects[tense_mood]?.parent_tense_mood
     while (parent_tense_mood) {
         tense_mood_lineage.unshift(parent_tense_mood)
-        parent_tense_mood = rules.aspects[parent_tense_mood]?.parent_tense_mood
+        parent_tense_mood = rules?.aspects[parent_tense_mood]?.parent_tense_mood
     }
     return tense_mood_lineage
 }
 
 
-
 // @return The conjugated forms for this irregular verb that differ from the regular forms.
-//  If there are no forms to replace the regular forms, then an empty object is returned.
-export function applyIrregularConjugationRules(infinitive: string, tense_mood: VerbTenseMood, regular_conjugation: VerbConjugation) : VerbConjugation {
-    let conjugation_rules = morphophonemic_verb_conjugation_rules[infinitive]
-    const irregular_base_infinitive = conjugation_rules?.irregular?.base
-    if (irregular_base_infinitive) {
-        // from this point on, the infinitive is only used for error reporting, as the irregular_base_infinitive is what is used for conjugation
-        const irregular_base = irregular_conjugations[irregular_base_infinitive]
-        if (!irregular_base) {
-            throw new Error(`morphophonemic_verb_conjugation_rules[${infinitive}].irregular.base=${irregular_base_infinitive} does not exist in morphophonemic_verb_conjugation_rules`)
-        }
-        let irregular_base_conjugated: VerbConjugation = {}
-        const lineage = getTenseMoodLineage(irregular_base_infinitive, tense_mood)
-        lineage.forEach((tense_mood) => {
-            const aspects = irregular_base.aspects[tense_mood]
-            if (aspects) {
-                const {forms, root} = aspects
-                // The root is applied first
-                if (root) {
-                    const regular_suffixes = getRegularSuffixes(irregular_base_infinitive, tense_mood)
-                    Object.keys(regular_suffixes).forEach((conjugation_key: keyof VerbConjugation) => {
-                        const root_w_suffix = root + regular_suffixes[conjugation_key]
-                        irregular_base_conjugated[conjugation_key] = [root_w_suffix]
-                    })
-                }
-                if (forms) {
-                    Object.keys(forms).forEach((conjugation_key: keyof VerbConjugation) => {
-                        const form = forms[conjugation_key]
-                        if (!irregular_base_conjugated[conjugation_key]) {
-                            if (form !== null) {
-                                irregular_base_conjugated[conjugation_key] = <any> form
-                            } else {
-                                delete regular_conjugation[conjugation_key]
-                                delete irregular_base_conjugated[conjugation_key]
-                            }
-                        } else if (((typeof irregular_base_conjugated[conjugation_key] === "string")) && (typeof form === "string")) {
-                            irregular_base_conjugated[conjugation_key] = form
-                            console.log("applyIrregularConjugationRules(): using possibly dead code ?")
-                            // FIX: Is this dead code?
-                        } else if (Array.isArray(irregular_base_conjugated[conjugation_key]) && Array.isArray(form)) {
-                            irregular_base_conjugated[conjugation_key] = <any> form
-                        } else {
-                            throw new Error(`expected typeof string for irregular_base_conjugated[${conjugation_key}] for infinitive=${infinitive} irregular_base_infinitive=${irregular_base_infinitive} tense_mood=${tense_mood}`)
-                        }
-                    })
-                }    
+//  If there are no forms to replace the regular forms, then an empty object or undefined is returned.
+export function applyIrregularConjugationRules(infinitive: string, tense_mood: TenseMood, regular_conjugation: VerbConjugation) : VerbConjugation | undefined {
+    function applyRoot(root: string) {
+        const regular_suffixes = getRegularSuffixes(irregular_base_infinitive, tense_mood)
+        for (const key in regular_suffixes) {
+            const grammatical_person = <GrammaticalPerson> key
+            if (regular_suffixes[grammatical_person] === null) {
+                irregular_forms[grammatical_person] = null
             } else {
-                // no aspect means use the regular forms, so no need to add anything here
+                const root_w_suffix = root + regular_suffixes[grammatical_person]
+                irregular_forms[grammatical_person] = [root_w_suffix]
             }
-        })
-        const irregular_conjugated: VerbConjugation = {...regular_conjugation, ...irregular_base_conjugated}
-        if (["CmdPos","CmdNeg"].includes(tense_mood)) {
-            delete irregular_base_conjugated.s1
         }
-        return irregular_base_conjugated
     }
-    return {}
+    let conjugation_rules = morphophonemic_verb_conjugation_rules[infinitive]
+    const irregular_base_infinitive = conjugation_rules?.irregular_base
+    if (!irregular_base_infinitive) {
+        return undefined
+    }
+    // from this point on, the infinitive is only used for error reporting, as the irregular_base_infinitive is what is used for conjugation
+    const irregular_base = irregular_conjugations[irregular_base_infinitive]
+    if (!irregular_base) {
+        throw new Error(`morphophonemic_verb_conjugation_rules[${infinitive}].irregular.base=${irregular_base_infinitive} does not exist in morphophonemic_verb_conjugation_rules`)
+    }
+    let irregular_forms: VerbConjugation = {}
+    const lineage = getTenseMoodLineage(irregular_base_infinitive, tense_mood)
+    for (const lineage_tense_mood of lineage) {
+        const aspects = irregular_base.aspects[lineage_tense_mood]
+        if (aspects) {
+            const {forms, root} = aspects
+            // The root is applied first
+            if (root) {
+                applyRoot(root)
+            }
+            if (forms) {
+                for (const key in forms) {
+                    const grammatical_person = <GrammaticalPerson> key
+                    const form = forms[grammatical_person]
+                    // override a farther ancestor with a closer one
+                    // if this is null, then this form will not be conjugated
+                    if (irregular_forms[grammatical_person] !== null) {
+                        irregular_forms[grammatical_person] = form
+                    }
+                }
+            }    
+        } else {
+            // no aspect means use the regular forms, so no need to add anything here
+        }
+    }
+    return irregular_forms
 }
 
