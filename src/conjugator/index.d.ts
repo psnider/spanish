@@ -1,11 +1,12 @@
+import { ConjugationModel, VerboClaseConjugacional } from "./verbos-con-cambios-morfológicas.js"
+
 // FIX: nomenclature: InfinitiveThemeVowelClass, or ConjugationClass, or InfinitiveConjugationClass
-type InfinitiveClass = "-ar" | "-er" | "-ir"
 type TenseMood = "IndPres" | "IndImp" | "IndPret" | "IndFut" | "IndCond" | "SubPres"  | "SubImp"  | "SubFut" | "CmdPos" | "CmdNeg"
 
 
 interface Participles {
-    pres: string
-    past: string
+    pres?: string
+    past?: string
 }
 
 
@@ -74,6 +75,9 @@ interface VerbConjugationAnnotated {
 // This is used both for suffixes and stem change rules, and for fully conjugated forms.
 type VerbConjugationChanges = VerbConjugation
 
+// A set of stems for a conjugation.
+type VerbConjugationStems = VerbConjugation
+type VerbConjugationSuffixes = VerbConjugation
 
 // The conjugation clases of verbs.
 // These may be presented to users, so they are in Spanish.
@@ -138,44 +142,28 @@ export interface ParticipleRules {
 
 
 
-// A family of verbs that conjugate the same depending on the termination.
-// A preceding hyphen indicates that the form is not a verb itself.
-type ConjugationFamily = "-acer" | "decir" | "-ducir" | "-eer" | "-iar" | "oír" | "poner" | "seguir" | "tener" | "traer" | "-uir"
-
-
 // Rules describing how a verb (or model) realizes its paradigm.
 // T usually represents either suffixes, stem changes, or full forms.
 export interface VerbConjugationRules<T> {
     conjugation_classes: ConjugationClass[]
     // The suffix of a family of verbs based on spelling that identifies this conjugation.
     // Only specified for the canonical verb, to which all others in the family refer.
-    conjugation_family?: ConjugationFamily
+    conjugation_family?: VerboClaseConjugacional
+    stem_change_rule_id?: StemChangeRuleId
     participle_rules?: ParticipleRules
     aspects: TenseMoodMap<T> 
 }
 
 
-type StemChangeRuleId = "e:i" | "e:ie" | "o:u" | "o:ue" | "u:ú" | "u:ue"
+export type StemChangeRuleId = "e:i" | "e:ie" | "i:í" | "o:u" | "o:ue" | "u:ú" | "u:ue"
 type SuffixChangeType = "eer"
 
 
 
-// The model of conjugation.
-// Note that some models are not verbs themselves, but are productive verb endings. These are marked with a leading hyphen.
-export type ConjugationModel = InfinitiveClass | ConjugationFamily
-                    | "delinquir"
-                    | "caber" | "caer" | "dar" | "erguir" | "estar"
-                    | "haber" | "ir" | "jugar" | "poder"
-                    | "querer" | "saber" | "salir" | "ser"
-                    | "venir" | "ver"
-
-
-interface ConjugationRules {
+interface ORIGINAL_ConjugationRules {
     // another verb that serves as the model for conjugation for this verb
     // This is interesting, but may not be needed...
     model?: string
-    // suffix_change_type?: SuffixChangeType    // TODO remove this if unnecessary
-    stem_change_rule_id?: StemChangeRuleId
     conjugate_only?: GrammaticalPerson[]
     // The name of the verb upon which this conjugation is based.
     // This is the name of the verb itself if it is the topmost verb, for example: "huir"
@@ -183,4 +171,5 @@ interface ConjugationRules {
     irregular_base?: string
     individual_accents?: TenseMoodMap<GrammaticalPersons<VerbForms>>
 }
+
 

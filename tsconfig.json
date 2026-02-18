@@ -17,5 +17,5 @@
     },
     "include": [
         "src/**/*.ts"
-, "src/conjugator/resolve-conjugation-class.ts.OBS"    ]
+, "src/conjugator/resolve-conjugation-class.ts.OBS", "src/conjugator/stem-changes.ts", "src/conjugator/test/validate-stem-change-patterns.ts"    ]
 }

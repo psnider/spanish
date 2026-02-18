@@ -1,7 +1,10 @@
-import { VerbConjugation, VerbConjugationChanges, TenseMood, VerbConjugationRules, InfinitiveClass } from ".";
+import { VerbConjugation, VerbConjugationChanges, TenseMood, VerbConjugationRules, VerbConjugationSuffixes } from ".";
+import { getPreterite3PStem } from "./conjugate-verb.js";
+import { ConjugationAndDerivationRules } from "./resolve-conjugation-class.js";
+import { InfinitiveClass } from "./verbos-con-cambios-morfológicas.js";
 
 
-interface VerbAspectModifications {
+export interface VerbAspectModifications {
     // stem selection: only one of these may be selected
     // The default behavior is to append the 'suffixes' to the root or stem.
     // The next two fields can change that behavior.
@@ -9,14 +12,15 @@ interface VerbAspectModifications {
     add_suffix_to_infinitive?: boolean
     // true if the stress should be placed on the last sylable of the stem of the 3rd-person plural form.
     add_suffix_to_preterite_p3_stem?: boolean
-
     // prosody
-    // true if the last sylable of the 1st-person plural form a verb stem must be accented.
-    stress_last_sylable_of_p1_stem?: boolean
+    // true if the last char of the 1st-person plural form a verb stem must be accented.
+    stress_last_char_of_p1_stem?: boolean
+    // true if the stress should be placed on the last sylable of the stem of the 3rd-person plural form.
+    stress_last_char_of_s123p3_stem?: boolean
 }
 
-// The rules for conjugating a single form of a verb, such as: "IndPres", "IndImp"
-interface VerbAspectRules extends VerbAspectModifications {
+// The rules for conjugating a single form of a regular verb, such as: "IndPres", "IndImp"
+export interface VerbAspectRules extends VerbAspectModifications {
     // - an InfinitiveClass is used for cross-family inheritance
     // - a TenseMood is used for a different tense in the same family
     base?: InfinitiveClass | TenseMood
@@ -42,10 +46,10 @@ export const regular_verb_suffixes: { [ending: string]: VerbConjugationRules<Ver
             IndCond: { add_suffix_to_infinitive: true, 
                        suffixes: { s1: ["ía"],  s2: ["ías"],  s3: ["ía"],  p1: ["íamos"],  p2: ["íais"],   p3: ["ían"] } },
             SubPres: { suffixes: { s1: ["e"],   s2: ["es"],   s3: ["e"],   p1: ["emos"],   p2: ["éis"],    p3: ["en"] } },
-            SubImp:  { add_suffix_to_preterite_p3_stem: true, stress_last_sylable_of_p1_stem: true,
+            SubImp:  { add_suffix_to_preterite_p3_stem: true, stress_last_char_of_p1_stem: true,
                        suffixes: { s1: ["ra",    "se"],    s2: ["ras",  "ses"],  s3: ["ra",  "se"], 
                                    p1: ["ramos", "semos"], p2: ["rais", "seis"], p3: ["ran", "sen"]} },
-            SubFut:  { add_suffix_to_preterite_p3_stem: true, stress_last_sylable_of_p1_stem: true,
+            SubFut:  { add_suffix_to_preterite_p3_stem: true, stress_last_char_of_p1_stem: true,
                        suffixes: { s1: ["re"],  s2: ["res"],  s3: ["re"],  p1: ["remos"],  p2: ["reis"],   p3: ["ren"]} },
             CmdPos:  { suffixes: { s1: null,    s2: ["a"],    s3: ["e"],   p1: ["emos"],   p2: ["ad"],     p3: ["en"],  vos: ["á"] } },
             CmdNeg:  { base: "SubPres", 
@@ -153,7 +157,19 @@ export function doUsePreteriteP3Stem(infinitive: string, tense_mood: TenseMood) 
 
 
 export function doStressLastSylableOfP1Stem(infinitive: string, tense_mood: TenseMood) {
-    return modificationIsRequired(infinitive, tense_mood, "stress_last_sylable_of_p1_stem")
+    return modificationIsRequired(infinitive, tense_mood, "stress_last_char_of_p1_stem")
+}
+
+
+export function getRegularStems(conj_and_deriv_rules: ConjugationAndDerivationRules, tense_mood: TenseMood) : VerbConjugation {
+    const {conjugable_infinitive, verb_family} = conj_and_deriv_rules
+    const add_suffix_to_infinitive = doAddSuffixToInfinitive(conjugable_infinitive, tense_mood)
+    const add_suffix_to_preterite_p3_stem = doUsePreteriteP3Stem(conjugable_infinitive, tense_mood)
+    const stress_last_char_of_p1_stem = doStressLastSylableOfP1Stem(conjugable_infinitive, tense_mood)
+    const preterite_p3_stem = (add_suffix_to_preterite_p3_stem ? getPreterite3PStem(conj_and_deriv_rules, conjugable_infinitive) : undefined)
+    const verb_root = conjugable_infinitive.slice(0, -2)
+    let conjugation: VerbConjugation = {}
+    return conjugation
 }
 
 
@@ -161,14 +177,13 @@ export function doStressLastSylableOfP1Stem(infinitive: string, tense_mood: Tens
 // @return The set of suffixes for all of the conjugated forms.
 // For example: getSuffixes("creer", "IndPret", "eer")
 //    {s1: ["í"], s2: ["íste"], s3: ["yó"], p1: ["ímos"], p2: ["ísteis"], p3: ["yeron"]}
-export function getRegularSuffixes(infinitive: string, tense_mood: TenseMood /* , suffix_change_type?: SuffixChangeType */) : VerbConjugationChanges {
-    const rule_sets = getAncestorRuleSets(infinitive, tense_mood)
-    let accumulated_suffixes: VerbConjugationChanges = {...rule_sets[0].suffixes}
-    rule_sets.slice(1).forEach((rule_set) => {
-        if (rule_set.suffixes) {
-            const conjugation_keys = Object.keys(rule_set.suffixes)
+export function getRegularSuffixes(infinitive: string, tense_mood: TenseMood, ancestor_rule_sets: VerbAspectRules[]) : VerbConjugationSuffixes {
+    let accumulated_suffixes: VerbConjugationSuffixes = {...ancestor_rule_sets[0].suffixes}
+    ancestor_rule_sets.slice(1).forEach((ancestor_rule_sets) => {
+        if (ancestor_rule_sets.suffixes) {
+            const conjugation_keys = Object.keys(ancestor_rule_sets.suffixes)
             conjugation_keys.forEach((conjugation_key: keyof VerbConjugation) => {
-                const ancestor_suffix = rule_set.suffixes[conjugation_key]
+                const ancestor_suffix = ancestor_rule_sets.suffixes[conjugation_key]
                 const accumulated_suffix = accumulated_suffixes[conjugation_key]
                 if (accumulated_suffix == null) {
                     // do not update a form that has been set to null, as that indicates an invalid form

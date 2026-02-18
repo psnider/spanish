@@ -1,7 +1,8 @@
 
 import {GrammaticalPersons, Participles, VerbConjugation, VerbForms, TenseMood} from ".."
-import { conjugateVerb, deriveParticiples } from "../conjugate-verb.js"
-import { test_applyTypographicalChange } from "../typographical-rules.js"
+import { conjugateVerb } from "../conjugate-verb.js"
+import { deriveParticiples } from "../derive-participles.js";
+import { test_applyOrthographicalChanges } from "./test-orthographical-change.js"
 
 
 export function equal(lhs: string | [string] | [string, string] | undefined, rhs: string | [string, string] | undefined) {
@@ -62,9 +63,9 @@ export function assert_TenseMood(infinitive: string, mood_tense: TenseMood, expe
 }
 
 
-export function assert_typographicalChange(args: {conjugated_form: string, infinitive: string}, expected: string) {
+export function assert_orthographicalChange(args: {conjugated_form: string, suffix: string, infinitive: string}, expected: string) {
     const rules_applied: string[] = []
-    const actual = test_applyTypographicalChange(args.conjugated_form, args.infinitive)
+    const actual = test_applyOrthographicalChanges(args)
     if (actual !== expected) {
         throw new Error(`${actual} !== ${expected} : rules_applied=${rules_applied}`)
     }
