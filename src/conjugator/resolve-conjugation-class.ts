@@ -69,33 +69,34 @@ interface ConjugationFamilyMapping {
 }
 
 
+// FIX: shouldn't this be merged into verbos_con_cambios_morfológicas[]
 // longer keys must appear before shorter ones that match as a suffix.
 const conjugation_families: {[conjugation_family: string]: ConjugationFamilyMapping} = {
-    delinquir:  {model: "delinquir",  conjugable_infinitive: "delinquir"},  // prevents mismatch with "huir"
-    erguir:     {model: "erguir",  conjugable_infinitive: "erguir"},        // prevents mismatch with "huir"
-    seguir:     {model: "seguir",  conjugable_infinitive: "seguir"},        // prevents mismatch with "huir"
-    caber:      {model: "caber",  conjugable_infinitive: "caber"},          // its own model
-    caer:       {model: "caer",  conjugable_infinitive: "caer"},            // its own model
-    estar:      {model: "estar",  conjugable_infinitive: "estar"},          // its own model
-    haber:      {model: "haber",  conjugable_infinitive: "haber"},          // its own model
-    jugar:      {model: "jugar",  conjugable_infinitive: "jugar"},          // its own model
-    poder:      {model: "poder",  conjugable_infinitive: "poder"},          // its own model
-    querer:     {model: "querer",  conjugable_infinitive: "querer"},        // its own model
-    saber:      {model: "saber",  conjugable_infinitive: "saber"},          // its own model
-    salir:      {model: "salir",  conjugable_infinitive: "salir"},          // its own model
-    venir:      {model: "venir",  conjugable_infinitive: "venir"},          // ChatGPT said that all "-venir" verbs conjugate the same
-    satisfacer: {model: "-acer",  conjugable_infinitive: "hacer"},          // prevents mismatch with "huir"
-    tener:      {model: "tener",  conjugable_infinitive: "tener"},          // ChatGPT said that there are no modern "-tener" verbs that conjugate differently, but that the origin of the word could make a difference
-    poner:      {model: "poner",  conjugable_infinitive: "poner"},          // ChatGPT said that all "-poner" verbs conjugate the same, that this is 100% reliable
-    decir:      {model: "decir",  conjugable_infinitive: "decir"},          // ChatGPT said that all "-decir" verbs conjugate the same
-    traer:      {model: "traer",  conjugable_infinitive: "traer"},          // ChatGPT said that all "-traer" verbs conjugate the same
-    oír:        {model: "oír",    conjugable_infinitive: "oír"},            // ChatGPT said that all "-oír" verbs conjugate the same
-    // NOTE: hacer verbs are a different family from -acer? e.g. "nacer"
-    // FIX: change model from "-acer" to "hacer"
-    hacer:      {model: "-acer",  conjugable_infinitive: "hacer"},          // ChatGPT said that all "-hacer" verbs conjugate the same
-    ducir:      {model: "-ducir", conjugable_infinitive: "conducir"},       // ChatGPT said that all "-ducir" verbs conjugate like conducir
-    eer:        {model: "-eer",   conjugable_infinitive: "leer"},           // ChatGPT said that all "-eer" verbs conjugate like leer
-    uir:        {model: "-uir",   conjugable_infinitive: "huir"},           // ChatGPT said that all "-uir" verbs conjugate like huir
+    delinquir:  {model: "delinquir", conjugable_infinitive: "delinquir"},  // prevents mismatch with "huir"
+    erguir:     {model: "erguir",    conjugable_infinitive: "erguir"},        // prevents mismatch with "huir"
+    seguir:     {model: "seguir",    conjugable_infinitive: "seguir"},        // prevents mismatch with "huir"
+    caber:      {model: "caber",     conjugable_infinitive: "caber"},          // its own model
+    caer:       {model: "caer",      conjugable_infinitive: "caer"},            // its own model
+    estar:      {model: "estar",     conjugable_infinitive: "estar"},          // its own model
+    haber:      {model: "haber",     conjugable_infinitive: "haber"},          // its own model
+    jugar:      {model: "jugar",     conjugable_infinitive: "jugar"},          // its own model
+    poder:      {model: "poder",     conjugable_infinitive: "poder"},          // its own model
+    querer:     {model: "querer",    conjugable_infinitive: "querer"},        // its own model
+    saber:      {model: "saber",     conjugable_infinitive: "saber"},          // its own model
+    salir:      {model: "salir",     conjugable_infinitive: "salir"},          // its own model
+    venir:      {model: "venir",     conjugable_infinitive: "venir"},          // ChatGPT said that all "-venir" verbs conjugate the same
+    satisfacer: {model: "-acer",     conjugable_infinitive: "hacer"},          // 
+    tener:      {model: "tener",     conjugable_infinitive: "tener"},          // ChatGPT said that there are no modern "-tener" verbs that conjugate differently, but that the origin of the word could make a difference
+    poner:      {model: "poner",     conjugable_infinitive: "poner"},          // ChatGPT said that all "-poner" verbs conjugate the same, that this is 100% reliable
+    decir:      {model: "decir",     conjugable_infinitive: "decir"},          // ChatGPT said that all "-decir" verbs conjugate the same
+    traer:      {model: "traer",     conjugable_infinitive: "traer"},          // ChatGPT said that all "-traer" verbs conjugate the same
+    oír:        {model: "oír",       conjugable_infinitive: "oír"},            // ChatGPT said that all "-oír" verbs conjugate the same
+    // FIX: linguist: hacer verbs are a different family from -acer? e.g. "nacer"
+    // FIX: linguist: change model from "-acer" to "hacer"
+    hacer:      {model: "-acer",     conjugable_infinitive: "hacer"},          // ChatGPT said that all "-hacer" verbs conjugate the same
+    ducir:      {model: "-ducir",    conjugable_infinitive: "conducir"},       // ChatGPT said that all "-ducir" verbs conjugate like conducir
+    eer:        {model: "-eer",      conjugable_infinitive: "leer"},           // ChatGPT said that all "-eer" verbs conjugate like leer
+    uir:        {model: "-uir",      conjugable_infinitive: "huir"},           // ChatGPT said that all "-uir" verbs conjugate like huir
     // NOT valid conjugation families:
     // -iar NOT => vaciar, e.g.: cambiar, estudiar
     // FIX: linguistics: consider all of these

@@ -1,0 +1,21 @@
+{
+  "lexicografía": {
+  "pronunciacion": "[naˈseɾ]",
+  "silabacion": "na-cer",
+  "acentuacion": "aguda",
+  "etimologia": "Del latín tardío nascere, y este del latín nasci, del latín gnasci, a su vez del protoindoeuropeo *gen-, en última instancia del protoindoeuropeo *ǵénh₁os, \"linaje\".",
+  "modelos": ["parecer"]
+},
+  "formas_no_personales": {"infinitivo":"nacer","gerundio":"naciendo","participio":"nacido"},
+  "formas_personales": {
+    "IndPres": {"s1":["nazco"],"s2":["naces"],"vos":["nacés"],"s3":["nace"],"p1":["nacemos"],"p2":["nacéis"],"p3":["nacen"]},
+    "IndImp": {"s1":["nacía"],"s2":["nacías"],"vos":["nacías"],"s3":["nacía"],"p1":["nacíamos"],"p2":["nacíais"],"p3":["nacían"]},
+    "IndPret": {"s1":["nací"],"s2":["naciste"],"vos":["naciste"],"s3":["nació"],"p1":["nacimos"],"p2":["nacisteis"],"p3":["nacieron"]},
+    "IndFut": {"s1":["naceré"],"s2":["nacerás"],"vos":["nacerás"],"s3":["nacerá"],"p1":["naceremos"],"p2":["naceréis"],"p3":["nacerán"]},
+    "IndCond": {"s1":["nacería"],"s2":["nacerías"],"vos":["nacerías"],"s3":["nacería"],"p1":["naceríamos"],"p2":["naceríais"],"p3":["nacerían"]},
+    "SubPres": {"s1":["nazca"],"s2":["nazcas"],"vos":["nazcas","nazcás"],"s3":["nazca"],"p1":["nazcamos"],"p2":["nazcáis"],"p3":["nazcan"]},
+    "SubImp": {"s1":["naciera","naciese"],"s2":["nacieras","nacieses"],"vos":["nacieras","nacieses"],"s3":["naciera","naciese"],"p1":["naciéramos","naciésemos"],"p2":["nacierais","nacieseis"],"p3":["nacieran","naciesen"]},
+    "SubFut": {"s1":["naciere"],"s2":["nacieres"],"vos":["nacieres"],"s3":["naciere"],"p1":["naciéremos"],"p2":["naciereis"],"p3":["nacieren"]},
+    "CmdPos": {"s2":["nace"],"vos":["nacé"],"s3":["nazca"],"p1":["nazcamos"],"p2":["naced"],"p3":["nazcan"]}
+}
+}

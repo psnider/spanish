@@ -1,0 +1,21 @@
+{
+  "lexicografía": {
+  "pronunciacion": "[reˈiɾ]",
+  "silabacion": "re-ír",
+  "acentuacion": "aguda",
+  "etimologia": "Del latín ridere.",
+  "modelos": ["reír"]
+},
+  "formas_no_personales": {"infinitivo":"reír","gerundio":"riendo","participio":"reído"},
+  "formas_personales": {
+    "IndPres": {"s1":["río"],"s2":["ríes"],"vos":["reís"],"s3":["ríe"],"p1":["reímos"],"p2":["reís"],"p3":["ríen"]},
+    "IndImp": {"s1":["reía"],"s2":["reías"],"vos":["reías"],"s3":["reía"],"p1":["reíamos"],"p2":["reíais"],"p3":["reían"]},
+    "IndPret": {"s1":["reí"],"s2":["reíste"],"vos":["reíste"],"s3":["rió"],"p1":["reímos"],"p2":["reísteis"],"p3":["rieron"]},
+    "IndFut": {"s1":["reiré"],"s2":["reirás"],"vos":["reirás"],"s3":["reirá"],"p1":["reiremos"],"p2":["reiréis"],"p3":["reirán"]},
+    "IndCond": {"s1":["reiría"],"s2":["reirías"],"vos":["reirías"],"s3":["reiría"],"p1":["reiríamos"],"p2":["reiríais"],"p3":["reirían"]},
+    "SubPres": {"s1":["ría"],"s2":["rías"],"vos":["rías","riás"],"s3":["ría"],"p1":["riamos"],"p2":["riáis"],"p3":["rían"]},
+    "SubImp": {"s1":["riera","riese"],"s2":["rieras","rieses"],"vos":["rieras","rieses"],"s3":["riera","riese"],"p1":["riéramos","riésemos"],"p2":["rierais","rieseis"],"p3":["rieran","riesen"]},
+    "SubFut": {"s1":["riere"],"s2":["rieres"],"vos":["rieres"],"s3":["riere"],"p1":["riéremos"],"p2":["riereis"],"p3":["rieren"]},
+    "CmdPos": {"s2":["ríe"],"vos":["reí"],"s3":["ría"],"p1":["riamos"],"p2":["reíd"],"p3":["rían"]}
+}
+}

@@ -1,0 +1,21 @@
+{
+  "lexicografía": {
+  "pronunciacion": "[d̪esaˈseɾ]",
+  "silabacion": "des-ha-cer",
+  "acentuacion": "aguda",
+  "etimologia": "Del prefijo des- y hacer.[2]",
+  "modelos": ["hacer"]
+},
+  "formas_no_personales": {"infinitivo":"deshacer","gerundio":"deshaciendo","participio":"deshecho"},
+  "formas_personales": {
+    "IndPres": {"s1":["deshago"],"s2":["deshaces"],"vos":["deshacés"],"s3":["deshace"],"p1":["deshacemos"],"p2":["deshacéis"],"p3":["deshacen"]},
+    "IndImp": {"s1":["deshacía"],"s2":["deshacías"],"vos":["deshacías"],"s3":["deshacía"],"p1":["deshacíamos"],"p2":["deshacíais"],"p3":["deshacían"]},
+    "IndPret": {"s1":["deshice"],"s2":["deshiciste"],"vos":["deshiciste"],"s3":["deshizo"],"p1":["deshicimos"],"p2":["deshicisteis"],"p3":["deshicieron"]},
+    "IndFut": {"s1":["desharé"],"s2":["desharás"],"vos":["desharás"],"s3":["deshará"],"p1":["desharemos"],"p2":["desharéis"],"p3":["desharán"]},
+    "IndCond": {"s1":["desharía"],"s2":["desharías"],"vos":["desharías"],"s3":["desharía"],"p1":["desharíamos"],"p2":["desharíais"],"p3":["desharían"]},
+    "SubPres": {"s1":["deshaga"],"s2":["deshagas"],"vos":["deshagas","deshagás"],"s3":["deshaga"],"p1":["deshagamos"],"p2":["deshagáis"],"p3":["deshagan"]},
+    "SubImp": {"s1":["deshiciera","deshiciese"],"s2":["deshicieras","deshicieses"],"vos":["deshicieras","deshicieses"],"s3":["deshiciera","deshiciese"],"p1":["deshiciéramos","deshiciésemos"],"p2":["deshicierais","deshicieseis"],"p3":["deshicieran","deshiciesen"]},
+    "SubFut": {"s1":["deshiciere"],"s2":["deshicieres"],"vos":["deshicieres"],"s3":["deshiciere"],"p1":["deshiciéremos"],"p2":["deshiciereis"],"p3":["deshicieren"]},
+    "CmdPos": {"s2":{"estándar":["deshaz"],"atípicos":[{"forma":"deshace","etiquetas":["no normativo"]}]},"vos":["deshacé"],"s3":["deshaga"],"p1":["deshagamos"],"p2":["deshaced"],"p3":["deshagan"]}
+}
+}

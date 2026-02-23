@@ -226,7 +226,7 @@ export type ConjugationModel = InfinitiveClass | VerboClaseConjugacional
                     | "caber" | "caer" | "dar" | "erguir" | "estar"
                     | "haber" | "ir" | "jugar" | "poder"
                     | "querer" | "saber" | "salir" | "ser"
-                    | "venir" | "ver"
+                    | "vaciar" |"venir" | "ver"
 
 
 // The rules for conjugating a single form of an irregular verb, such as: "IndPres", "IndImp"
@@ -245,6 +245,7 @@ export interface VerbAspectRulesWithFullyIrregularForms extends VerbAspectModifi
 // FIX: want to explain reason/origin/etemology for each change... this could help learners
 export interface ReglasDeConjugaciónDeVerbo {
     clase_conjugacional?: VerboClaseConjugacional
+    model?: ConjugationModel
     tema_presente_yo?: string | [string, string]
     sufijo_presente_yo?: string
     tema_pretérito?: string
@@ -274,7 +275,11 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
     acordar:  {alternancia_vocálica: "o:ue"},
     acostar:  {alternancia_vocálica: "o:ue"},
     almorzar: {alternancia_vocálica: "o:ue"},
+    ampliar:  {model: "vaciar"},
     andar:    {tema_pretérito: "anduv"},
+    apostar:  {alternancia_vocálica: "o:ue"},
+    aprobar:  {alternancia_vocálica: "o:ue"},  // Remove once a- prefixes are handled correctly
+    ascender: {alternancia_vocálica: "e:ie"},
     atender:  {alternancia_vocálica: "e:ie"},
     caer:     {tema_presente_yo: "caig"},
     caber: {
@@ -282,10 +287,25 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
         tema_pretérito: "cup",
         tema_futuro: "cabr",
     },
+    calentar:  {alternancia_vocálica: "e:ie"},
+    // FIX: add ceñir
+    comenzar:  {alternancia_vocálica: "e:ie"},
+    competir:  {alternancia_vocálica: "e:i"},
+    comprobar: {alternancia_vocálica: "o:ue"},
+    concertar: {alternancia_vocálica: "e:ie"},
+    concordar: {alternancia_vocálica: "o:ue"},
     conducir: {
         clase_conjugacional: "-ducir",
+        // FIX: linguist: how can this pattern be generalized?
         tema_pretérito: "conduj",  // pretérito fuerte con -j
     },
+    confesar:  {alternancia_vocálica: "e:ie"},
+    confiar:   {model: "vaciar"},
+    contar:    {alternancia_vocálica: "o:ue"},
+    convertir: {alternancia_vocálica: "e:ie"},
+    corregir:  {alternancia_vocálica: "e:i"},
+    costar:    {alternancia_vocálica: "o:ue"},
+    criar:     {model: "vaciar"},
     dar: {
         // FIX: linguist: unclear
         excepciones_lexicas: {
@@ -311,11 +331,21 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
             imperativo_tú: "di"
         }
     },
-    defender: {alternancia_vocálica: "e:ie"},
-    descender: {alternancia_vocálica: "e:ie"},
-    dormir: {alternancia_vocálica: "o:ue"},
-    elegir: {alternancia_vocálica: "e:i"},
-    entender: {alternancia_vocálica: "e:ie"},
+    defender:   {alternancia_vocálica: "e:ie"},
+    descender:  {alternancia_vocálica: "e:ie"},
+    desconfiar: {model: "vaciar"},
+    despertar:  {alternancia_vocálica: "e:ie"},
+    desviar:    {model: "vaciar"},
+    disolver:   {alternancia_vocálica: "o:ue"},
+    doler:      {alternancia_vocálica: "o:ue"},
+    dormir:     {alternancia_vocálica: "o:ue"},
+    elegir:     {alternancia_vocálica: "e:i"},
+    empezar:    {alternancia_vocálica: "e:ie"},
+    encender:   {alternancia_vocálica: "e:ie"},
+    encontrar:  {alternancia_vocálica: "o:ue"},
+    entender:   {alternancia_vocálica: "e:ie"},
+    enterrar:   {alternancia_vocálica: "e:ie"},
+    enviar:     {model: "vaciar"},
     erguir: {
         alternancia_vocálica: "e:ie",
         // tema_presente_yo: ["irg", "yerg"],
@@ -329,6 +359,9 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
             participio: "escrito",
         }
     },
+    esforzar: {alternancia_vocálica: "o:ue"},
+    espiar: {model: "vaciar"},
+    esquiar: {model: "vaciar"},
     estar: {
         sufijo_presente_yo: "oy",
         tema_pretérito: "estuv", 
@@ -343,6 +376,10 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
         }
     },
     extender: {alternancia_vocálica: "e:ie"},
+    forzar: {alternancia_vocálica: "o:ue"},
+    fotografiar: {model: "vaciar"},
+    gobernar: {alternancia_vocálica: "e:ie"},
+    granizar: {alternancia_vocálica: "o:ue"},     // conjugate_only: ["s3"]},
     guiar: {
         // TODO: hay formas reformadas en la reforma ortográfica de la RAE de 2010, considera añadir estas formas
         // irregular_base: "vaciar"
@@ -378,6 +415,7 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
         }
     },
     hacer: {
+        clase_conjugacional: "-acer",
         tema_presente_yo: "hag",
         tema_pretérito: "hic",
         tema_futuro: "har",
@@ -390,6 +428,7 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
             }
         }
     },
+    helar: {alternancia_vocálica: "e:ie"},
     huir: { // FIX: is this fully regular now?
         clase_conjugacional: "-uir",
         excepciones_lexicas: {
@@ -400,6 +439,7 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
             },
         }
     },
+    impedir: {alternancia_vocálica: "e:i"},
     ir: {
         tema_pretérito: "fu",
         sufijo_presente_yo: "oy",
@@ -434,6 +474,14 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
         // }
 
     },
+    llover:     {alternancia_vocálica: "o:ue"},   // FIX: conjugate_only: ["s3"]},
+    manifestar: {alternancia_vocálica: "e:ie"},
+    medir:      {alternancia_vocálica: "e:i"},
+    merendar:   {alternancia_vocálica: "e:ie"},
+    morir:      {alternancia_vocálica: "o:ue"},
+    mostrar:    {alternancia_vocálica: "o:ue"},
+    mover:      {alternancia_vocálica: "o:ue"},
+    nevar:      {alternancia_vocálica: "e:ie"},       // FIX: conjugate_only: ["s3"]},
     oír: {
         // why is this a class?
         clase_conjugacional: "oír", 
@@ -444,8 +492,9 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
             }
         }
     },
-    pensar:  {alternancia_vocálica: "e:ie"},
-    perder:  {alternancia_vocálica: "e:ie"},
+    pedir:    {alternancia_vocálica: "e:i"},
+    pensar:   {alternancia_vocálica: "e:ie"},
+    perder:   {alternancia_vocálica: "e:ie"},
     poder: {
         alternancia_vocálica: "o:ue",
         tema_pretérito: "pud",
@@ -479,13 +528,39 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
             }
         }
     },
+    preferir: {alternancia_vocálica: "e:ie"},
     pretender: {alternancia_vocálica: "e:ie"},
+    probar:    {alternancia_vocálica: "o:ue"},
+    quebrar:   {alternancia_vocálica: "e:ie"},
     querer: {
         tema_pretérito: "quis",
         tema_futuro: "querr",
         alternancia_vocálica: "e:ie",
     },
-    reunir: {alternancia_vocálica: "u:ú"},
+    recomendar: {alternancia_vocálica: "e:ie"},
+    recordar: {alternancia_vocálica: "o:ue"},
+    regir: {alternancia_vocálica: "e:i"},
+    reír: {
+        // alternancia_vocálica: "i:í",  FIX: linguist: is there a vowel change rule?
+        excepciones_lexicas: {
+            gerundio: "riendo",
+            participio: "reído",
+            rules: {
+                // FIX: linguist: are there other rules I can use?
+                // FIX: must formalize the relationship of CmdPos on SubPres
+                IndPres: {forms: {s1: ["río"], s2: ["ríes"], s3: ["ríe"], p1: ["reímos"], p2: ["reís"],  p3: ["ríen"],   vos: ["reís"], }},
+                IndPret: {forms: {                           s3: ["rio"],                                p3: ["rieron"],}},
+                SubPres: {tema: "rí",
+                        //   forms: {s1: ["ría"], s2: ["rías"], s3: ["ría"], p1: ["riamos"], p2: ["riáis"], p3: ["rían"] }},
+                          forms: {                           s3: ["ría"], p1: ["riamos"], p2: ["riáis"], p3: ["rían"] }},
+                CmdPos:  {tema: "rí",
+                          forms: {                                        p1: ["riamos"], p2: ["reíd"],                  vos: ["reí"]}}
+            }
+        }
+    },
+    repetir: {alternancia_vocálica: "e:i"},
+    resolver: {alternancia_vocálica: "o:ue"},
+    reunir: {alternancia_vocálica: "u:ú"},      // FIX: linguist: can this be handled with accentuation rules?
     saber: {
         tema_pretérito: "sup",
         tema_futuro: "sabr",
@@ -496,13 +571,6 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
                 // similar a caber
                 IndPres: { forms: { s1: ["sé"] } },
                 SubPres: { tema: "sep" },
-                // IndPret: { root: "sup",
-                //            // FIX: linguist: This is the same pattern as in "haber","hacer","poder","poner". Are there some rules that could apply here instead of a list?
-                //            //                í:e                         ió:o
-                //            forms: { s1: ["supe"],                  s3: ["supo"] }
-                //          },
-                // IndFut:  { root: "sabr" },
-                // IndCond: { root: "sabr" },
                 CmdPos:  { forms: {                                s3: ["sepa"],  p1: ["sepamos"],                     p3: ["sepan"] } },
                 CmdNeg:  { tema: "sep" },
             }
@@ -515,6 +583,7 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
             imperativo_tú: "sal"
         }
     },
+    // seducir: is this supported?
     seguir: {
         // NOTE: this does not conjugate as a "-uir" clase infinitive
         tema_presente_yo: "sig",
@@ -538,7 +607,13 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
 
         }
     },
-    tender: {alternancia_vocálica: "e:ie"},
+    servir:  {alternancia_vocálica: "e:i"},
+    soldar:  {alternancia_vocálica: "o:ue"},
+    soltar:  {alternancia_vocálica: "o:ue"},
+    sonar:   {alternancia_vocálica: "o:ue"},
+    soñar:   {alternancia_vocálica: "o:ue"},
+    temblar: {alternancia_vocálica: "e:ie"},
+    tender:  {alternancia_vocálica: "e:ie"},
     tener: {
         clase_conjugacional: "tener", 
         tema_presente_yo: "teng",
@@ -552,6 +627,7 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
             }
         }
     },
+    // traducir: is this supported?
     traer: {
         tema_presente_yo: "traig",
         tema_pretérito: "traj",
@@ -562,6 +638,7 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
         //     gerundio: "trayendo"
         // }
     },
+    trompezar: {alternancia_vocálica: "e:ie"},
     vaciar: {
         // The accent is the only thing different from the regular forms.
         // Is this due to an orthographic rule? or something else?
@@ -578,6 +655,7 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
             }
         }
     },
+    variar: {model: "vaciar"},
     valer: {
         tema_presente_yo: "valg",
         tema_futuro: "valdr",
@@ -589,7 +667,10 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
         alternancia_vocálica: "e:ie",
         excepciones_lexicas: {
             gerundio: "viniendo",
-            imperativo_tú: "ven"
+            imperativo_tú: "ven",
+            rules: {
+                CmdPos:  { derivations: {preserve_stress_from_base: ["s2"] }},
+            }
         }
     },
     ver: {
@@ -621,11 +702,15 @@ export const verbos_con_cambios_morfológicas : {[infinitive: string]: ReglasDeC
             }
         }
     },
+    vestir: {alternancia_vocálica: "e:ie"},
     volar: {
+        alternancia_vocálica: "o:ue",
         excepciones_lexicas: {
             participio: "vuelto",
         }
-    }
+    },
+    volcar: {alternancia_vocálica: "o:ue"},
+    volver:  {alternancia_vocálica: "o:ue"},
 }
 
 

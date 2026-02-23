@@ -1,0 +1,21 @@
+{
+  "lexicografía": {
+  "pronunciacion": "[aβ̞eˈniɾ]",
+  "silabacion": "a-ve-nir",
+  "acentuacion": "aguda",
+  "etimologia": null,
+  "modelos": ["venir","sentir"]
+},
+  "formas_no_personales": {"infinitivo":"avenir","gerundio":"aviniendo","participio":"avenido"},
+  "formas_personales": {
+    "IndPres": "{"s1":["avengo"],"s2":["avienes"],"vos":["avenís"],"s3":["aviene"],"p1":["avenimos"],"p2":["avenís"],"p3":["avienen"]}",
+    "IndImp": "{"s1":["avenía"],"s2":["avenías"],"vos":["avenías"],"s3":["avenía"],"p1":["aveníamos"],"p2":["aveníais"],"p3":["avenían"]}",
+    "IndPret": "{"s1":["avine"],"s2":["aviniste"],"vos":["aviniste"],"s3":["avino"],"p1":["avinimos"],"p2":["avinisteis"],"p3":["avinieron"]}",
+    "IndFut": "{"s1":["avendré"],"s2":["avendrás"],"vos":["avendrás"],"s3":["avendrá"],"p1":["avendremos"],"p2":["avendréis"],"p3":["avendrán"]}",
+    "IndCond": "{"s1":["avendría"],"s2":["avendrías"],"vos":["avendrías"],"s3":["avendría"],"p1":["avendríamos"],"p2":["avendríais"],"p3":["avendrían"]}",
+    "SubPres": "{"s1":["avenga"],"s2":["avengas"],"vos":["avengas","avengás"],"s3":["avenga"],"p1":["avengamos"],"p2":["avengáis"],"p3":["avengan"]}",
+    "SubImp": "{"s1":["aviniera","aviniese"],"s2":["avinieras","avinieses"],"vos":["avinieras","avinieses"],"s3":["aviniera","aviniese"],"p1":["aviniéramos","aviniésemos"],"p2":["avinierais","avinieseis"],"p3":["avinieran","aviniesen"]}",
+    "SubFut": "{"s1":["aviniere"],"s2":["avinieres"],"vos":["avinieres"],"s3":["aviniere"],"p1":["aviniéremos"],"p2":["aviniereis"],"p3":["avinieren"]}",
+    "CmdPos": "{"s2":{"estándar":["avén"],"atípicos":[{"forma":"aviene","etiquetas":["no normativo"]}]},"vos":["avení"],"s3":["avenga"],"p1":["avengamos"],"p2":["avenid"],"p3":["avengan"]}"
+}
+}

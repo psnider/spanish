@@ -1,0 +1,21 @@
+{
+  "lexicografía": {
+  "pronunciacion": "[eˈraɾ]",
+  "silabacion": "e-rrar",
+  "acentuacion": "aguda",
+  "etimologia": "Del latín errare.",
+  "modelos": ["errar"]
+},
+  "formas_no_personales": {"infinitivo":"errar","gerundio":"errando","participio":"errado"},
+  "formas_personales": {
+    "IndPres": {"s1":["yerro","erro"],"s2":["yerras","erras"],"vos":["errás"],"s3":["yerra","erra"],"p1":["erramos"],"p2":["erráis"],"p3":["yerran","erran"]},
+    "IndImp": {"s1":["erraba"],"s2":["errabas"],"vos":["errabas"],"s3":["erraba"],"p1":["errábamos"],"p2":["errabais"],"p3":["erraban"]},
+    "IndPret": {"s1":["erré"],"s2":["erraste"],"vos":["erraste"],"s3":["erró"],"p1":["erramos"],"p2":["errasteis"],"p3":["erraron"]},
+    "IndFut": {"s1":["erraré"],"s2":["errarás"],"vos":["errarás"],"s3":["errará"],"p1":["erraremos"],"p2":["erraréis"],"p3":["errarán"]},
+    "IndCond": {"s1":["erraría"],"s2":["errarías"],"vos":["errarías"],"s3":["erraría"],"p1":["erraríamos"],"p2":["erraríais"],"p3":["errarían"]},
+    "SubPres": {"s1":["yerre","erre"],"s2":["yerres","erres"],"vos":["yerres","erres","errés"],"s3":["yerre","erre"],"p1":["erremos"],"p2":["erréis"],"p3":["yerren","erren"]},
+    "SubImp": {"s1":["errara","errase"],"s2":["erraras","errases"],"vos":["erraras","errases"],"s3":["errara","errase"],"p1":["erráramos","errásemos"],"p2":["errarais","erraseis"],"p3":["erraran","errasen"]},
+    "SubFut": {"s1":["errare"],"s2":["errares"],"vos":["errares"],"s3":["errare"],"p1":["erráremos"],"p2":["errareis"],"p3":["erraren"]},
+    "CmdPos": {"s2":["yerra","erra"],"vos":["errá"],"s3":["yerre","erre"],"p1":["erremos"],"p2":["errad"],"p3":["yerren","erren"]}
+}
+}

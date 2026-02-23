@@ -1,0 +1,21 @@
+{
+  "lexicografía": {
+  "pronunciacion": "[sat̪isfaˈseɾ]",
+  "silabacion": "sa-tis-fa-cer",
+  "acentuacion": "aguda",
+  "etimologia": "Del latín satisfacere, compuesto de satis&nbsp;('suficiente') y facere&nbsp;('hacer')",
+  "modelos": ["hacer"]
+},
+  "formas_no_personales": {"infinitivo":"satisfacer","gerundio":"satisfaciendo","participio":"satisfecho"},
+  "formas_personales": {
+    "IndPres": {"s1":["satisfago"],"s2":["satisfaces"],"vos":["satisfacés"],"s3":["satisface"],"p1":["satisfacemos"],"p2":["satisfacéis"],"p3":["satisfacen"]},
+    "IndImp": {"s1":["satisfacía"],"s2":["satisfacías"],"vos":["satisfacías"],"s3":["satisfacía"],"p1":["satisfacíamos"],"p2":["satisfacíais"],"p3":["satisfacían"]},
+    "IndPret": {"s1":["satisfice"],"s2":["satisficiste"],"vos":["satisficiste"],"s3":["satisfizo"],"p1":["satisficimos"],"p2":["satisficisteis"],"p3":["satisficieron"]},
+    "IndFut": {"s1":["satisfaré"],"s2":["satisfarás"],"vos":["satisfarás"],"s3":["satisfará"],"p1":["satisfaremos"],"p2":["satisfaréis"],"p3":["satisfarán"]},
+    "IndCond": {"s1":["satisfaría"],"s2":["satisfarías"],"vos":["satisfarías"],"s3":["satisfaría"],"p1":["satisfaríamos"],"p2":["satisfaríais"],"p3":["satisfarían"]},
+    "SubPres": {"s1":["satisfaga"],"s2":["satisfagas"],"vos":["satisfagas","satisfagás"],"s3":["satisfaga"],"p1":["satisfagamos"],"p2":["satisfagáis"],"p3":["satisfagan"]},
+    "SubImp": {"s1":["satisficiera","satisficiese"],"s2":["satisficieras","satisficieses"],"vos":["satisficieras","satisficieses"],"s3":["satisficiera","satisficiese"],"p1":["satisficiéramos","satisficiésemos"],"p2":["satisficierais","satisficieseis"],"p3":["satisficieran","satisficiesen"]},
+    "SubFut": {"s1":["satisficiere"],"s2":["satisficieres"],"vos":["satisficieres"],"s3":["satisficiere"],"p1":["satisficiéremos"],"p2":["satisficiereis"],"p3":["satisficieren"]},
+    "CmdPos": {"s2":{"estándar":["satisfaz"],"atípicos":[{"forma":"satisface","etiquetas":["no normativo"]}]},"vos":["satisfacé"],"s3":["satisfaga"],"p1":["satisfagamos"],"p2":["satisfaced"],"p3":["satisfagan"]}
+}
+}

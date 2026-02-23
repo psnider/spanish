@@ -27,7 +27,7 @@ export function equal(lhs: string | [string] | [string, string] | undefined, rhs
 }
 
 
-type VerbConjugationExpected = GrammaticalPersons<string | [string, string]>
+export type VerbConjugationExpected = GrammaticalPersons<string | [string, string]>
 
 
 export function assert_Participles(infinitive: string, expected: Participles) {

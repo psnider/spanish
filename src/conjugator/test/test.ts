@@ -26,13 +26,15 @@ const conjugation_types_to_test = {
   alternancia_vocálica_u_ue: false,
 
   // clases de conjugación por ortografía
+  clase_acer: false,
   clase_ducir: false,
   clase_eer: false,
   clase_iar: false,
   clase_poner: false,
   clase_tener: false,
   clase_uir: false,
-  non_class: false
+  no_dar: false,
+  no_ser: false,
 }
 type TestableConjugationType = keyof typeof conjugation_types_to_test
 
@@ -148,7 +150,7 @@ doTestIf(["alternancia_vocálica_e_ie"], () => {
 })
 
 
-doTestIf(["alternancia_vocálica_o_ue", "non_class"], () => {
+doTestIf(["alternancia_vocálica_o_ue", "no_dar"], () => {
   assert_Participles("acordar", { pres: "acordando", past: "acordado" })
   assert_TenseMood("acordar", "IndPres", {s1: "acuerdo", s2: "acuerdas", s3: "acuerda", p1: "acordamos", p2: "acordáis", p3: "acuerdan", vos: "acordás"})
   assert_TenseMood("acordar", "IndPret", {s1: "acordé", s2: "acordaste", s3: "acordó", p1: "acordamos", p2: "acordasteis", p3: "acordaron"})
@@ -176,7 +178,7 @@ doTestIf(["alternancia_vocálica_o_ue"], () => {
   assert_TenseMood("almorzar", "CmdNeg", {s1:null, s2: "almuerces", s3: "almuerce", p1: "almorcemos", p2: "almorcéis", p3: "almuercen"})
 })
 
-doTestIf(["tema_pretérito", "non_class"], () => {
+doTestIf(["tema_pretérito", "no_dar"], () => {
   assert_Participles("andar", { pres: "andando", past: "andado" })
   assert_TenseMood("andar", "IndPres", {s1: "ando", s2: "andas", s3: "anda", p1: "andamos", p2: "andáis", p3: "andan", vos: "andás"})
   assert_TenseMood("andar", "IndImp", {s1: "andaba", s2: "andabas", s3: "andaba", p1: "andábamos", p2: "andabais", p3: "andaban"})
@@ -204,6 +206,21 @@ doTestIf(["regular", "clase_uir"], () => {
   assert_TenseMood("argüir","SubFut",{s1:"arguyere", s2:"arguyeres", s3:"arguyere", p1:"arguyéremos", p2:"arguyereis", p3:"arguyeren"})
   assert_TenseMood("argüir","CmdPos",{s1:null,s2: "arguye", s3: "arguya", p1: "arguyamos", p2: "argüid", p3: "arguyan",vos: "argüí"})
   assert_TenseMood("argüir","CmdNeg",{s1:null,s2: "arguyas", s3: "arguya", p1: "arguyamos", p2: "arguyáis", p3: "arguyan"})
+})
+
+doTestIf(["regular"], () => {
+  // tests prefix 'a' + 'venir'
+  assert_Participles("avenir", { pres: "aviniendo", past: "avenido" })
+  assert_TenseMood("avenir", "IndPres", {s1:"avengo",   s2:"avienes",   s3:"aviene",   p1:"avenimos",    p2:"avenís",     p3:"avienen",  vos:"avenís"})
+  assert_TenseMood("avenir", "IndImp",  {s1:"avenía",   s2:"avenías",   s3:"avenía",   p1:"aveníamos",   p2:"aveníais",   p3:"avenían"})
+  assert_TenseMood("avenir", "IndPret", {s1:"avine",    s2:"aviniste",  s3:"avino",    p1:"avinimos",    p2:"avinisteis", p3:"avinieron"})
+  assert_TenseMood("avenir", "IndFut",  {s1:"avendré",  s2:"avendrás",  s3:"avendrá",  p1:"avendremos",  p2:"avendréis",  p3:"avendrán"})
+  assert_TenseMood("avenir", "IndCond", {s1:"avendría", s2:"avendrías", s3:"avendría", p1:"avendríamos", p2:"avendríais", p3:"avendrían"})
+  assert_TenseMood("avenir", "SubPres", {s1:"avenga",   s2:"avengas",   s3:"avenga",   p1:"avengamos",   p2:"avengáis",   p3:"avengan"})
+  assert_TenseMood("avenir", "SubImp",  {s1:["aviniera","aviniese"],s2:["avinieras","avinieses"],s3:["aviniera","aviniese"],
+                                         p1:["aviniéramos","aviniésemos"],p2:["avinierais","avinieseis"],p3:["avinieran","aviniesen"]})
+  assert_TenseMood("avenir", "SubFut",  {s1:"aviniere", s2:"avinieres", s3:"aviniere", p1:"aviniéremos", p2:"aviniereis", p3:"avinieren"})
+  assert_TenseMood("avenir", "CmdPos",  {               s2:"avén",      s3:"avenga",   p1:"avengamos",   p2:"avenid",     p3:"avengan", vos:"avení"})
 })
 
 doTestIf(["tema_presente_yo", "tema_pretérito", "tema_futuro"], () => {
@@ -248,7 +265,7 @@ doTestIf(["clase_ducir", "tema_presente_yo", "tema_pretérito"], () => {
   assert_TenseMood("conducir", "CmdNeg", {s1:null,s2: "conduzcas", s3: "conduzca", p1: "conduzcamos", p2: "conduzcáis", p3: "conduzcan"})
 })
 
-doTestIf(["regular", "non_class"], () => {
+doTestIf(["regular", "no_ser"], () => {
   // test prefix + irregular base: 'co-' + 'ser'
   assert_Participles("coser", { pres: "cosiendo", past: "cosido" })
   assert_TenseMood("coser", "IndPres", {s1: "coso", s2: "coses", s3: "cose",     p1: "cosemos",  p2: "coséis",    p3: "cosen", vos: "cosés"})
@@ -335,7 +352,18 @@ doTestIf(["regular"], () => {
   assert_TenseMood("delinquir", "CmdNeg",  {s1:null,s2: "delinquas", s3: "delinqua", p1: "delinquamos", p2: "delinquáis", p3: "delinquan"})
 })
 
-// FIX: add     deshacer
+doTestIf(["clase_acer"], () => {
+  assert_Participles("deshacer", { pres: "deshaciendo", past: "deshecho" })
+  assert_TenseMood("deshacer", "IndPres", {s1: "deshago", s2: "deshaces", s3: "deshace", p1: "deshacemos", p2: "deshacéis", p3: "deshacen", vos: "deshacés", })
+  assert_TenseMood("deshacer", "IndImp", {s1: "deshacía", s2: "deshacías", s3: "deshacía", p1: "deshacíamos", p2: "deshacíais", p3: "deshacían", })
+  assert_TenseMood("deshacer", "IndPret", {s1: "deshice", s2: "deshiciste", s3: "deshizo", p1: "deshicimos", p2: "deshicisteis", p3: "deshicieron", })
+  assert_TenseMood("deshacer", "IndFut", {s1: "desharé", s2: "desharás", s3: "deshará", p1: "desharemos", p2: "desharéis", p3: "desharán", })
+  assert_TenseMood("deshacer", "IndCond", {s1: "desharía", s2: "desharías", s3: "desharía", p1: "desharíamos", p2: "desharíais", p3: "desharían", })
+  assert_TenseMood("deshacer", "SubPres", {s1: "deshaga", s2: "deshagas", s3: "deshaga", p1: "deshagamos", p2: "deshagáis", p3: "deshagan", })
+  assert_TenseMood("deshacer", "SubImp", {s1: ["deshiciera","deshiciese"], s2: ["deshicieras","deshicieses"], s3: ["deshiciera","deshiciese"], p1: ["deshiciéramos","deshiciésemos"], p2: ["deshicierais","deshicieseis"], p3: ["deshicieran","deshiciesen"], })
+  assert_TenseMood("deshacer", "SubFut", {s1: "deshiciere", s2: "deshicieres", s3: "deshiciere", p1: "deshiciéremos", p2: "deshiciereis", p3: "deshicieren", })
+  assert_TenseMood("deshacer", "CmdPos", {s2: "deshaz", s3: "deshaga", p1: "deshagamos", p2: "deshaced", p3: "deshagan", vos: "deshacé", })
+})
 
 doTestIf(["alternancia_vocálica_o_ue"], () => {
   assert_Participles("dormir", { pres: "durmiendo", past: "dormido" })
@@ -393,6 +421,32 @@ doTestIf(["irregular"], () => {
 //   assert_TenseMood("erguir", "CmdPos", {s1:null,s2:["irgue","yergue"],s3:["irga","yerga"],p1:["irgamos","yergamos"],p2: "erguid", p3:["irgan","yergan"],vos: "erguí"})
 //   assert_TenseMood("erguir", "CmdNeg", {s1:null,s2:["irgas","yergas"],s3:["irga","yerga"],p1:["irgamos","yergamos"],p2:["irgáis","yergáis"],p3:["irgan","yergan"],vos: "yergas"})
 // })
+
+// FIX: restore second form
+// doTestIf(["irregular"], () => {
+//   assert_Participles("errar", { pres: "errando", past: "errado" })
+//   assert_TenseMood("errar", "IndPres", {s1: ["yerro","erro"], s2: "yerras", s3: ["yerra","erra"], p1: "erramos", p2: "erráis", p3: ["yerran","erran"], vos: "errás", })
+//   assert_TenseMood("errar", "IndImp", {s1: "erraba", s2: "errabas", s3: "erraba", p1: "errábamos", p2: "errabais", p3: "erraban", })
+//   assert_TenseMood("errar", "IndPret", {s1: "erré", s2: "erraste", s3: "erró", p1: "erramos", p2: "errasteis", p3: "erraron", })
+//   assert_TenseMood("errar", "IndFut", {s1: "erraré", s2: "errarás", s3: "errará", p1: "erraremos", p2: "erraréis", p3: "errarán", })
+//   assert_TenseMood("errar", "IndCond", {s1: "erraría", s2: "errarías", s3: "erraría", p1: "erraríamos", p2: "erraríais", p3: "errarían", })
+//   assert_TenseMood("errar", "SubPres", {s1: ["yerre","erre"], s2: "yerres", s3: ["yerre","erre"], p1: "erremos", p2: "erréis", p3: ["yerren","erren"], })
+//   assert_TenseMood("errar", "SubImp", {s1: ["errara","errase"], s2: ["erraras","errases"], s3: ["errara","errase"], p1: ["erráramos","errásemos"], p2: ["errarais","erraseis"], p3: ["erraran","errasen"], })
+//   assert_TenseMood("errar", "SubFut", {s1: "errare", s2: "errares", s3: "errare", p1: "erráremos", p2: "errareis", p3: "erraren", })
+//   assert_TenseMood("errar", "CmdPos", {s2: "yerra", s3: ["yerre","erre"], p1: "erremos", p2: "errad", p3: ["yerren","erren"], vos: "errá", })
+// })
+doTestIf(["irregular"], () => {
+  assert_Participles("errar", { pres: "errando", past: "errado" })
+  assert_TenseMood("errar", "IndPres", {s1: "erro", s2: "erras", s3: "erra", p1: "erramos", p2: "erráis", p3: "erran", vos: "errás", })
+  assert_TenseMood("errar", "IndImp", {s1: "erraba", s2: "errabas", s3: "erraba", p1: "errábamos", p2: "errabais", p3: "erraban", })
+  assert_TenseMood("errar", "IndPret", {s1: "erré", s2: "erraste", s3: "erró", p1: "erramos", p2: "errasteis", p3: "erraron", })
+  assert_TenseMood("errar", "IndFut", {s1: "erraré", s2: "errarás", s3: "errará", p1: "erraremos", p2: "erraréis", p3: "errarán", })
+  assert_TenseMood("errar", "IndCond", {s1: "erraría", s2: "errarías", s3: "erraría", p1: "erraríamos", p2: "erraríais", p3: "errarían", })
+  assert_TenseMood("errar", "SubPres", {s1: "erre", s2: "erres", s3: "erre", p1: "erremos", p2: "erréis", p3: "erren", })
+  assert_TenseMood("errar", "SubImp", {s1: ["errara","errase"], s2: ["erraras","errases"], s3: ["errara","errase"], p1: ["erráramos","errásemos"], p2: ["errarais","erraseis"], p3: ["erraran","errasen"], })
+  assert_TenseMood("errar", "SubFut", {s1: "errare", s2: "errares", s3: "errare", p1: "erráremos", p2: "errareis", p3: "erraren", })
+  assert_TenseMood("errar", "CmdPos", {s2: "erra", s3: "erre", p1: "erremos", p2: "errad", p3: "erren", vos: "errá", })
+})
 
 doTestIf(["irregular", "tema_pretérito"], () => {
   assert_Participles("estar", { pres: "estando", past: "estado" })
@@ -537,7 +591,18 @@ doTestIf(["regular"], () => {
   assert_TenseMood("llegar", "CmdNeg", {s1:null,s2:"llegues", s3:"llegue", p1:"lleguemos", p2:"lleguéis", p3:"lleguen"})
 })
 
-// FIX: add nacer
+doTestIf(["regular", "clase_acer"], () => {
+  assert_Participles("nacer", { pres: "naciendo", past: "nacido" })
+  assert_TenseMood("nacer", "IndPres", {s1: "nazco", s2: "naces", s3: "nace", p1: "nacemos", p2: "nacéis", p3: "nacen", vos: "nacés", })
+  assert_TenseMood("nacer", "IndImp", {s1: "nacía", s2: "nacías", s3: "nacía", p1: "nacíamos", p2: "nacíais", p3: "nacían", })
+  assert_TenseMood("nacer", "IndPret", {s1: "nací", s2: "naciste", s3: "nació", p1: "nacimos", p2: "nacisteis", p3: "nacieron", })
+  assert_TenseMood("nacer", "IndFut", {s1: "naceré", s2: "nacerás", s3: "nacerá", p1: "naceremos", p2: "naceréis", p3: "nacerán", })
+  assert_TenseMood("nacer", "IndCond", {s1: "nacería", s2: "nacerías", s3: "nacería", p1: "naceríamos", p2: "naceríais", p3: "nacerían", })
+  assert_TenseMood("nacer", "SubPres", {s1: "nazca", s2: "nazcas", s3: "nazca", p1: "nazcamos", p2: "nazcáis", p3: "nazcan", })
+  assert_TenseMood("nacer", "SubImp", {s1: ["naciera","naciese"], s2: ["nacieras","nacieses"], s3: ["naciera","naciese"], p1: ["naciéramos","naciésemos"], p2: ["nacierais","nacieseis"], p3: ["nacieran","naciesen"], })
+  assert_TenseMood("nacer", "SubFut", {s1: "naciere", s2: "nacieres", s3: "naciere", p1: "naciéremos", p2: "naciereis", p3: "nacieren", })
+  assert_TenseMood("nacer", "CmdPos", {s2: "nace", s3: "nazca", p1: "nazcamos", p2: "naced", p3: "nazcan", vos: "nacé", })
+})
 
 doTestIf(["tema_presente_yo"], () => {
   assert_Participles("oír", { pres: "oyendo", past: "oído" })
@@ -610,7 +675,18 @@ doTestIf(["tema_pretérito", "tema_futuro", "alternancia_vocálica_e_ie"], () =>
   assert_TenseMood("querer", "CmdNeg",  {s1:null,s2: "quieras", s3: "quiera", p1: "queramos", p2: "queráis", p3: "quieran"})
 })
 
-// FIX: add reír
+doTestIf([], () => {
+  assert_Participles("reír", { pres: "riendo", past: "reído" })
+  assert_TenseMood("reír", "IndPres", {s1: "río", s2: "ríes", s3: "ríe", p1: "reímos", p2: "reís", p3: "ríen", vos: "reís", })
+  assert_TenseMood("reír", "IndImp", {s1: "reía", s2: "reías", s3: "reía", p1: "reíamos", p2: "reíais", p3: "reían", })
+  assert_TenseMood("reír", "IndPret", {s1: "reí", s2: "reíste", s3: "rio", p1: "reímos", p2: "reísteis", p3: "rieron", })
+  assert_TenseMood("reír", "IndFut", {s1: "reiré", s2: "reirás", s3: "reirá", p1: "reiremos", p2: "reiréis", p3: "reirán", })
+  assert_TenseMood("reír", "IndCond", {s1: "reiría", s2: "reirías", s3: "reiría", p1: "reiríamos", p2: "reiríais", p3: "reirían", })
+  assert_TenseMood("reír", "SubPres", {s1: "ría", s2: "rías", s3: "ría", p1: "riamos", p2: "riáis", p3: "rían", })
+  assert_TenseMood("reír", "SubImp", {s1: ["riera","riese"], s2: ["rieras","rieses"], s3: ["riera","riese"], p1: ["riéramos","riésemos"], p2: ["rierais","rieseis"], p3: ["rieran","riesen"], })
+  assert_TenseMood("reír", "SubFut", {s1: "riere", s2: "rieres", s3: "riere", p1: "riéremos", p2: "riereis", p3: "rieren", })
+  assert_TenseMood("reír", "CmdPos", {s2: "ríe", s3: "ría", p1: "riamos", p2: "reíd", p3: "rían", vos: "reí", })
+})
 
 doTestIf(["prefijado", "tema_pretérito", "tema_futuro", "alternancia_vocálica_e_ie"], () => {
   assert_Participles("reunir", { pres: "reuniendo", past: "reunido" })
@@ -668,7 +744,18 @@ doTestIf(["tema_pretérito", "tema_futuro", "tema_subjuntivo_yo"], () => {
   assert_TenseMood("salir", "CmdNeg", {s1:null,s2: "salgas", s3: "salga", p1: "salgamos", p2: "salgáis", p3: "salgan"})
 })
 
-// FIX: add satisfacer
+doTestIf([], () => {
+  assert_Participles("satisfacer", { pres: "satisfaciendo", past: "satisfecho" })
+  assert_TenseMood("satisfacer", "IndPres", {s1: "satisfago", s2: "satisfaces", s3: "satisface", p1: "satisfacemos", p2: "satisfacéis", p3: "satisfacen", vos: "satisfacés", })
+  assert_TenseMood("satisfacer", "IndImp", {s1: "satisfacía", s2: "satisfacías", s3: "satisfacía", p1: "satisfacíamos", p2: "satisfacíais", p3: "satisfacían", })
+  assert_TenseMood("satisfacer", "IndPret", {s1: "satisfice", s2: "satisficiste", s3: "satisfizo", p1: "satisficimos", p2: "satisficisteis", p3: "satisficieron", })
+  assert_TenseMood("satisfacer", "IndFut", {s1: "satisfaré", s2: "satisfarás", s3: "satisfará", p1: "satisfaremos", p2: "satisfaréis", p3: "satisfarán", })
+  assert_TenseMood("satisfacer", "IndCond", {s1: "satisfaría", s2: "satisfarías", s3: "satisfaría", p1: "satisfaríamos", p2: "satisfaríais", p3: "satisfarían", })
+  assert_TenseMood("satisfacer", "SubPres", {s1: "satisfaga", s2: "satisfagas", s3: "satisfaga", p1: "satisfagamos", p2: "satisfagáis", p3: "satisfagan", })
+  assert_TenseMood("satisfacer", "SubImp", {s1: ["satisficiera","satisficiese"], s2: ["satisficieras","satisficieses"], s3: ["satisficiera","satisficiese"], p1: ["satisficiéramos","satisficiésemos"], p2: ["satisficierais","satisficieseis"], p3: ["satisficieran","satisficiesen"], })
+  assert_TenseMood("satisfacer", "SubFut", {s1: "satisficiere", s2: "satisficieres", s3: "satisficiere", p1: "satisficiéremos", p2: "satisficiereis", p3: "satisficieren", })
+  assert_TenseMood("satisfacer", "CmdPos", {s2: "satisfaz", s3: "satisfaga", p1: "satisfagamos", p2: "satisfaced", p3: "satisfagan", vos: "satisfacé", })
+})
 
 doTestIf(["tema_presente_yo", "alternancia_vocálica_e_i"], () => {
   assert_Participles("seguir", { pres: "siguiendo", past: "seguido" })

@@ -3,8 +3,8 @@ import { conjugateVerb } from "../conjugate-verb.js";
 import { deriveParticiples } from "../derive-participles.js";
 
 
-let infinitive = "prever"
-let mood_tense: TenseMood = "IndPres"
+let infinitive = "satisfacer"
+let mood_tense: TenseMood = "IndImp"
 
 // case "IndPres":
 // case "IndImp":

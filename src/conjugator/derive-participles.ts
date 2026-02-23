@@ -41,7 +41,7 @@ function getRegularParticiples(conj_and_deriv_rules: ConjugationAndDerivationRul
 
 
 function getParticiosExcepcionales (conj_and_deriv_rules: ConjugationAndDerivationRules) {
-    const {infinitive, conjugable_infinitive, prefixes, morphological_rules} = conj_and_deriv_rules
+    const {infinitive, conjugable_infinitive, is_conjugation_family, prefixes, morphological_rules} = conj_and_deriv_rules
 
     const prefix_len = infinitive.length - conjugable_infinitive.length
     const prefix = infinitive.slice(0, prefix_len)
@@ -51,7 +51,21 @@ function getParticiosExcepcionales (conj_and_deriv_rules: ConjugationAndDerivati
         participios_excepcionales.pres = prefix + excepciones_lexicas?.gerundio
     }
     if (excepciones_lexicas?.participio) {
-        participios_excepcionales.past = prefix + excepciones_lexicas?.participio
+        if (is_conjugation_family) {
+            let participio = excepciones_lexicas.participio
+            const clase_conjugacional = morphological_rules.clase_conjugacional
+            const base_prefix_length = conjugable_infinitive.length - (clase_conjugacional.length - 1)
+            const conjugation_family_prefix = conj_and_deriv_rules.prefixes?.conjugation_family_prefix
+            participio = conjugation_family_prefix + participio.slice(base_prefix_length)
+            const prefixes_len = infinitive.length - (conjugation_family_prefix.length + conjugable_infinitive.length - base_prefix_length)
+            if (prefixes_len > 0) {
+                const prefix = infinitive.slice(0, prefixes_len)
+                participio = prefix + participio
+            }
+            participios_excepcionales.past = participio
+        } else {
+            participios_excepcionales.past = prefix + excepciones_lexicas?.participio
+        }
     }
     if (participios_excepcionales.pres || participios_excepcionales.past) {
         return participios_excepcionales
