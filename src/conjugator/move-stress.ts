@@ -1,6 +1,3 @@
-import { GrammaticalPerson, TenseMood, VerbConjugation, VerbForms } from ".";
-import { ConjugationAndDerivationRules } from "./resolve-conjugation-class.js";
-
 
 const unaccented_vowels_to_accented = {
   a: "á", e: "é", i: "í", o: "ó", u: "ú"
@@ -54,13 +51,6 @@ function findIndexOfStress(verb_form: string) : number | undefined {
 }
 
 
-function placeStressInVerbForm(verb_form: string, stress_index: number) : string {
-    const old_stress_index = findIndexOfStress(verb_form)
-    const moved = moveStress(verb_form, {from: old_stress_index, to: stress_index})
-    return moved
-}
-
-
 export function removeStress(original: string) : string {
     const old_stress_index = findIndexOfStress(original)
     if (old_stress_index !== undefined) {
@@ -72,13 +62,13 @@ export function removeStress(original: string) : string {
 }
 
 
-export function removeHiatusStressFromAfterDipthong(form: string) {
-    const index = form.indexOf("gui")
-    if (index !== -1) {
-        const accented_ch = form[index + "gui".length] 
-        const unaccented_ch = removeAccent(accented_ch)
-        form = form.replace(`gui` + accented_ch, `gui` + unaccented_ch)
-    }
-    return form
-}
+// export function removeHiatusStressFromAfterDipthong(form: string) {
+//     const index = form.indexOf("gui")
+//     if (index !== -1) {
+//         const accented_ch = form[index + "gui".length] 
+//         const unaccented_ch = removeAccent(accented_ch)
+//         form = form.replace(`gui` + accented_ch, `gui` + unaccented_ch)
+//     }
+//     return form
+// }
 

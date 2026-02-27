@@ -1,113 +1,6 @@
 import * as fs from 'node:fs/promises';
 import { VerbConjugationExpected } from './test-support.js';
-import { TenseMood } from '../index.js';
-
-/*
-type PersonSlot = "s1" | "s2" | "v2" | "s3" | "p1" | "p2" | "p3";
-
-type ConjugationTable = Record<string, Partial<Record<PersonSlot, string>>>;
-
-
-function extractForm(td: string): string {
-  const links = extractAll(td, "<a", "</a>");
-  return links
-    .map(stripTags)
-    .map(x => x.trim())
-    .filter(Boolean)
-    .join(" ");
-}
-
-
-function mapPersons(forms: string[]): Partial<Record<PersonSlot, string>> {
-  const slots: PersonSlot[] = ["s1","s2","v2","s3","p1","p2","p3"];
-  const result: Partial<Record<PersonSlot,string>> = {};
-  for (let i = 0; i < slots.length; i++)
-    if (forms[i])
-      result[slots[i]] = forms[i];
-  return result;
-}
-
-
-function normalizeMood(text: string): string {
-  if (text.includes("indicativo")) return "Ind";
-  if (text.includes("subjuntivo")) return "Sub";
-  if (text.includes("condicional")) return "Cond";
-  return "";
-}
-
-function normalizeTense(text: string): string {
-  if (text.includes("Presente")) return "Pres";
-  if (text.includes("imperfecto")) return "Imp";
-  if (text.includes("perfecto")) return "Pret";
-  if (text.includes("Futuro")) return "Fut";
-  return text;
-}
-
-function clean(html: string): string {
-  return stripTags(html).replace(/\s+/g, " ").trim();
-}
-
-
-function stripTags(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
-
-
-function extractFirst(text: string, start: string, end: string): string {
-  const s = text.indexOf(start);
-  if (s === -1) return "";
-  const s2 = text.indexOf(">", s);
-  const e = text.indexOf(end, s2);
-  if (e === -1) return "";
-  return text.slice(s2 + 1, e);
-}
-
-function extractAll(text: string, start: string, end: string): string[] {
-  const result: string[] = [];
-  let pos = 0;
-  while (true) {
-    const s = text.indexOf(start, pos);
-    if (s === -1) break;
-    const s2 = text.indexOf(">", s);
-    const e = text.indexOf(end, s2);
-    if (e === -1) break;
-    result.push(text.slice(s, e + end.length));
-    pos = e + end.length;
-  }
-  return result;
-}
-
-
-function isTense(text: string): boolean {
-  return ["Presente", "Pretérito", "Futuro", "Condicional"].some(t => text.includes(t));
-}
-
-
-export function scrapeVerbConjugation(html: string): ConjugationTable {
-  const result: ConjugationTable = {};
-  let currentMood = "";
-  const rows = extractAll(html, "<tr", "</tr>");
-  for (const row of rows) {
-    const header = extractFirst(row, "<th", "</th>");
-    if (!header) continue;
-    const headerText = clean(header);
-    // Detect mood
-    if (headerText.startsWith("Modo ")) {
-      currentMood = normalizeMood(headerText);
-      continue;
-    }
-    // Detect tense rows
-    if (isTense(headerText)) {
-      const tense = normalizeTense(headerText);
-      const key = currentMood + tense;
-      const cells = extractAll(row, "<td", "</td>");
-      const forms = cells.map(extractForm);
-      result[key] = mapPersons(forms);
-    }
-  }
-  return result;
-}
-*/
+import { MoodTense } from '../index.js';
 
 
 interface FormasNoPersonales {
@@ -324,6 +217,7 @@ function buildConjugationSlot(
     return { estándar, atípicos }
 }
 
+
 function parseCell(cellHtml: string, legendMap: Record<string,string>): ConjugationSlot | undefined {
 
     const estándar: string[] = []
@@ -353,6 +247,7 @@ function parseCell(cellHtml: string, legendMap: Record<string,string>): Conjugat
         atípicos.length ? atípicos : undefined
     )
 }
+
 
 const RE_ROW = /<tr[\s\S]*?<\/tr>/gi
 const RE_CELL = /<td[^>]*>(.*?)<\/td>/gi
@@ -459,7 +354,7 @@ const persons_order_in_tests = <Array<keyof ConjugaciónModoTiempo>> ["s1", "s2"
 
 
 function printTests(entero: ConjugaciónEntero) {
-    function getTestable_Tú_y_Vos(mood_tense: TenseMood, formas: ConjugaciónModoTiempo) {
+    function getTestable_Tú_y_Vos(mood_tense: MoodTense, formas: ConjugaciónModoTiempo) {
         const {s2, vos} = formas
         if (mood_tense === "SubImp") {
             if (Array.isArray(s2) && Array.isArray(vos)) {
@@ -481,9 +376,9 @@ function printTests(entero: ConjugaciónEntero) {
     const {formas_no_personales, formas_personales} = entero
     const {infinitivo} = formas_no_personales
     console.log(`doTestIf([], () => {`)
-    console.log(`  assert_Participles("${formas_no_personales.infinitivo}", { pres: "${formas_no_personales.gerundio}", past: "${formas_no_personales.participio}" })`)
+    console.log(`  assert_Participles("${formas_no_personales.infinitivo}", { gerundio: "${formas_no_personales.gerundio}", participio: "${formas_no_personales.participio}" })`)
     for (const key of desired_mood_tenses) {
-        const mood_tense = <TenseMood> key
+        const mood_tense = <MoodTense> key
         const formas = formas_personales[<keyof ConjugaciónTabla> mood_tense]
         const tú_y_vos_test = getTestable_Tú_y_Vos(mood_tense, formas)
         let persons_for_tests = (tú_y_vos_test ? persons_order_in_tests : persons_order_in_tests.slice(0,6))
@@ -507,7 +402,7 @@ function printTests(entero: ConjugaciónEntero) {
                 test_args_of_forms += `${person}: ${JSON.stringify(formas_comprobables)}, `
             }
         }
-        console.log(`  assert_TenseMood("${formas_no_personales.infinitivo}", "${mood_tense}", {${test_args_of_forms}})`)
+        console.log(`  assert_MoodTense("${formas_no_personales.infinitivo}", "${mood_tense}", {${test_args_of_forms}})`)
     }
     console.log(`})`)
 }

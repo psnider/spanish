@@ -1,0 +1,21 @@
+{
+  "lexicografía": {
+  "pronunciacion": "[kõŋxuˈɣ̞aɾ]",
+  "silabacion": "con-ju-gar",
+  "acentuacion": "aguda",
+  "etimologia": null,
+  "modelos": ["llegar"]
+},
+  "formas_no_personales": {"infinitivo":"conjugar","gerundio":"conjugando","participio":"conjugado"},
+  "formas_personales": {
+    "IndPres": {"s1":["conjugo"],"s2":["conjugas"],"vos":["conjugás"],"s3":["conjuga"],"p1":["conjugamos"],"p2":["conjugáis"],"p3":["conjugan"]},
+    "IndImp": {"s1":["conjugaba"],"s2":["conjugabas"],"vos":["conjugabas"],"s3":["conjugaba"],"p1":["conjugábamos"],"p2":["conjugabais"],"p3":["conjugaban"]},
+    "IndPret": {"s1":["conjugué"],"s2":["conjugaste"],"vos":["conjugaste"],"s3":["conjugó"],"p1":["conjugamos"],"p2":["conjugasteis"],"p3":["conjugaron"]},
+    "IndFut": {"s1":["conjugaré"],"s2":["conjugarás"],"vos":["conjugarás"],"s3":["conjugará"],"p1":["conjugaremos"],"p2":["conjugaréis"],"p3":["conjugarán"]},
+    "IndCond": {"s1":["conjugaría"],"s2":["conjugarías"],"vos":["conjugarías"],"s3":["conjugaría"],"p1":["conjugaríamos"],"p2":["conjugaríais"],"p3":["conjugarían"]},
+    "SubPres": {"s1":["conjugue"],"s2":["conjugues"],"vos":["conjugues","conjugués"],"s3":["conjugue"],"p1":["conjuguemos"],"p2":["conjuguéis"],"p3":["conjuguen"]},
+    "SubImp": {"s1":["conjugara","conjugase"],"s2":["conjugaras","conjugases"],"vos":["conjugaras","conjugases"],"s3":["conjugara","conjugase"],"p1":["conjugáramos","conjugásemos"],"p2":["conjugarais","conjugaseis"],"p3":["conjugaran","conjugasen"]},
+    "SubFut": {"s1":["conjugare"],"s2":["conjugares"],"vos":["conjugares"],"s3":["conjugare"],"p1":["conjugáremos"],"p2":["conjugareis"],"p3":["conjugaren"]},
+    "CmdPos": {"s2":["conjuga"],"vos":["conjugá"],"s3":["conjugue"],"p1":["conjuguemos"],"p2":["conjugad"],"p3":["conjuguen"]}
+}
+}

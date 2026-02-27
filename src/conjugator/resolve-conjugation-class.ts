@@ -1,10 +1,12 @@
 import { findProductiveVerbPrefix } from "./prefixes.js"
 import { getInfinitiveClass } from "./regular-verb-rules.js"
-import { ConjugationModel, InfinitiveClass, ReglasDeConjugaciónDeVerbo, verbos_con_cambios_morfológicas } from "./verbos-con-cambios-morfológicas.js"
+import { ModeloConjugacional, InfinitiveClass, ReglasDeConjugaciónDeVerbo, verbos_con_cambios_morfológicos } from "./verbos-con-cambios-morfológicas.js"
 
 
 interface Prefixes {
-    conjugable_infinitive_prefix?: string
+    // El prefijo del verbo que pertenece a una familia de conjugación.
+    // Por ejemplo, "creer" es miembro de la familia "-eer" (modelo "leer"), entonces 'conjugation_family_prefix' es "cr",
+    // => implica is_conjugation_family
     conjugation_family_prefix?: string
     // Semantic prefixes (that produce new verbs).
     // This is informational only, and is a guess. 
@@ -13,18 +15,30 @@ interface Prefixes {
 }
 
 
-// e.g.: descreer: {infinitive: "descreer", model: "leer", prefix: "des", conjugation_family_prefix: "cr", base_infinitive: "creer"}
+// e.g.: descreer: 
+var descreer: ConjugationAndDerivationRules = 
+{
+    infinitive: "descreer", 
+    conjugable_infinitive: "creer", 
+    verb_family: "-er", 
+    modelo: "-eer",
+    prefixes: {
+        conjugation_family_prefix: "cr",
+        productive_prefixes: ["des"]
+    },
+    // copiado de verbos_con_cambios_morfológicas.leer
+    morphological_rules: {
+        clase_conjugacional: "-eer", 
+    }
+}
 export interface ConjugationAndDerivationRules {
     // The infinitive that this describes.
     infinitive: string
     // The infinitive that is left when any semantic prefixes have been removed.
-    // Only specified if different from infinitive.
-    // If the model is a conjugation family (it starts with a hyphen), then this is the infinitive that the conjugation family follows, e.g. "leer" for "-eer".
+    // If the modelo is a conjugation family (it starts with a hyphen), then this is the infinitive that the conjugation family follows, e.g. "leer" for "-eer".
     conjugable_infinitive: string
     verb_family: InfinitiveClass
-    model: ConjugationModel
-    // true if this verb is part of a productive conjugation family, that is, it has an ending that classifies its conjugation, e.g. "-eer".
-    is_conjugation_family?: boolean
+    modelo?: ModeloConjugacional
     prefixes?: Prefixes
     morphological_rules?: ReglasDeConjugaciónDeVerbo  // from verbos_con_cambios_morfológicas[]
     // FIX: calculate IndPret,p3 stem here
@@ -59,7 +73,7 @@ export interface BaseWPrefix {
 
 
 interface ConjugationFamilyMapping {
-    model: ConjugationModel
+    modelo: ModeloConjugacional
     // NOTE: only one of base_infinitive and conjugation_family_infinitive may be set
     // The infinitive that remains after prefixes have been removed.
     // This is what is conjugated, prefixes will be reapplied afterwards.
@@ -72,31 +86,31 @@ interface ConjugationFamilyMapping {
 // FIX: shouldn't this be merged into verbos_con_cambios_morfológicas[]
 // longer keys must appear before shorter ones that match as a suffix.
 const conjugation_families: {[conjugation_family: string]: ConjugationFamilyMapping} = {
-    delinquir:  {model: "delinquir", conjugable_infinitive: "delinquir"},  // prevents mismatch with "huir"
-    erguir:     {model: "erguir",    conjugable_infinitive: "erguir"},        // prevents mismatch with "huir"
-    seguir:     {model: "seguir",    conjugable_infinitive: "seguir"},        // prevents mismatch with "huir"
-    caber:      {model: "caber",     conjugable_infinitive: "caber"},          // its own model
-    caer:       {model: "caer",      conjugable_infinitive: "caer"},            // its own model
-    estar:      {model: "estar",     conjugable_infinitive: "estar"},          // its own model
-    haber:      {model: "haber",     conjugable_infinitive: "haber"},          // its own model
-    jugar:      {model: "jugar",     conjugable_infinitive: "jugar"},          // its own model
-    poder:      {model: "poder",     conjugable_infinitive: "poder"},          // its own model
-    querer:     {model: "querer",    conjugable_infinitive: "querer"},        // its own model
-    saber:      {model: "saber",     conjugable_infinitive: "saber"},          // its own model
-    salir:      {model: "salir",     conjugable_infinitive: "salir"},          // its own model
-    venir:      {model: "venir",     conjugable_infinitive: "venir"},          // ChatGPT said that all "-venir" verbs conjugate the same
-    satisfacer: {model: "-acer",     conjugable_infinitive: "hacer"},          // 
-    tener:      {model: "tener",     conjugable_infinitive: "tener"},          // ChatGPT said that there are no modern "-tener" verbs that conjugate differently, but that the origin of the word could make a difference
-    poner:      {model: "poner",     conjugable_infinitive: "poner"},          // ChatGPT said that all "-poner" verbs conjugate the same, that this is 100% reliable
-    decir:      {model: "decir",     conjugable_infinitive: "decir"},          // ChatGPT said that all "-decir" verbs conjugate the same
-    traer:      {model: "traer",     conjugable_infinitive: "traer"},          // ChatGPT said that all "-traer" verbs conjugate the same
-    oír:        {model: "oír",       conjugable_infinitive: "oír"},            // ChatGPT said that all "-oír" verbs conjugate the same
+    delinquir:  {modelo: "delinquir", conjugable_infinitive: "delinquir"},  // prevents mismatch with "huir"
+    erguir:     {modelo: "erguir",    conjugable_infinitive: "erguir"},        // prevents mismatch with "huir"
+    seguir:     {modelo: "seguir",    conjugable_infinitive: "seguir"},        // prevents mismatch with "huir"
+    caber:      {modelo: "caber",     conjugable_infinitive: "caber"},          // its own modelo
+    caer:       {modelo: "caer",      conjugable_infinitive: "caer"},            // its own modelo
+    estar:      {modelo: "estar",     conjugable_infinitive: "estar"},          // its own modelo
+    haber:      {modelo: "haber",     conjugable_infinitive: "haber"},          // its own modelo
+    // jugar:      {modelo: "jugar",     conjugable_infinitive: "jugar"},          // its own modelo
+    poder:      {modelo: "poder",     conjugable_infinitive: "poder"},          // its own modelo
+    querer:     {modelo: "querer",    conjugable_infinitive: "querer"},        // its own modelo
+    saber:      {modelo: "saber",     conjugable_infinitive: "saber"},          // its own modelo
+    salir:      {modelo: "salir",     conjugable_infinitive: "salir"},          // its own modelo
+    venir:      {modelo: "venir",     conjugable_infinitive: "venir"},          // ChatGPT said that all "-venir" verbs conjugate the same
+    satisfacer: {modelo: "-acer",     conjugable_infinitive: "hacer"},          // 
+    tener:      {modelo: "tener",     conjugable_infinitive: "tener"},          // ChatGPT said that there are no modern "-tener" verbs that conjugate differently, but that the origin of the word could make a difference
+    poner:      {modelo: "poner",     conjugable_infinitive: "poner"},          // ChatGPT said that all "-poner" verbs conjugate the same, that this is 100% reliable
+    decir:      {modelo: "decir",     conjugable_infinitive: "decir"},          // ChatGPT said that all "-decir" verbs conjugate the same
+    traer:      {modelo: "traer",     conjugable_infinitive: "traer"},          // ChatGPT said that all "-traer" verbs conjugate the same
+    oír:        {modelo: "oír",       conjugable_infinitive: "oír"},            // ChatGPT said that all "-oír" verbs conjugate the same
     // FIX: linguist: hacer verbs are a different family from -acer? e.g. "nacer"
-    // FIX: linguist: change model from "-acer" to "hacer"
-    hacer:      {model: "-acer",     conjugable_infinitive: "hacer"},          // ChatGPT said that all "-hacer" verbs conjugate the same
-    ducir:      {model: "-ducir",    conjugable_infinitive: "conducir"},       // ChatGPT said that all "-ducir" verbs conjugate like conducir
-    eer:        {model: "-eer",      conjugable_infinitive: "leer"},           // ChatGPT said that all "-eer" verbs conjugate like leer
-    uir:        {model: "-uir",      conjugable_infinitive: "huir"},           // ChatGPT said that all "-uir" verbs conjugate like huir
+    // FIX: linguist: change modelo from "-acer" to "hacer"
+    hacer:      {modelo: "-acer",     conjugable_infinitive: "hacer"},          // ChatGPT said that all "-hacer" verbs conjugate the same
+    ducir:      {modelo: "-ducir",    conjugable_infinitive: "conducir"},       // ChatGPT said that all "-ducir" verbs conjugate like conducir
+    eer:        {modelo: "-eer",      conjugable_infinitive: "leer"},           // ChatGPT said that all "-eer" verbs conjugate like leer
+    uir:        {modelo: "-uir",      conjugable_infinitive: "huir"},           // ChatGPT said that all "-uir" verbs conjugate like huir
     // NOT valid conjugation families:
     // -iar NOT => vaciar, e.g.: cambiar, estudiar
     // FIX: linguistics: consider all of these
@@ -106,21 +120,20 @@ const conjugation_families: {[conjugation_family: string]: ConjugationFamilyMapp
 
 
 const unique_conjugations: {[conjugation_family: string]: ConjugationFamilyMapping} = {
-    ir:         {model: "ir",   conjugable_infinitive: "ir"},                // its own model, and no prefixes exist
-    dar:        {model: "dar",  conjugable_infinitive: "dar"},              // its own model
-    ser:        {model: "ser",  conjugable_infinitive: "ser"},              // its own model
-    ver:        {model: "ver",  conjugable_infinitive: "ver"},              // its own model
+    ir:         {modelo: "ir",   conjugable_infinitive: "ir"},                // its own modelo, and no prefixes exist
+    dar:        {modelo: "dar",  conjugable_infinitive: "dar"},              // its own modelo
+    ser:        {modelo: "ser",  conjugable_infinitive: "ser"},              // its own modelo
+    ver:        {modelo: "ver",  conjugable_infinitive: "ver"},              // its own modelo
 }
 
 
 
 function detectConjugationFamilyByEnding(infinitive: string) {
     if (infinitive in unique_conjugations) {
-        const model_w_base = conjugation_families[infinitive]
+        const model_w_base = unique_conjugations[infinitive]
         return model_w_base
     } else {
         for (const conjugation_family in conjugation_families) {
-            const conjugation_family_len = conjugation_family.length
             if (infinitive.endsWith(conjugation_family)) {
                 const model_w_base = conjugation_families[conjugation_family]
                 return model_w_base
@@ -138,19 +151,20 @@ interface MorphophonemicRulesWithPrefixes extends ConjugationFamilyMapping{
 
 
 // Note that there is no way to know whether these are actual prefixes, especially the single char prefixes: "a", "o"
-function findRulesAndProductiveVerbPrefixes(infinitive: string, model: ConjugationModel, is_conjugation_family: boolean) : MorphophonemicRulesWithPrefixes {
+function findRulesAndProductiveVerbPrefixes(infinitive: string, modelo: ModeloConjugacional) : MorphophonemicRulesWithPrefixes {
     let productive_prefixes: string[]
     let base = infinitive
+    const is_conjugation_family = (modelo?.[0] === "-")
     // NOTE: in case of a productive ending (has a hyphen), at least one more character is needed, so length is correct.
-    const min_ending_length = (is_conjugation_family ? model.length : MIN_BASE_VERB_LENGTH)
+    const min_ending_length = (is_conjugation_family ? modelo.length : MIN_BASE_VERB_LENGTH)
     // stop as soon as a known verb is found, e.g. "acertar" is in morphophonemic_verb_conjugation_rules, but not "certar"
-    let morphological_rules = verbos_con_cambios_morfológicas[infinitive]
+    let morphological_rules = verbos_con_cambios_morfológicos[infinitive]
     let do_look_for_prefix = !morphological_rules
     while (do_look_for_prefix && (base.length > min_ending_length)) {
         const prefix_found = findProductiveVerbPrefix(base, min_ending_length)
         if (prefix_found) {
             // FIX: probably need an alert if a new rule set is found...
-            morphological_rules = verbos_con_cambios_morfológicas[prefix_found.remainder]
+            morphological_rules = verbos_con_cambios_morfológicos[prefix_found.remainder]
             productive_prefixes = productive_prefixes || []
             productive_prefixes.push(prefix_found.prefix)
             base = prefix_found.remainder
@@ -162,25 +176,26 @@ function findRulesAndProductiveVerbPrefixes(infinitive: string, model: Conjugati
 }
 
 
-interface DeterminecPrefixes {
+interface DeterminePrefixesResult {
     prefixes?: Prefixes
     morphological_rules?: ReglasDeConjugaciónDeVerbo
     conjugable_infinitive?: string
-    model: ConjugationModel
+    modelo: ModeloConjugacional
 }
 
 
-function determinePrefixes(infinitive: string, conjugable_infinitive: string, model: ConjugationModel, is_conjugation_family: boolean) : DeterminecPrefixes {
+function determinePrefixes(infinitive: string, conjugable_infinitive: string, modelo: ModeloConjugacional) : DeterminePrefixesResult {
     let conjugable_infinitive_prefix: string
     let conjugation_family_prefix: string
-    let rules_and_prefixes = findRulesAndProductiveVerbPrefixes(infinitive, model, is_conjugation_family)
+    let rules_and_prefixes = findRulesAndProductiveVerbPrefixes(infinitive, modelo)
     conjugable_infinitive = rules_and_prefixes.conjugable_infinitive || conjugable_infinitive
-    model = rules_and_prefixes.model || model
+    const is_conjugation_family = (modelo?.[0] === "-")
     const productive_prefixes = rules_and_prefixes.productive_prefixes
     const morphological_rules = rules_and_prefixes.morphological_rules
+    modelo = rules_and_prefixes.modelo || modelo
     let conjugable_infinitive_prefix_len : number
     if (is_conjugation_family) {
-        const ending_len = (model.length - 1)
+        const ending_len = (modelo.length - 1)
         if (productive_prefixes) {
             const prefix = productive_prefixes.join("")
             const remainder = infinitive.slice(prefix.length)
@@ -191,7 +206,7 @@ function determinePrefixes(infinitive: string, conjugable_infinitive: string, mo
             }
             conjugable_infinitive_prefix_len = infinitive.length - (conjugation_family_prefix.length + ending_len)
         } else {
-            conjugation_family_prefix = infinitive.slice(0, -(model.length - 1))
+            conjugation_family_prefix = infinitive.slice(0, -(modelo.length - 1))
         }
         const conjugable_infinitive_len = conjugation_family_prefix.length + ending_len
         conjugable_infinitive_prefix = infinitive.slice(0, -conjugable_infinitive_len)
@@ -210,12 +225,13 @@ function determinePrefixes(infinitive: string, conjugable_infinitive: string, mo
         if (conjugation_family_prefix) {
             prefixes.conjugation_family_prefix = conjugation_family_prefix
         }
-        if (conjugable_infinitive_prefix) {
-            prefixes.conjugable_infinitive_prefix = conjugable_infinitive_prefix
-        }
+        // if (conjugable_infinitive_prefix) {
+        //     prefixes.conjugable_infinitive_prefix = conjugable_infinitive_prefix
+        // }
     } 
-    return {prefixes, morphological_rules, conjugable_infinitive, model}
+    return {prefixes, morphological_rules, conjugable_infinitive, modelo}
 }
+
 
 // ChatGPT says: Si ves un verbo que:
 // - tiene prefijo claro (pre-, re-, con-, sub-, ante-, etc.)
@@ -232,26 +248,20 @@ export function resolveConjugationClass(infinitive: string): ConjugationAndDeriv
     }
     let conjugable_infinitive = infinitive
     if (verbs_with_false_prefixes.has(infinitive)) {
-        return {infinitive, conjugable_infinitive, verb_family, model: verb_family}
+        return {infinitive, conjugable_infinitive, verb_family}
     }
-    let model: ConjugationModel = verb_family
-    let morphological_rules: ReglasDeConjugaciónDeVerbo
-    let is_conjugation_family: boolean
+    let modelo: ModeloConjugacional
+    let morphological_rules_from_ending: ReglasDeConjugaciónDeVerbo
     const model_w_base = detectConjugationFamilyByEnding(infinitive)
     if (model_w_base) {
-        ;({model, conjugable_infinitive} = model_w_base)
-        is_conjugation_family = (model[0] === "-")
-        morphological_rules = verbos_con_cambios_morfológicas[conjugable_infinitive]
+        ;({modelo, conjugable_infinitive} = model_w_base)
+        morphological_rules_from_ending = verbos_con_cambios_morfológicos[conjugable_infinitive]
     }
-    const prefixes_w_meta = determinePrefixes(infinitive, conjugable_infinitive, model, is_conjugation_family)
+    const prefixes_w_meta = determinePrefixes(infinitive, conjugable_infinitive, modelo)
     const prefixes = prefixes_w_meta.prefixes
-    model = prefixes_w_meta.model || model
+    modelo = prefixes_w_meta.modelo || modelo
     conjugable_infinitive = prefixes_w_meta.conjugable_infinitive || conjugable_infinitive
-    if (morphological_rules !== prefixes_w_meta.morphological_rules) {
-        if (!morphological_rules) {
-            morphological_rules = prefixes_w_meta.morphological_rules
-        }
-    }
-    return {infinitive, verb_family, model, is_conjugation_family, conjugable_infinitive, prefixes, morphological_rules}
+    let morphological_rules = prefixes_w_meta.morphological_rules || morphological_rules_from_ending
+    return {infinitive, verb_family, modelo, conjugable_infinitive, prefixes, morphological_rules}
 }
 

@@ -1,4 +1,4 @@
-import {GrammaticalPerson, TenseMood, VerbConjugation, VerbConjugationStems, VerbForms} from "."
+import {GrammaticalPerson, MoodTense, VerbConjugation, VerbConjugationStems, VerbForms} from "."
 
 
 // Apply a change to each verb form for a single conjugation (for mood + tense + gramatical person).
@@ -22,7 +22,7 @@ export function applyToVerbForms(source_forms: VerbForms, change: (form: string,
 
 export const persons_standard = <(keyof VerbConjugation)[]> ["s1", "s2", "s3", "p1", "p2", "p3"]
 export const persons_w_vos = <(keyof VerbConjugation)[]> ["s1", "s2", "s3", "p1", "p2", "p3", "vos"]
-export const tense_moods : TenseMood[] = ["IndPres", "IndImp", "IndPret", "IndFut", "IndCond", "SubPres" , "SubImp" , "SubFut", "CmdPos", "CmdNeg"]
+export const mood_tenses : MoodTense[] = ["IndPres", "IndImp", "IndPret", "IndFut", "IndCond", "SubPres" , "SubImp" , "SubFut", "CmdPos", "CmdNeg"]
 
 
 export function setStem(stem: string | [string, string], only_persons?: GrammaticalPerson[]) {

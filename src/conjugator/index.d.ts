@@ -1,16 +1,17 @@
-import { ConjugationModel, VerboClaseConjugacional } from "./verbos-con-cambios-morfológicas.js"
+import { VerbAspectRules } from "./regular-verb-rules.js"
+import { ModeloConjugacional, VerboClaseConjugacional } from "./verbos-con-cambios-morfológicas.js"
 
 // FIX: nomenclature: InfinitiveThemeVowelClass, or ConjugationClass, or InfinitiveConjugationClass
-type TenseMood = "IndPres" | "IndImp" | "IndPret" | "IndFut" | "IndCond" | "SubPres"  | "SubImp"  | "SubFut" | "CmdPos" | "CmdNeg"
+type MoodTense = "IndPres" | "IndImp" | "IndPret" | "IndFut" | "IndCond" | "SubPres"  | "SubImp"  | "SubFut" | "CmdPos" | "CmdNeg"
 
 
-interface Participles {
-    pres?: string
-    past?: string
+interface Participios {
+    gerundio?: string
+    participio?: string
 }
 
 
-interface TenseMoodMap<T> {
+interface MoodTenseMap<T> {
     IndPres?: T
     IndImp?: T
     IndPret?: T
@@ -58,11 +59,13 @@ type VerbForms = [string] | [string, string] | null
 
 type VerbConjugation = GrammaticalPersons<VerbForms>
 interface VerbConjugationAnnotation {
-    model: ConjugationModel
+    version: string
+    license: string
+    modelo: ModeloConjugacional
     // filled in for returned conjugations.
-    tense_mood?: TenseMood
-    // set if verb is unknown and results are a best guess
-    unconfirmed?: boolean
+    mood_tense?: MoodTense
+    // The non regular rules applied to this verb
+    rules_applied?: any[]
 }
 
 interface VerbConjugationAnnotated {
@@ -116,31 +119,6 @@ export interface ParticipleRules {
     past?: ParticipleRule
 }
 
-// FIX: nomenclature: 
-// lexeme-based classes: tener, etc
-
-//
-// Inflectional subclass
-// (-uir verbs, -ger/-gir verbs, -cer/-cir verbs, -iar/-uar verbs…)
-// "uir" | "ger_gir" | "cer_cir" | "iar_uar" | "none"
-
-// Irregular paradigm class
-// (tener-class, venir-class, decir-class, poner-class…)
-
-// → Morphophonological subclasses
-// -uir verbs (huir, construir, concluir…)
-// → predictable y insertion
-
-// -ger / -gir (escoger, dirigir…)
-// → predictable j in yo
-
-// -cer / -cir (conocer, conducir…)
-// → predictable zc in yo
-
-// -iar / -uar (enviar, actuar…)
-// → predictable stress shifts (with dialect variation)
-
-
 
 // Rules describing how a verb (or model) realizes its paradigm.
 // T usually represents either suffixes, stem changes, or full forms.
@@ -151,7 +129,7 @@ export interface VerbConjugationRules<T> {
     conjugation_family?: VerboClaseConjugacional
     stem_change_rule_id?: StemChangeRuleId
     participle_rules?: ParticipleRules
-    aspects: TenseMoodMap<T> 
+    aspects: MoodTenseMap<T> 
 }
 
 
@@ -159,17 +137,26 @@ export type StemChangeRuleId = "e:i" | "e:ie" | "i:í" | "o:u" | "o:ue" | "u:ú"
 type SuffixChangeType = "eer"
 
 
+export interface VerbRulesApplied {
+    ancestor_rule_sets?: VerbAspectRules[]
+    suffixes?: VerbConjugation
+    stems?: VerbConjugation
+    lexical_exceptions_stems?: VerbConjugation
+    lexical_exceptions_suffixes?: VerbConjugation
+    combined_stems_w_suffixes?: VerbConjugation
+    orthography?: VerbConjugation
+    suplicaciones?: VerbConjugation
+    imperativo_tú?: VerbConjugation
+    maintain_stressed_last_sylable?: VerbConjugation
+    prefixed?: VerbConjugation
+}
 
-interface ORIGINAL_ConjugationRules {
-    // another verb that serves as the model for conjugation for this verb
-    // This is interesting, but may not be needed...
-    model?: string
-    conjugate_only?: GrammaticalPerson[]
-    // The name of the verb upon which this conjugation is based.
-    // This is the name of the verb itself if it is the topmost verb, for example: "huir"
-    // "huir" is also the base of "construir", which is formed by removing the "h", and adding "constr".
-    irregular_base?: string
-    individual_accents?: TenseMoodMap<GrammaticalPersons<VerbForms>>
+export interface ParticipleRulesApplied {
+    regular?: Participios
+    excepciones_léxicas?: Participios
+    prefixed?: Participios
+    gerund_stem_change?: string
+    orthography?: Participios
 }
 
 

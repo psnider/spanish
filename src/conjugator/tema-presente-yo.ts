@@ -61,7 +61,7 @@
 //   y existe tema_presente_yo
 //   - usarlo
 
-import { TenseMood, VerbConjugationStems, VerbForms } from ".";
+import { MoodTense, VerbConjugationStems } from ".";
 import { setStem } from "./lib.js";
 import { ConjugationAndDerivationRules } from "./resolve-conjugation-class.js";
 
@@ -74,11 +74,11 @@ import { ConjugationAndDerivationRules } from "./resolve-conjugation-class.js";
 //     - ustedes
 //     - Imperativo negativo (vía subjuntivo)
 
-export function getTemaPresenteYo(conj_and_deriv_rules: ConjugationAndDerivationRules, tense_mood: TenseMood) : VerbConjugationStems | undefined {
+export function getTemaPresenteYo(conj_and_deriv_rules: ConjugationAndDerivationRules, mood_tense: MoodTense) : VerbConjugationStems | undefined {
     const tema_presente_yo = conj_and_deriv_rules.morphological_rules?.tema_presente_yo
     if (tema_presente_yo) {
         let temas
-        switch (tense_mood) {
+        switch (mood_tense) {
         case "IndPres":
             temas = setStem(tema_presente_yo, ["s1"])
             return temas
@@ -94,10 +94,10 @@ export function getTemaPresenteYo(conj_and_deriv_rules: ConjugationAndDerivation
 }
 
 
-export function getSuffixesForPresenteYo(conj_and_deriv_rules: ConjugationAndDerivationRules, tense_mood: TenseMood) : VerbConjugationStems | undefined {
+export function getSuffixesForPresenteYo(conj_and_deriv_rules: ConjugationAndDerivationRules, mood_tense: MoodTense) : VerbConjugationStems | undefined {
     const sufijo_presente_yo = conj_and_deriv_rules.morphological_rules?.sufijo_presente_yo
     if (sufijo_presente_yo) {
-        switch (tense_mood) {
+        switch (mood_tense) {
         case "IndPres":
             const sufijos: VerbConjugationStems = {s1: [sufijo_presente_yo]}
             return sufijos

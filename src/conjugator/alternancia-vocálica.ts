@@ -40,12 +40,12 @@
 //   - Añadir terminaciones
 
 
-import { TenseMood, VerbConjugationStems, VerbForms } from ".";
+import { MoodTense, VerbConjugationStems } from ".";
 import { ConjugationAndDerivationRules } from "./resolve-conjugation-class.js";
 import { applyStemChangePattern, getStemChangesFromRule, stem_change_descriptions } from "./stem-changes.js";
 
 
-const domains: TenseMood[] = ["IndPres", "SubPres", "CmdPos", "CmdNeg"]
+const domains_alternancia_vocálica: MoodTense[] = ["IndPres", "SubPres", "CmdPos", "CmdNeg"]
 
 // function stub() {
     // if (alternancia_vocálica &&
@@ -57,18 +57,18 @@ const domains: TenseMood[] = ["IndPres", "SubPres", "CmdPos", "CmdNeg"]
 // }
 
 
-export function getTemaConAlternanciaVocálica(conj_and_deriv_rules: ConjugationAndDerivationRules, tense_mood: TenseMood) : VerbConjugationStems {
+export function getTemaConAlternanciaVocálica(conj_and_deriv_rules: ConjugationAndDerivationRules, mood_tense: MoodTense) : VerbConjugationStems {
     const changed_stems : VerbConjugationStems = {}
-    if (domains.includes(tense_mood)) {
+    if (domains_alternancia_vocálica.includes(mood_tense)) {
         const {conjugable_infinitive, verb_family, morphological_rules} = conj_and_deriv_rules
         const alternancia_vocálica = morphological_rules?.alternancia_vocálica
         if (alternancia_vocálica) {
             const stem_regular = conjugable_infinitive.slice(0, -2)
             const tema_presente_yo = morphological_rules?.tema_presente_yo
             const sufijo_presente_yo = morphological_rules?.sufijo_presente_yo
-            const dont_apply_to_yo = (tense_mood === "IndPres") && (tema_presente_yo || sufijo_presente_yo)
+            const dont_apply_to_yo = (mood_tense === "IndPres") && (tema_presente_yo || sufijo_presente_yo)
             // FIX: linguist: vocal_en_sílaba_tónica is implied by the existance of alternancia_vocálica, which is manually applied to verbs in verbos_con_cambios_morfológicas[]
-            const stem_changes_per_form = getStemChangesFromRule(tense_mood, alternancia_vocálica)
+            const stem_changes_per_form = getStemChangesFromRule(mood_tense, alternancia_vocálica)
             for (const key in stem_changes_per_form) {
                 const gramatical_person = key as keyof VerbConjugationStems
                 const do_apply = (!dont_apply_to_yo || (gramatical_person !== "s1"))

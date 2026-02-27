@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Conjugador</title>
+
+<style>
+
+/* =====================
+   GENERAL BODY / THEME
+   ===================== */
+
+/* Dark mode por defecto */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: system-ui, sans-serif;
+    margin: 20px;
+}
+
+/* Light mode */
+body.light {
+    background-color: #f5f5f5; /* suave, no blanco puro */
+    color: #222;
+}
+
+/* =====================
+   TOPBAR: SLIDER + ICONOS
+   ===================== */
+.topbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px; /* espacio entre iconos y slider */
+    margin-bottom: 20px;
+}
+
+/* iconos UTF-8 */
+.theme-icon {
+    font-size: 22px;
+    width: 24px;
+    text-align: center;
+    transition: opacity 0.2s, color 0.2s;
+    line-height: 1;
+}
+
+/* sol ☀ */
+.sun::before {
+    content: '\263C'; /* ☼ */
+}
+
+/* luna ☾ */
+.moon::before {
+    content: '\263E'; /* ☾ */
+}
+
+
+/* DARK MODE (default) */
+body:not(.light) .sun {
+    fill: #888;
+    opacity: 0.35;
+}
+
+body:not(.light) .moon {
+    fill: #7fb3ff;
+    opacity: 1;
+}
+
+/* LIGHT MODE */
+body.light .sun {
+    fill: #e6a800;
+    opacity: 1;
+}
+
+body.light .moon {
+    fill: #555;
+    opacity: 0.45;
+}
+
+/* =====================
+   SLIDER
+   ===================== */
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+}
+
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.theme-switch .slider {
+    position: absolute;
+    inset: 0;
+    background-color: #888;
+    border-radius: 24px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.theme-switch .slider::before {
+    content: "";
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    top: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+}
+
+/* CHECKED = DARK MODE */
+.theme-switch input:checked + .slider {
+    background-color: #4caf50;
+}
+
+.theme-switch input:checked + .slider::before {
+    transform: translateX(22px);
+}
+
+/* =====================
+   CONTROLES: INPUT + SELECT
+   ===================== */
+.controls {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 220px;
+}
+
+label {
+    font-size: 14px;
+    color: inherit;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+input, select {
+    font-size: 16px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #555;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    transition: background-color 0.2s, color 0.2s;
+}
+#infinitiveInput{
+    width:24ch;
+}
+body.light input,
+body.light select {
+    background-color: #ffffff;
+    color: #000;
+    border: 1px solid #ccc;
+}
+
+/* =====================
+   TABLA DE CONJUGACIONES
+   ===================== */
+table {
+    border-collapse: collapse;
+    width:600px;           /* ancho fijo estable */
+    table-layout:fixed;    /* evita que cambie según contenido */
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 6px 10px;    /* reduce padding */
+    text-align: left;
+/*    word-break: break-word;  evita que celdas largas estiren */
+}
+th {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+}
+
+th:first-child,td:first-child{
+    width:120px;           /* columna Persona */
+}
+
+th:last-child,td:last-child{
+    width:540px;           /* columna Forma, no tiene que apoyar más que algo como "superextracontraargumentar" */
+    word-wrap:break-word;  /* permite partir palabras largas */
+}
+
+body.light th {
+    background-color: #f3f3f3;
+    color: #222;
+}
+
+
+.license {
+    margin-top: 40px;
+    font-size: 13px;
+    color: #888;
+    text-align: center;
+}
+
+.license a {
+    color: inherit;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+
+    <span class="theme-icon sun"></span>
+    <label class="theme-switch">
+        <input type="checkbox" id="themeToggle" onchange="handleThemeToggle()" checked>
+        <span class="slider"></span>
+    </label>
+    <span class="theme-icon moon"></span>
+
+</div>
+
+<h1>Conjugador de verbos</h1>
+<h3>Gracias a la Profesora Lizano!</h3>
+
+
+<div class="controls">
+    <div class="control">
+        <label for="infinitiveInput">Entra un infinitivo</label>
+        <input id="infinitiveInput" placeholder="escribir"
+            onkeydown="if (event.key === 'Enter') { event.preventDefault(); handleConjugate(); }"
+            onblur="handleInfinitiveBlur()"
+        >
+    </div>
+    <div class="control">
+        <label for="moodTenseSelect">Elige un modo y tiempo</label>
+        <select id="moodTenseSelect" onchange="handleMoodTenseChange()">
+            <option value="IndPres">Indicativo — presente</option>
+            <option value="IndImp">Indicativo — imperfecto</option>
+            <option value="IndPret">Indicativo — pretérito</option>
+            <option value="IndFut">Indicativo — futuro</option>
+            <option value="IndCond">Indicativo — condicional</option>
+            <option value="SubPres">Subjuntivo — presente</option>
+            <option value="SubImp">Subjuntivo — imperfecto</option>
+            <option value="SubFut">Subjuntivo — futuro</option>
+            <option value="CmdPos">Imperativo — afirmativo</option>
+            <option value="CmdNeg">Imperativo — negativo</option>
+        </select>
+    </div>
+</div>
+
+<div id="result">entrar el infinitivo de un verbo...</div>
+
+<footer class="license">
+    <p>Completamente gratis. Nadie puede cobrarle para utilizar este servicio.<br/>
+    Nunca hay annuncios. Nunca le rastreamos.<br/>
+    <b>© <span id="versión"></span> Peter Snider — Licenciado bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.es" target="_blank" rel="license noopener noreferrer">Creative Commons BY-NC-SA 4.0</a></b></p>
+</footer>
+
+<script type="module">
+
+document.getElementById("versión").innerText = version
+const infinitiveInput = document.getElementById("infinitiveInput")
+const moodTenseSelect = document.getElementById("moodTenseSelect")
+const resultDiv = document.getElementById("result")
+
+
+const PERSON_LABELS = {
+    s1: "yo",
+    s2: "tú",
+    vos: "vos",
+    s3: "él / ella / usted",
+    p1: "nosotros",
+    p2: "vosotros",
+    p3: "ellos / ustedes"
+}
+
+
+let lastInfinitive = ""
+
+function handleInfinitiveBlur() {
+    const infinitive = infinitiveInput.value.trim()
+    if (!infinitive || infinitive === lastInfinitive)
+        return
+    resultDiv.innerHTML = "handleInfinitiveBlur()"
+    lastInfinitive = infinitive
+    clearConjugation()
+    handleConjugate()
+}
+window.handleInfinitiveBlur = handleInfinitiveBlur
+
+
+
+function clearConjugation() {
+    resultDiv.innerHTML = "clearConjugation()"
+}
+
+
+function handleMoodTenseChange() {
+    resultDiv.innerHTML = "handleMoodTenseChange()"
+    clearConjugation()
+    handleConjugate()
+}
+window.handleMoodTenseChange = handleMoodTenseChange
+
+
+/**
+ * Conjuga el verbo actual y muestra la tabla
+ */
+function handleConjugate() {
+    const infinitive = infinitiveInput.value.trim();
+    const moodTense = moodTenseSelect.value;
+
+    if (!infinitive) {
+        resultDiv.innerHTML = "<p>Por favor escribe un infinitivo.</p>";
+        return;
+    }
+
+    // aquí llamas tu función TypeScript ya disponible
+    const conj = conjugateVerb(infinitive, moodTense); // VerbConjugationAnnotated
+
+    if (!conj || !conj.forms) {
+        resultDiv.innerHTML = "<p>No hay formas para este verbo/modo-tiempo.</p>";
+        return;
+    }
+
+    renderConjugationTable(conj.forms);
+}
+window.handleConjugate = handleConjugate
+
+
+/**
+ * Renderiza la tabla de formas
+ */
+function renderConjugationTable(forms) {
+    function combineTuVos(s2,vos){
+        if(!s2&&!vos){
+            const span=document.createElement("span")
+            span.textContent="—"
+            span.className="null"
+            return span
+        }
+        if(s2&&!vos)return renderVerbForms(s2)
+        if(!s2&&vos)return renderVerbForms(vos)
+        if(JSON.stringify(s2)===JSON.stringify(vos))return renderVerbForms(s2)
+        const span=document.createElement("span")
+        const left=s2.join(", ")
+        const right=vos.join(", ")
+        span.innerHTML=left+" <span class='variant'>/ "+right+"</span>"
+        return span
+    }
+    const rows = [
+        ["s1", "yo"],
+        ["s2_vos", "tú / vos"], // combinamos
+        ["s3", "él / ella / usted"],
+        ["p1", "nosotros"],
+        ["p2", "vosotros"],
+        ["p3", "ellos / ustedes"]
+    ];
+    let html = `<table>
+        <thead><tr><th>Persona</th><th>Forma</th></tr></thead>
+        <tbody>`;
+    for(const [key,label]of rows){
+        let verbForms
+        let span
+        if (key==="s2_vos")span=combineTuVos(forms.s2,forms.vos)
+        else span=renderVerbForms(forms[key])
+        html+=`<tr><td>${label}</td><td>${span.outerHTML}</td></tr>`
+    }
+    html += "</tbody></table>";
+    resultDiv.innerHTML = html;
+}
+
+
+function renderVerbForms(verbForms){
+    const span=document.createElement("span")
+    if(verbForms==null){
+        span.textContent="—"
+        span.className="null"
+        return span
+    }
+    if(verbForms?.length===1){
+        span.textContent=verbForms[0]
+        return span
+    }
+    span.innerHTML=
+        verbForms[0]
+        +" "
+        +"<span class='variant'>, "
+        +verbForms[1]
+        +"</span>"
+    return span
+}
+
+function handleThemeToggle() {
+    const checkbox = document.getElementById("themeToggle");
+    const dark = checkbox.checked;  // checked = oscuro
+
+    document.body.classList.toggle("light", !dark);
+    localStorage.setItem("theme", dark ? "dark" : "light");
+}
+window.handleThemeToggle = handleThemeToggle
+
+function initTheme() {
+    const saved = localStorage.getItem("theme");
+    const dark = saved !== "light";  // default oscuro
+    document.body.classList.toggle("light", !dark);
+    document.getElementById("themeToggle").checked = dark;
+}
+
+
+initTheme()
+
+
+
+// INSERT conjugateVerb ----------------------------------------------------------------------
+
+
+</script>
+
+</body>
+</html>

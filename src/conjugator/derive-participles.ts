@@ -1,131 +1,128 @@
-import { Participles } from "."
+import { Participios, ParticipleRulesApplied, VerbRulesApplied } from "."
 import { applyOrthographicalChangesForParticiples } from "./ortografía.js"
 import { regular_verb_suffixes } from "./regular-verb-rules.js"
 import { ConjugationAndDerivationRules, resolveConjugationClass } from "./resolve-conjugation-class.js"
 import { applyStemChangeToGerundStem, stem_change_patterns } from "./stem-changes.js"
-import { ReglasDeConjugaciónDeVerbo } from "./verbos-con-cambios-morfológicas.js"
+import { InfinitiveClass } from "./verbos-con-cambios-morfológicas"
 
 
-function getRegularParticiples(conj_and_deriv_rules: ConjugationAndDerivationRules) : Participles {
-    const {infinitive, verb_family, is_conjugation_family, prefixes, conjugable_infinitive, morphological_rules} = conj_and_deriv_rules
-    const conjugable_base = conjugable_infinitive || infinitive
-    const stem = conjugable_base.slice(0, -2)
-    const participle_rules = regular_verb_suffixes[verb_family].participle_rules
-    let pres = stem + participle_rules.pres.suffix
-    let past = stem + participle_rules.past.suffix
-    if (infinitive !== conjugable_infinitive) {
-        if (is_conjugation_family) {
-            const clase_conjugacional = morphological_rules.clase_conjugacional
-            const base_prefix_length = conjugable_infinitive.length - (clase_conjugacional.length - 1)
-            const conjugation_family_prefix = conj_and_deriv_rules.prefixes?.conjugation_family_prefix
-            if (!conjugation_family_prefix) {
-                throw new Error(`Missing conjugation_family_prefix for infinitive=${infinitive}`)
-            }
-            pres = conjugation_family_prefix + pres.slice(base_prefix_length)
-            past = conjugation_family_prefix + past.slice(base_prefix_length)
-            const prefixes_len = infinitive.length - (conjugation_family_prefix.length + conjugable_infinitive.length - base_prefix_length)
-            if (prefixes_len > 0) {
-                const prefix = infinitive.slice(0, prefixes_len)
-                pres = prefix + pres
-                past = prefix + past
-            }
-        } else {
-            const prefix_len = infinitive.length - conjugable_infinitive.length
-            const prefix = infinitive.slice(0, prefix_len)
-            pres = prefix + pres
-            past = prefix + past
-        }
+function applyInfinitivePrefix(form: string, conj_and_deriv_rules: ConjugationAndDerivationRules): string {
+    const {infinitive, conjugable_infinitive, prefixes, morphological_rules} = conj_and_deriv_rules
+    if (infinitive === conjugable_infinitive) {
+        return form
     }
-    return {pres, past}
+    let basePrefixLen = 0
+    if (prefixes?.conjugation_family_prefix) {
+        const clase = morphological_rules.clase_conjugacional
+        basePrefixLen = conjugable_infinitive.length - (clase.length - 1)
+    }
+    const infinitivePrefixLen = infinitive.length - conjugable_infinitive.length + basePrefixLen
+    const infinitivePrefix = infinitive.slice(0, infinitivePrefixLen)
+    return infinitivePrefix + form.slice(basePrefixLen)
 }
 
 
-function getParticiosExcepcionales (conj_and_deriv_rules: ConjugationAndDerivationRules) {
-    const {infinitive, conjugable_infinitive, is_conjugation_family, prefixes, morphological_rules} = conj_and_deriv_rules
-
-    const prefix_len = infinitive.length - conjugable_infinitive.length
-    const prefix = infinitive.slice(0, prefix_len)
-    const excepciones_lexicas = morphological_rules?.excepciones_lexicas
-    let participios_excepcionales: Participles = {}
-    if (excepciones_lexicas?.gerundio) {
-        participios_excepcionales.pres = prefix + excepciones_lexicas?.gerundio
-    }
-    if (excepciones_lexicas?.participio) {
-        if (is_conjugation_family) {
-            let participio = excepciones_lexicas.participio
-            const clase_conjugacional = morphological_rules.clase_conjugacional
-            const base_prefix_length = conjugable_infinitive.length - (clase_conjugacional.length - 1)
-            const conjugation_family_prefix = conj_and_deriv_rules.prefixes?.conjugation_family_prefix
-            participio = conjugation_family_prefix + participio.slice(base_prefix_length)
-            const prefixes_len = infinitive.length - (conjugation_family_prefix.length + conjugable_infinitive.length - base_prefix_length)
-            if (prefixes_len > 0) {
-                const prefix = infinitive.slice(0, prefixes_len)
-                participio = prefix + participio
-            }
-            participios_excepcionales.past = participio
-        } else {
-            participios_excepcionales.past = prefix + excepciones_lexicas?.participio
+function getRegularParticiples(conj_and_deriv_rules: ConjugationAndDerivationRules, rules_applied: ParticipleRulesApplied[]): Participios {
+    const {conjugable_infinitive, verb_family} = conj_and_deriv_rules
+    const stem = conjugable_infinitive.slice(0, -2)
+    const suffixes = regular_verb_suffixes[verb_family].participle_rules
+    const gerundio_base = stem + suffixes.pres.suffix
+    const participio_base = stem + suffixes.past.suffix
+    const regular: Participios = {gerundio: gerundio_base, participio: participio_base}
+    rules_applied.push({regular})
+    if (conj_and_deriv_rules.prefixes) {
+        const prefixed: Participios = {}
+        const gerundio_prefixed = applyInfinitivePrefix(gerundio_base, conj_and_deriv_rules)
+        if (gerundio_prefixed !== gerundio_base) {
+            prefixed.gerundio = gerundio_prefixed
         }
-    }
-    if (participios_excepcionales.pres || participios_excepcionales.past) {
-        return participios_excepcionales
+        const participio_prefixed =  applyInfinitivePrefix(participio_base, conj_and_deriv_rules)
+        if (participio_prefixed !== participio_base) {
+            prefixed.participio = participio_prefixed
+        }
+        if (Object.keys(prefixed).length > 0) {
+            rules_applied.push({prefixed})
+        }
+        return {...regular, ...prefixed}
+    } else {
+        return regular
     }
 }
 
 
-function getOrthographicChangesForParticiples(conj_and_deriv_rules: ConjugationAndDerivationRules, regulares: Participles) : Participles | undefined {
-    const {infinitive, verb_family, morphological_rules} = conj_and_deriv_rules
-    const alternancia_vocálica = morphological_rules?.alternancia_vocálica
-    let accumulated: Participles = {...regulares}
+function getParticipiosExcepcionales(rules: ConjugationAndDerivationRules, rules_applied: ParticipleRulesApplied[]): Participios | undefined {
+    const excepciones_léxicas = rules.morphological_rules?.excepciones_léxicas
+    if (!excepciones_léxicas) return
+    const {gerundio, participio} = excepciones_léxicas
+    if (gerundio || participio) {
+        rules_applied.push({excepciones_léxicas: {gerundio, participio}})
+        const result: Participios = {}
+        const prefixed: Participios = {}
+        if (excepciones_léxicas.gerundio) {
+            result.gerundio = applyInfinitivePrefix(excepciones_léxicas.gerundio, rules)
+            if (result.gerundio !== excepciones_léxicas.gerundio) {
+                prefixed.gerundio = result.gerundio
+            }
+        }
+        if (excepciones_léxicas.participio) {
+            result.participio = applyInfinitivePrefix(excepciones_léxicas.participio, rules)
+            if (result.participio !== excepciones_léxicas.participio) {
+                prefixed.participio = result.participio
+            }
+        }
+        if (Object.keys(prefixed).length > 0) {
+            rules_applied.push({prefixed})
+        }
+        return result
+    }
+}
+
+
+function getOrthographicChangesForParticiples(rules: ConjugationAndDerivationRules, regulares: Participios, rules_applied: ParticipleRulesApplied[]): Participios | undefined {
+    function splitGerund(form: string, verb_family: InfinitiveClass) {
+        const len = verb_family === "-ar" ? 4 : 5
+        return {
+            gerund_stem: form.slice(0, -len),
+            ending: form.slice(-len)
+        }
+    }
+    const {infinitive, verb_family, morphological_rules} = rules
+    const alternancia = morphological_rules?.alternancia_vocálica
+    const {gerund_stem, ending} = splitGerund(regulares.gerundio, verb_family)
+    const excepcion = morphological_rules?.excepciones_léxicas?.gerundio_tema_cambio_excepcional
+    const gerundio_tema_cambio = excepcion ?? stem_change_patterns[alternancia!]?.gerund_rule
+    const excepcional = !!excepcion
+    const gerundio = gerundio_tema_cambio
+            ? applyStemChangeToGerundStem({gerund_stem, verb_family, gerundio_tema_cambio,excepcional, rules_applied}) + ending
+            : regulares.gerundio
     const do_correct_diéresis = infinitive.includes("ü")
-    const gerund_ending_len = ((verb_family === "-ar") ? 4 : 5)
-    const gerund_ending = regulares.pres.slice(-gerund_ending_len)
-    let gerund_stem = regulares.pres.slice(0, -gerund_ending_len)
-    if (alternancia_vocálica) {
-        let gerundio_tema_cambio = morphological_rules?.excepciones_lexicas?.gerundio_tema_cambio_excepcional
-        const excepcional = !!gerundio_tema_cambio
-        if (!excepcional) {
-            const stem_change_rules = stem_change_patterns[alternancia_vocálica]
-            gerundio_tema_cambio = stem_change_rules.gerund_rule
-        }
-        if (gerundio_tema_cambio) {
-            gerund_stem = applyStemChangeToGerundStem({gerund_stem, verb_family, gerundio_tema_cambio, excepcional})
-        }
-        accumulated.pres = gerund_stem + gerund_ending
-    }
-    const orthographical_changes = applyOrthographicalChangesForParticiples(accumulated, gerund_ending, do_correct_diéresis)
-    accumulated = {...accumulated, ...orthographical_changes}
-    if (accumulated.pres === regulares.pres) {
-      delete accumulated.pres
-    }
-    if (accumulated.past === regulares.past) {
-      delete accumulated.past
-    }
-    return accumulated
+    const orthographical_changes = applyOrthographicalChangesForParticiples({...regulares, gerundio}, ending, do_correct_diéresis, rules_applied)
+    const result = {...regulares, gerundio, ...orthographical_changes}
+    if (result.gerundio === regulares.gerundio) delete result.gerundio
+    if (result.participio === regulares.participio) delete result.participio
+    return result
 }
 
 
-function _deriveParticiples(conj_and_deriv_rules: ConjugationAndDerivationRules) : Participles {
-    const { morphological_rules } = conj_and_deriv_rules
-    const participios_excepcionales = getParticiosExcepcionales(conj_and_deriv_rules)
-    if (participios_excepcionales?.pres && participios_excepcionales?.past) {
-        return participios_excepcionales
+function _deriveParticiples(rules: ConjugationAndDerivationRules): {participles: Participios, rules_applied: ParticipleRulesApplied[]} {
+    const rules_applied: ParticipleRulesApplied[] = []
+    const excepcionales = getParticipiosExcepcionales(rules, rules_applied)
+    if (excepcionales?.gerundio && excepcionales?.participio) {
+        return {participles: excepcionales, rules_applied}
     }
-    const regular = getRegularParticiples(conj_and_deriv_rules)
-    // 9. ortografía
-    const typography = getOrthographicChangesForParticiples(conj_and_deriv_rules, regular)
-    const regular_w_typography = {...regular, ...typography}
-    const final_forms = {...regular_w_typography, ...participios_excepcionales}
-    return final_forms
+    const regulares = getRegularParticiples(rules, rules_applied)
+    const ortográficos = getOrthographicChangesForParticiples(rules, regulares, rules_applied)
+    const final_forms = {...regulares, ...ortográficos, ...excepcionales}
+    return {participles: final_forms, rules_applied}
 }
 
 
-export function deriveParticiples(infinitive: string): Participles {
+export function deriveParticiples(infinitive: string): {participles: Participios, rules_applied: ParticipleRulesApplied[]} {
     console.log(`deriveParticiples(${infinitive})`)
     const conj_and_deriv_rules = resolveConjugationClass(infinitive)
     if (!conj_and_deriv_rules) {
         return undefined
     }
-    let participles = _deriveParticiples(conj_and_deriv_rules)
-    return participles
+    let {participles, rules_applied} = _deriveParticiples(conj_and_deriv_rules)
+    return {participles, rules_applied}
 }

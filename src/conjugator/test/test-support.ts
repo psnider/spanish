@@ -1,5 +1,5 @@
 
-import {GrammaticalPersons, Participles, VerbConjugation, VerbForms, TenseMood} from ".."
+import {GrammaticalPersons, Participios, VerbConjugation, VerbForms, MoodTense} from ".."
 import { conjugateVerb } from "../conjugate-verb.js"
 import { deriveParticiples } from "../derive-participles.js";
 import { test_applyOrthographicalChanges } from "./test-orthographical-change.js"
@@ -30,10 +30,10 @@ export function equal(lhs: string | [string] | [string, string] | undefined, rhs
 export type VerbConjugationExpected = GrammaticalPersons<string | [string, string]>
 
 
-export function assert_Participles(infinitive: string, expected: Participles) {
-    const actual = deriveParticiples(infinitive)
+export function assert_Participles(infinitive: string, expected: Participios) {
+    const {participles: actual} = deriveParticiples(infinitive)
     const expected_keys = Object.keys(expected)
-    expected_keys.forEach((expected_key: keyof Participles) => {
+    expected_keys.forEach((expected_key: keyof Participios) => {
         if (! equal(actual[expected_key], expected[expected_key])) {
             throw new Error(`${infinitive},${expected_key}: ${actual[expected_key]} !== ${expected[expected_key]}`)
         }
@@ -46,7 +46,7 @@ export function assert_Participles(infinitive: string, expected: Participles) {
 }
 
 
-export function assert_TenseMood(infinitive: string, mood_tense: TenseMood, expected: VerbConjugationExpected) {
+export function assert_MoodTense(infinitive: string, mood_tense: MoodTense, expected: VerbConjugationExpected) {
     const actual = conjugateVerb(infinitive, mood_tense)
     const forms = actual.forms
     const expected_keys = Object.keys(expected)

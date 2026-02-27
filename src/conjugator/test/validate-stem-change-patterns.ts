@@ -1,5 +1,5 @@
 import { GrammaticalPerson } from "../index.js"
-import { persons_standard, persons_w_vos, tense_moods } from "../lib.js"
+import { mood_tenses } from "../lib.js"
 import { stem_change_descriptions, stem_change_patterns, StemChangeRules } from "../stem-changes.js"
 
 
@@ -14,20 +14,20 @@ function validateStemChangePatterns() {
       )
     }
     // validate tiempos / personas
-    for (const tense_mood of tense_moods) {
-      const stem_changes = rules[tense_mood]
+    for (const mood_tense of mood_tenses) {
+      const stem_changes = rules[mood_tense]
       if (stem_changes) {
         for (const person in stem_changes) {
           const rule_id = stem_changes[<GrammaticalPerson>person]
           if (rule_id == null) continue
           if (!allowed_rule_ids.has(rule_id)) {
             throw new Error(
-              `stem_change_patterns.${pattern_id}.${tense_mood}.${person}: rule ${rule_id} not in transforms`
+              `stem_change_patterns.${pattern_id}.${mood_tense}.${person}: rule ${rule_id} not in transforms`
             )
           }
           if (!stem_change_descriptions[rule_id]) {
             throw new Error(
-              `stem_change_patterns.${pattern_id}.${tense_mood}.${person}: unknown rule ${rule_id}`
+              `stem_change_patterns.${pattern_id}.${mood_tense}.${person}: unknown rule ${rule_id}`
             )
           }
         }

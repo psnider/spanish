@@ -1782,6 +1782,7 @@
 *[[reconfigurar]]
 *[[reconocer]]
 *[[reconsiderar]]
+reconquistar
 *[[recordar]]
 *[[recorrer]]
 *[[recortar]]
@@ -1799,6 +1800,7 @@
 *[[reeducar]]
 *[[reemplazar]]
 *[[reestructurar]]
+refaccionar
 *[[referirse]]
 *[[refrescarse]]
 *[[regalar]]
@@ -2026,6 +2028,7 @@
 *[[teclear]]
 *[[telefonear]]
 *[[telegrafiar]]
+teletransportar
 *[[televisar]]
 *[[temblar]]
 *[[temblequear]]

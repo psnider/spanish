@@ -1,6 +1,5 @@
-import { TenseMoodMap, GrammaticalPersons, TenseMood, VerbConjugation, VerbForms, StemChangeRuleId } from "./index.js";
-import { ConjugationAndDerivationRules } from "./resolve-conjugation-class.js";
-import { InfinitiveClass, verbos_con_cambios_morfológicas } from "./verbos-con-cambios-morfológicas.js";
+import { MoodTenseMap, GrammaticalPersons, MoodTense, VerbConjugation, VerbForms, StemChangeRuleId, VerbRulesApplied, ParticipleRulesApplied } from "./index.js";
+import { InfinitiveClass, verbos_con_cambios_morfológicos } from "./verbos-con-cambios-morfológicas.js";
 
 // e→ie, o→ue (sílabas tónicas)
 // e→i, o→u (solo -ir, sílaba átona)
@@ -35,7 +34,7 @@ export const stem_change_descriptions: Record<StemChangeRuleId, StemChangeDescri
 type StemChangesForMoodTense = GrammaticalPersons<StemChangeRuleId>
 
 
-export interface StemChangeRules extends TenseMoodMap<StemChangesForMoodTense> {
+export interface StemChangeRules extends MoodTenseMap<StemChangesForMoodTense> {
     // Used only for spelling change transforms
     allowed_transforms: StemChangeRuleId[]
     gerund_rule?: StemChangeRuleId
@@ -73,8 +72,8 @@ export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChan
         CmdNeg:  {            s2: "e:ie", s3: "e:ie",                         p3: "e:ie"},
     },
     "i:í": {
-        allowed_transforms: ["i:í"],
         // FIX: linguist: figure out what this is exactly
+        allowed_transforms: ["i:í"],
     },
     // "o:u" is only used for vowel raising wihin "o:ue" verbs, and is not a pattern for stem changes generally
     "o:ue": {
@@ -113,7 +112,7 @@ export const stem_change_patterns: {[stem_change_pattern_name: string]: StemChan
 // @return Stem change patterns for those conjugated forms for which they exist.
 //   For example: getStemChanges("IndPres", {stem_change_type: "o:ue"}):
 //     {s1: "o:ue", s2: "o:ue", s3: "o:ue", p3: "o:ue"},
-export function getStemChangesFromRule(mood_tense: TenseMood, alternancia_vocálica: StemChangeRuleId) : StemChangesForMoodTense | undefined {
+export function getStemChangesFromRule(mood_tense: MoodTense, alternancia_vocálica: StemChangeRuleId) : StemChangesForMoodTense | undefined {
     if (alternancia_vocálica) {
         const stem_changes_for_type = stem_change_patterns[<keyof StemChangeRules> alternancia_vocálica]
         if (!stem_changes_for_type) {
@@ -150,13 +149,13 @@ export function applyStemChangePattern(verb_part: string, stem_change_descriptio
 // @return The root of each conjugation that should be used after applying any stem change.
 // This is the unchanged root if there is no stem change.
 // regular_suffixes: provides the grammatical persons to be conjugated, as well as the number of forms for each
-export function getStemChanges(args: {conjugable_infinitive: string, verb_family: InfinitiveClass, tense_mood: TenseMood, suffixes: VerbConjugation}) : VerbConjugation {
-    const {conjugable_infinitive, verb_family, tense_mood, suffixes} = args
+export function getStemChanges(args: {conjugable_infinitive: string, verb_family: InfinitiveClass, mood_tense: MoodTense, suffixes: VerbConjugation}) : VerbConjugation {
+    const {conjugable_infinitive, verb_family, mood_tense, suffixes} = args
     const verb_root = conjugable_infinitive.slice(0, -2)
     const conjugated_stems: VerbConjugation = {}
-    const morphophonemic_conjugation_rules = verbos_con_cambios_morfológicas[conjugable_infinitive]
+    const morphophonemic_conjugation_rules = verbos_con_cambios_morfológicos[conjugable_infinitive]
     const alternancia_vocálica = morphophonemic_conjugation_rules?.alternancia_vocálica
-    const stem_change_rules = (alternancia_vocálica ? getStemChangesFromRule(tense_mood, alternancia_vocálica) : undefined)
+    const stem_change_rules = (alternancia_vocálica ? getStemChangesFromRule(mood_tense, alternancia_vocálica) : undefined)
     // const conjugate_only = morphophonemic_conjugation_rules?.conjugate_only
     if (stem_change_rules) {
         for (const key in suffixes) {
@@ -186,20 +185,21 @@ export function getStemChanges(args: {conjugable_infinitive: string, verb_family
 
 
 // Get gerund with any stem changes.
-export function applyStemChangeToGerundStem(args: {gerund_stem: string, verb_family: InfinitiveClass, gerundio_tema_cambio: StemChangeRuleId, excepcional: boolean}): string {
-    const {verb_family, gerundio_tema_cambio, excepcional} = args
+export function applyStemChangeToGerundStem(args: {gerund_stem: string, verb_family: InfinitiveClass, gerundio_tema_cambio: StemChangeRuleId, excepcional: boolean, rules_applied: ParticipleRulesApplied[]}): string {
+    const {verb_family, gerundio_tema_cambio, excepcional, rules_applied} = args
     let gerund_stem = args.gerund_stem
-    // if (verb_family === "-ir") {
-        if (gerundio_tema_cambio) {
-            const stem_change_description = stem_change_descriptions[gerundio_tema_cambio]
-            if (stem_change_description.kind !== "vowel raising") {
-                throw new Error(`for gerund_stem=${gerund_stem} verb_family=${verb_family} expect stem_change_description.kind=${stem_change_description.kind} to be "vowel raising"`)
-            }
-            if (excepcional || !stem_change_description.only_for_ir_verbs || (verb_family === "-ir")) {
-                gerund_stem = applyStemChangePattern(gerund_stem, stem_change_description)
-            }
+    if (gerundio_tema_cambio) {
+        const stem_change_description = stem_change_descriptions[gerundio_tema_cambio]
+        if (stem_change_description.kind !== "vowel raising") {
+            throw new Error(`for gerund_stem=${gerund_stem} verb_family=${verb_family} expect stem_change_description.kind=${stem_change_description.kind} to be "vowel raising"`)
         }
-    // }
+        if (excepcional || !stem_change_description.only_for_ir_verbs || (verb_family === "-ir")) {
+            gerund_stem = applyStemChangePattern(gerund_stem, stem_change_description)
+        }
+    }
+    if (gerund_stem !== args.gerund_stem) {
+        rules_applied.push({gerund_stem_change: gerund_stem})
+    }
     return gerund_stem
 }
 

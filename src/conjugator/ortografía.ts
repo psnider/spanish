@@ -1,4 +1,4 @@
-import { Participles, TenseMood, VerbConjugation, VerbConjugationSuffixes } from ".";
+import { Participios, MoodTense, VerbConjugation, VerbConjugationSuffixes, VerbRulesApplied, ParticipleRulesApplied } from ".";
 import { applyToVerbForms } from "./lib.js";
 
 // ============================================================
@@ -134,6 +134,7 @@ export interface OrthographicalChangeRule {
 
 
 // A mapping of the last 3 or 4 characters of an infinitive to the possible typographic change rule.
+// NOTE: these are searched in the same order that they are presented in this list, and the first match is selected.
 const infinitive_ending_sound_rules: {[ending: string]: string} = {
     quir: "preserve-hard-c-sound-of-q",
     guir: null,   // prevent -guir verbs from selecting -uir rules
@@ -148,7 +149,7 @@ const infinitive_ending_sound_rules: {[ending: string]: string} = {
 }
 
 
-// FIX: linguist: are these patterns
+// FIX: linguist: are these patterns correct?
 // Verb changes made solely for phonetic reasons, and using changes in typography.
 const orthographical_change_rules : {[rule_name: string]: OrthographicalChangeRule} = {
     "preserve-soft-c-sound": {
@@ -223,17 +224,20 @@ export function applyOrthographicalChangesToConjugatedForm(infinitive: string, f
 }
 
 
-export function applyOrthographicalChangesForParticiples(participles: Participles, gerund_ending: string, do_correct_dieresis: boolean): Participles | undefined {
-    const changes : Participles = {}
-    const pres = applyOrthographicalChangesCommon(participles.pres, gerund_ending, do_correct_dieresis)
-    const past = applyOrthographicalChangesCommon(participles.past, participles.past.slice(-3), do_correct_dieresis)
-    if (pres && (pres !== participles.pres)) {
-        changes.pres = pres
+export function applyOrthographicalChangesForParticiples(participles: Participios, gerund_ending: string, do_correct_dieresis: boolean, rules_applied: ParticipleRulesApplied[]): Participios | undefined {
+    const orthography : Participios = {}
+    const gerundio = applyOrthographicalChangesCommon(participles.gerundio, gerund_ending, do_correct_dieresis)
+    const participio = applyOrthographicalChangesCommon(participles.participio, participles.participio.slice(-3), do_correct_dieresis)
+    if (gerundio && (gerundio !== participles.gerundio)) {
+        orthography.gerundio = gerundio
     }
-    if (past && (past !== participles.past)) {
-        changes.past = past
+    if (participio && (participio !== participles.participio)) {
+        orthography.participio = participio
     }
-    return changes
+    if (Object.keys(orthography).length > 0) {
+        rules_applied.push({orthography})
+    }
+    return orthography
 }
 
 
@@ -266,8 +270,8 @@ export function correctDiéresis(conjugation: string) {
 // export function __getOrthographicChanges(stem: string, ending: string, form: string, do_correct_dieresis: boolean): string | undefined {
 //     return
 // }
-export function getOrthographicChanges(infinitive: string, tense_mood: TenseMood, forms: VerbConjugation, suffixes: VerbConjugationSuffixes): VerbConjugation {
-    const changes: VerbConjugation = {}
+export function getOrthographicChanges(infinitive: string, mood_tense: MoodTense, forms: VerbConjugation, suffixes: VerbConjugationSuffixes, rules_applied: VerbRulesApplied[]): VerbConjugation {
+    const orthography: VerbConjugation = {}
     const do_correct_dieresis = infinitive.includes("ü")
     for (const key in forms) {
         const gramatical_person = key as keyof VerbConjugation;
@@ -276,7 +280,8 @@ export function getOrthographicChanges(infinitive: string, tense_mood: TenseMood
             const suffix = suffixes_for_person[i] || suffixes_for_person[0] 
             return applyOrthographicalChangesToConjugatedForm(infinitive, form, suffix, do_correct_dieresis)
         })
-        forms[gramatical_person] = changed_forms
+        orthography[gramatical_person] = changed_forms
     }
-    return changes
+    rules_applied.push({orthography})
+    return orthography
 }
