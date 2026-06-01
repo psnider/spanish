@@ -20,25 +20,11 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "test-conjugate-verb",
+            "name": "test_sustantivos",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/src/conjugator/test/test-conjugate-verb.ts",
-            "preLaunchTask": "tsc: build - tsconfig.json",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "wiktionary-scraper",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/src/conjugator/test/wiktionary-scraper.ts",
-            "args": ["deshacer"],
+            "program": "${workspaceFolder}/test/test_sustantivos_adjetivos.ts",
             "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"

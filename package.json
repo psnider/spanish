@@ -7,8 +7,8 @@
   "scripts": {
     "version": "tsc --version",
     "build": "tsc -P .",
-    "test-full": "node generated/src/conjugator/test/validate-stem-change-patterns.js && node generated/src/conjugator/test/test.js",
-    "test": "node generated/src/conjugator/test/test.js"
+    "clean": "rm -fr generated",
+    "test": "node generated/src/test_sustantivos_adjetivos.js"
   },
   "author": "Peter Snider",
   "license": "CC-BY-NC-4.0",
