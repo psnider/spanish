@@ -6,13 +6,13 @@ interface Interjección {
 }
 
 
-const indice_de_interjecciones: {[lemma: string]: Interjección} = {
+export const indice_de_interjecciones: {[lemma: string]: Interjección} = {
     ah: {},
-    ay: {noun: true},
+    ay: {},   // noun: true
     eh: {},
     mmm: {},
     pues: {},
     qué: {},
-    so: {prep: true, adv: true},
-    ya: {adv: true}
+    so: {},   // prep: true, adv: true
+    ya: {},   // adv: true
 }

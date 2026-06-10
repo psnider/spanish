@@ -1,9 +1,8 @@
 import { PartOfSpeech } from "../src_dict/index.js"
-import { GéneroDeSustantivo, IrregularidadesOrtograficasDeSustantivos, indice_de_sustantivos } from "./sustantivos.js"
-import { indice_de_artículos } from "./artículos.js"
+import { IrregularidadesOrtograficasDeSustantivos, SustantivoExcepcional, indice_de_sustantivos } from "./sustantivos.js"
 import { AtributosDePalabra, GéneroDeForma, IndiceDePalabrasAtribuidas } from "./index.js"
 import { añadaSiEsNuevo, generaPlural, remueveUltimaAcento, vocales_acentados_al_final_regex } from "./genera-formas.js"
-
+import { géneros_de_forma, setFrecuencia } from "./lib.js"
 
 
 function generaFormaFemeninaSingularDeSustantivo(lema: string, irregularidades?: {f?: string}) : string {
@@ -26,38 +25,40 @@ function generaFormaFemeninaSingularDeSustantivo(lema: string, irregularidades?:
 }
 
 
-function generaSingularYPluralDeSustantivo(formas: IndiceDePalabrasAtribuidas, base: string, parte: PartOfSpeech, opciones: {género: GéneroDeForma, incontable?: boolean, solo_plural?: boolean, irregularidades?: IrregularidadesOrtograficasDeSustantivos}) : void {
-    const {género, incontable, solo_plural, irregularidades} = opciones
+function generaSingularYPluralDeSustantivo(formas: IndiceDePalabrasAtribuidas, base: string, parte: PartOfSpeech, género_de_forma: GéneroDeForma, sustantivo: SustantivoExcepcional) : void {
+    const {frecuencias, solo_plural, irregularidades} = sustantivo
     if (!solo_plural) {
-        const forma = irregularidades?.[<keyof IrregularidadesOrtograficasDeSustantivos> género] || base
-        const atributos: AtributosDePalabra = {parte, género, singular: true}
+        const forma = irregularidades?.[<keyof IrregularidadesOrtograficasDeSustantivos> género_de_forma] || base
+        const atributos: AtributosDePalabra = {parte, género: género_de_forma, singular: true}
+        setFrecuencia(atributos, frecuencias)
         añadaSiEsNuevo(formas, forma, atributos)
     }
-    if (!incontable) {
+    // if (!incontable) {   // paraced que cada sustantivo incontable puede ser plural en el contexto de tipos
         let plural = (solo_plural ? base : generaPlural(base))
-        const atributos: AtributosDePalabra = {parte, género, singular: false}
+        const atributos: AtributosDePalabra = {parte, género: género_de_forma, singular: false}
+        setFrecuencia(atributos, frecuencias)
         añadaSiEsNuevo(formas, plural, atributos)
-    }
+    // }
 }
 
 
-function añadaFormasDeSustantivo(formas: IndiceDePalabrasAtribuidas, lema: string, parte: PartOfSpeech, opciones: {género?: GéneroDeSustantivo, solo_plural?: true, irregularidades?: IrregularidadesOrtograficasDeSustantivos}) {
-    const {género, solo_plural, irregularidades} = opciones
+function añadaFormasDeSustantivo(formas: IndiceDePalabrasAtribuidas, lema: string, parte: PartOfSpeech, sustantivo: SustantivoExcepcional) {
+    const {género, solo_plural, frecuencias, irregularidades} = sustantivo
     switch (género) {
         case "m":
         case "f":
             if (irregularidades) {
                 console.log(`lema=${lema} tiene irregularidades inesperadas`)
             }
-            generaSingularYPluralDeSustantivo(formas, lema, parte, {género, solo_plural, irregularidades})
+            generaSingularYPluralDeSustantivo(formas, lema, parte, género, sustantivo)
             break
         case "mf":
             const femenina = generaFormaFemeninaSingularDeSustantivo(lema, irregularidades)
             if (femenina !== lema) {
-                generaSingularYPluralDeSustantivo(formas, lema, parte, {género: "m", solo_plural, irregularidades})
-                generaSingularYPluralDeSustantivo(formas, femenina, parte, {género: "f", solo_plural, irregularidades})
+                generaSingularYPluralDeSustantivo(formas, lema, parte, "m", sustantivo)
+                generaSingularYPluralDeSustantivo(formas, femenina, parte, "f", sustantivo)
             } else {
-                generaSingularYPluralDeSustantivo(formas, lema, parte, {género: "mf", solo_plural, irregularidades})
+                generaSingularYPluralDeSustantivo(formas, lema, parte, "mf", sustantivo)
             }
             // if (irregularidades?.n) {
             //     const atributos: AtributosDePalabra = {parte, género: "n", singular: true}
@@ -69,7 +70,7 @@ function añadaFormasDeSustantivo(formas: IndiceDePalabrasAtribuidas, lema: stri
             if (irregularidades) {
                 console.log(`lema=${lema} tiene irregularidades inesperadas`)
             }
-            generaSingularYPluralDeSustantivo(formas, lema, parte, {género: "mf", solo_plural})
+            generaSingularYPluralDeSustantivo(formas, lema, parte, "mf", sustantivo)
             break
     }
 }
@@ -78,9 +79,9 @@ export function generaFormasDeSustantivo(lema: string) : IndiceDePalabrasAtribui
     const sustantivo = indice_de_sustantivos[lema]
     let formas: IndiceDePalabrasAtribuidas = {}
     if (sustantivo) {
-        añadaFormasDeSustantivo(formas, lema, "NOUN", {...sustantivo})
+        añadaFormasDeSustantivo(formas, lema, "NOU", {...sustantivo})
         if (sustantivo.adicional) {
-            añadaFormasDeSustantivo(formas, lema, "NOUN", {...sustantivo.adicional})
+            añadaFormasDeSustantivo(formas, lema, "NOU", {...sustantivo.adicional})
         }
     }
     return formas

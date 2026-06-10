@@ -45,23 +45,25 @@ function generaFormaFemeninaSingularDeAdjetivo(lema: string, irregularidades?: {
 
 export function generaFormasDeAdjetivo(lema: string) : IndiceDePalabrasAtribuidas {
     const adjectivo = indice_de_adjetivos[lema]
-    const {géneros, pluralidad, persona, apócope, comparativo, demostrativo, exclamativo, indefinido, interrogativo, posesivo, relativo, irregularidades} = adjectivo    
     let formas: IndiceDePalabrasAtribuidas = {}
-    const femenina = ((géneros === "n") ? lema : generaFormaFemeninaSingularDeAdjetivo(lema, irregularidades))
-    if (femenina !== lema) {
-        generaSingularYPluralDeAdjetivo(formas, lema, "m", {pluralidad, irregularidades})
-        generaSingularYPluralDeAdjetivo(formas, femenina, "f", {pluralidad, irregularidades})
-    } else {
-        generaSingularYPluralDeAdjetivo(formas, lema, géneros, {pluralidad, irregularidades})
-    }
-    if ((géneros === "mf") && irregularidades?.n) {
-        const atributos: AtributosDePalabra = {parte: "ADJ", género: "n", singular: true}
-        añadaSiEsNuevo(formas, irregularidades.n, atributos)
-    }
-    if (apócope) {
-        const forma_corta = lema.slice(0, -apócope.length)
-        const atributos: AtributosDePalabra = {parte: "ADJ", género: "m", singular: true}
-        añadaSiEsNuevo(formas, forma_corta, atributos)
+    if (adjectivo) {
+        const {géneros, pluralidad, persona, apócope, comparativo, demostrativo, exclamativo, indefinido, interrogativo, posesivo, relativo, irregularidades} = adjectivo    
+        const femenina = ((géneros === "n") ? lema : generaFormaFemeninaSingularDeAdjetivo(lema, irregularidades))
+        if (femenina !== lema) {
+            generaSingularYPluralDeAdjetivo(formas, lema, "m", {pluralidad, irregularidades})
+            generaSingularYPluralDeAdjetivo(formas, femenina, "f", {pluralidad, irregularidades})
+        } else {
+            generaSingularYPluralDeAdjetivo(formas, lema, géneros, {pluralidad, irregularidades})
+        }
+        if ((géneros === "mf") && irregularidades?.n) {
+            const atributos: AtributosDePalabra = {parte: "ADJ", género: "n", singular: true}
+            añadaSiEsNuevo(formas, irregularidades.n, atributos)
+        }
+        if (apócope) {
+            const forma_corta = lema.slice(0, -apócope.length)
+            const atributos: AtributosDePalabra = {parte: "ADJ", género: "m", singular: true}
+            añadaSiEsNuevo(formas, forma_corta, atributos)
+        }
     }
     return formas
 }

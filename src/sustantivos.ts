@@ -1,10 +1,12 @@
 import { LemmaConceptID, Region } from "../src_dict/index.js"
+import { Frecuencias } from "./index.js"
 
 export type GéneroDeSustantivo = "m" | "f" | "mf" | "a" | "v"
 
 
 export interface AtributosDeSustantivo {
   género: GéneroDeSustantivo
+  forma_alterniva?: string
   // Si está prestado de otro idioma
   préstamo?: "en"
   // Si hay un verbo con el mismo o similar significado y una forma con la misma ortografía.
@@ -27,13 +29,15 @@ export interface AtributosDeSustantivo {
   // interj?: true
   // Solo si una palabra femenina que empece con "a" requiere "el" y no "la"
   exige_el?: true
-  // Solo si ningún significado admite plurales
+  // Solo si ningún significado admite plurales, o el único es en un contexto de tipos de la cosa.
+  // Por ejemplo, "agua" es incontable normalmente, pero "aguas" puede refiere a aguas de tipos diferentes, o a cuerpos de agua como rios o mares.
   incontable?: true
   // Solo si ningún significado admite singular.
   // En este caso solamente, el lema debe ser plural.
   solo_plural?: true
-  // numero por 100 páginas, asumiendo 400 palabras por página
-  frecuencia?: number
+  // numero por 100,000 palabras, aproximadamente 400 páginas de 250 palabras por página.
+  // Debe llenar este campo con los resultados de analísis real.
+  frecuencias?: Frecuencias
   significados: SustantivoRestringidoPorÁrea[]
   significado_cambia_con_genero?: boolean
   irregularidades?: IrregularidadesOrtograficasDeSustantivos
@@ -58,680 +62,681 @@ export interface IrregularidadesOrtograficasDeSustantivos {
 
 
 
-interface SustantivoExcepcional extends AtributosDeSustantivo {
+export interface SustantivoExcepcional extends AtributosDeSustantivo {
   // en casos raros, hay dos formas de una palabra, p.ej: actor/actriz, actor/actora
   adicional?: AtributosDeSustantivo  
 }
 
 
 export const indice_de_sustantivos: {[lemma: string]: SustantivoExcepcional} = {
-    amor: { género: "m", significados: [{id: "amor,m,1"}]},
-    año: { género: "m", significados: [{id: "año,m,1"}]},
-    amigo: { género: "mf", significados: [{id: "amigo,mf,1"}]},  // , adj: true
-    barrio: { género: "m", significados: [{id: "barrio,m,1"}]},
-    cable: { género: "m", significados: [{id: "cable,m,1"}]},
-    caja: { género: "f", significados: [{id: "caja,f,1"}]},
-    calle: { género: "f", significados: [{id: "calle,f,1"}]},
-    casa: { género: "f", significados: [{id: "casa,f,1"}]},
-    cosa: { género: "f", significados: [{id: "cosa,f,1"}]},
-    corazón: { género: "m", significados: [{id: "corazón,m,1"}]},
-    día: { género: "m", significados: [{id: "día,m,1"}]},
-    dinero: { género: "m", significados: [{id: "dinero,m,1"}]},
-    familia: { género: "f", significados: [{id: "familia,f,1"}]},
-    gente: { género: "f", significados: [{id: "gente,f,1"}]},
-    hijo: { género: "mf", significados: [{id: "hijo,mf,1"}]},
-    lado: { género: "m", significados: [{id: "lado,m,1"}]},
-    lugar: { género: "m", significados: [{id: "lugar,m,1"}]},
-    madre: { género: "f", significados: [{id: "madre,f,1"}]},
-    migrante: { género: "a", significados: [{id: "migrante,a,1", regiones: ["MX"]}]},  // , adj: true
-    momento: { género: "m", significados: [{id: "momento,m,1"}]},
-    mundo: { género: "m", significados: [{id: "mundo,m,1"}]},
-    mano: { género: "f", significados: [{id: "mano,f,1"}]},
-    mujer: { género: "f", significados: [{id: "mujer,f,1"}]},
-    niño: { género: "v", significados: [{id: "niño,mf,1"},{id: "niña,f,1"},{id: "niña,f,2"}]},  // , adj: true
-    noche: { género: "f", significados: [{id: "noche,f,1"}]},
-    parte: { género: "v", significados: [{id: "parte,f,1"},{id: "parte,m,1"}]},
-    persona: { género: "f", significados: [{id: "persona,f,1"}]},
-    tiempo: { género: "m", significados: [{id: "tiempo,m,1"}]},
-    tren: { género: "m", significados: [{id: "tren,m,1"}]},
-    vez: { género: "f", significados: [{id: "vez,f,1"}]},
-    vida: { género: "f", significados: [{id: "vida,f,1"}]},
-    hora: { género: "f", significados: [{id: "hora,f,1"}]},
-    historia: { género: "f", significados: [{id: "historia,f,1"},{id: "historia,f,2"}]},
-    tierra: { género: "f", significados: [{id: "tierra,f,1"}]},
-    manera: { género: "f", significados: [{id: "manera,f,1"}]},
-    cuerpo: { género: "m", significados: [{id: "cuerpo,m,1"}]},
-    ojo: { género: "m", significados: [{id: "ojo,m,1"}]},
-    nombre: { género: "m", significados: [{id: "nombre,m,1"}]},
-    mes: { género: "m", significados: [{id: "mes,m,1"}]},
-    hombre: { género: "m", significados: [{id: "hombre,m,1"}]},
-    policía: { género: "v", significados: [{id: "policía,f,1"},{id: "policía,mf,1"}]},
-    luz: { género: "f", significados: [{id: "luz,f,1"}]},
-    agua: { género: "f", exige_el: true, significados: [{id: "agua,f,1"}]},
-    palabra: { género: "f", significados: [{id: "palabra,f,1"}]},
-    pie: { género: "m", significados: [{id: "pie,m,1"}]},
-    miedo: { género: "m", significados: [{id: "miedo,m,1"}]},
-    pared: { género: "f", significados: [{id: "pared,f,1"}]},
-    forma: { género: "f", significados: [{id: "forma,f,1"}]},
-    muerte: { género: "f", significados: [{id: "muerte,f,1"}]},
-    inmigrante: { género: "a", significados: [{id: "inmigrante,a,1"}]},  // , adj: true
-    camino: { género: "m", significados: [{id: "camino,m,1"}]},
-    sol: { género: "m", significados: [{id: "sol,m,1"}]},
-    padre: { género: "m", significados: [{id: "padre,m,1"}]},
-    problema: { género: "m", significados: [{id: "problema,m,1"}]},
-    beso: { género: "m", significados: [{id: "beso,m,1"}]},
-    corriente: { género: "f", significados: [{id: "corriente,f,1"}]},
-    red: { género: "f", significados: [{id: "red,f,1"}]},
-    comida: { género: "f", significados: [{id: "comida,f,1"}]},
-    verdad: { género: "f", significados: [{id: "verdad,f,1"}]},
-    semana: { género: "f", significados: [{id: "semana,f,1"}]},
-    puerta: { género: "f", significados: [{id: "puerta,f,1"}]},
-    perro: { género: "v", significados: [{id: "perro,mf,1"},{id: "perro,m,1"},{id: "perra,f,1"}]},
-    servicio: { género: "m", significados: [{id: "servicio,m,1"}]},
-    país: { género: "m", significados: [{id: "país,m,1"}]},
-    fin: { género: "m", significados: [{id: "fin,m,1"}]},
-    viaje: { género: "m", significados: [{id: "viaje,m,1"}]},
-    ciudad: { género: "f", significados: [{id: "ciudad,f,1"}]},
-    cabeza: { género: "v", significados: [{id: "cabeza,f,1"},{id: "cabeza,a,1"}]},
-    agente: { género: "a", significados: [{id: "agente,a,1"}]},
-    noticia: { género: "f", significados: [{id: "noticia,f,1"}]},
-    mamá: { género: "f", significados: [{id: "mamá,f,1"}]},
-    vuelta: { género: "f", significados: [{id: "vuelta,f,1"}]},
-    circuito: { género: "m", significados: [{id: "circuito,m,1"}]},
-    techo: { género: "m", significados: [{id: "techo,m,1"}]},
-    color: { género: "a", significados: [{id: "color,m,1"},{id: "color,a,1"}]},
-    planeta: { género: "v", significados: [{id: "planeta,m,1"},{id: "planeta,f,1"}]},
-    caso: { género: "m", significados: [{id: "caso,m,1"}]},
-    cielo: { género: "m", significados: [{id: "cielo,m,1"}]},
-    dólar: { género: "m", significados: [{id: "dólar,m,1"}]},
-    río: { género: "m", significados: [{id: "río,m,1"}]},
-    boca: { género: "f", significados: [{id: "boca,f,1"}]},
-    cara: { género: "f", significados: [{id: "cara,f,1"}]},
-    mente: { género: "f", significados: [{id: "mente,f,1"}]},
-    frente: { género: "v", significados: [{id: "frente,f,1"},{id: "frente,m,1"}]},
-    panel: { género: "m", significados: [{id: "panel,m,1"},{id: "panel,m,2"}]},
-    tomacorriente: { género: "m", significados: [{id: "tomacorriente,m,1", regiones: ["Am."]}]},
-    media: { género: "f", significados: [{id: "media,f,1"}]},  // , adj: true
-    medio: { género: "m", significados: [{id: "medio,m,1"}]},  // , adj: true
-    mañana: { género: "f", significados: [{id: "mañana,f,1"}]},
-    suerte: { género: "f", significados: [{id: "suerte,f,1"}]},
-    piel: { género: "f", significados: [{id: "piel,f,1"}]},
-    pena: { género: "f", significados: [{id: "pena,f,1"}]},
-    voz: { género: "f", significados: [{id: "voz,f,1"}]},
-    hermano: { género: "mf", infinitivo: "hermanar", significados: [{id: "hermano,mf,1"}]},  // , adj: true
-    dolor: { género: "m", significados: [{id: "dolor,m,1"}]},
-    sueño: { género: "m", significados: [{id: "sueño,m,1"}]},
-    número: { género: "m", significados: [{id: "número,m,1"}]},
-    canción: { género: "f", significados: [{id: "canción,f,1"}]},
-    zona: { género: "a", significados: [{id: "zona,f,1"},{id: "zona,m,1"}]},
-    escuela: { género: "f", significados: [{id: "escuela,f,1"}]},
-    luna: { género: "f", significados: [{id: "luna,f,1"}]},
-    edificio: { género: "m", significados: [{id: "edificio,m,1"}]},
-    peso: { género: "m", infinitivo: "pesar", significados: [{id: "peso,m,1"}]},
-    par: { género: "m", significados: [{id: "par,m,1"}]},
-    fuego: { género: "m", significados: [{id: "fuego,m,1"}]},
-    cortacircuitos: { género: "m", solo_plural: true, significados: [{id: "cortacircuitos,m,1"}]},
-    abuelo: { género: "mf", significados: [{id: "abuelo,mf,1"}]},
-    bisabuelo: { género: "mf", significados: [{id: "bisabuelo,mf,1"}]},
-    idea: { género: "f", infinitivo: "idear", significados: [{id: "idea,f,1"}]},
-    ropa: { género: "f", significados: [{id: "ropa,f,1"}]},
-    gracia: { género: "f", significados: [{id: "gracias,f,1"}]},
-    periodista: { género: "a", significados: [{id: "periodista,a,1"}]},
-    grupo: { género: "m", significados: [{id: "grupo,m,1"}]},
-    labio: { género: "m", significados: [{id: "labio,m,1"}]},
-    paso: { género: "m", infinitivo: "pasar", significados: [{id: "paso,m,1"}]},
-    tipo: { género: "m", significados: [{id: "tipo,m,1"}]},
-    fotoperiodista: { género: "a", significados: [{id: "fotoperiodista,a,1"}]},
-    foto: { género: "f", significados: [{id: "foto,f,1"}]},
-    fotografía: { género: "f", significados: [{id: "fotografía,f,1"}]},
-    fotocopia: { género: "f", significados: [{id: "fotocopia,f,1"}]},
-    fotoperiodismo: { género: "m", significados: [{id: "fotoperiodismo,m,1"}]},
-    periodismo: { género: "m", significados: [{id: "periodismo,m,1"}]},
-    alma: { género: "f", exige_el: true, significados: [{id: "alma,f,1"}]},
-    metal: { género: "m", significados: [{id: "metal,m,1"}]},
-    gana: { género: "f", significados: [{id: "gana,f,1"}]},
-    cama: { género: "f", significados: [{id: "cama,f,1"}]},
-    razón: { género: "f", significados: [{id: "razón,f,1"}]},
-    brazo: { género: "m", significados: [{id: "brazo,m,1"}]},
-    punto: { género: "m", significados: [{id: "punto,m,1"}]},
-    aire: { género: "m", significados: [{id: "aire,m,1"}]},
-    través: { género: "m", significados: [{id: "través,m,1"}]},
-    humo: { género: "m", significados: [{id: "humo,m,1"}]},
-    rato: { género: "m", significados: [{id: "rato,m,1"}]},
-    hijueputa: { género: "a", significados: [{id: "hijueputa,a,1"}]},  // , adj: true
-    clase: { género: "f", significados: [{id: "clase,f,1"}]},
-    atención: { género: "f", significados: [{id: "atención,f,1"}]},
-    norte: { género: "m", significados: [{id: "norte,m,1"}]},
-    sur: { género: "m", significados: [{id: "sur,m,1"}]},
-    este: { género: "m", significados: [{id: "este,m,1"}]},
-    oeste: { género: "m", significados: [{id: "oeste,m,1"}]},
-    piso: { género: "m", significados: [{id: "piso,m,1"}]},
-    estudio: { género: "m", infinitivo: "estudiar", significados: [{id: "estudio,m,1"}]},
-    distancia: { género: "f", significados: [{id: "distancia,f,1"}]},
-    papá: { género: "m", significados: [{id: "papá,m,1"}]},
-    tema: { género: "m", significados: [{id: "tema,m,1"}]},
-    frío: { género: "m", significados: [{id: "frío,m,1"}]},  // , adj: true
-    sabor: { género: "m", significados: [{id: "sabor,m,1"}]},
-    sistema: { género: "m", significados: [{id: "sistema,m,1"}]},
-    vecino: { género: "mf", significados: [{id: "vecino,mf,1"}]},  // , adj: true
-    gobierno: { género: "m", significados: [{id: "gobierno,m,1"}]},
-    mirada: { género: "f", infinitivo: "mirar", significados: [{id: "mirada,f,1"}]},
-    tarde: { género: "f", infinitivo: "tardar", significados: [{id: "tarde,f,1"}]},  // , adv: true
-    conexión: { género: "f", significados: [{id: "conexión,f,1"}]},
-    calor: { género: "m", significados: [{id: "calor,m,1"}]},
-    sinestesia: { género: "f", significados: [{id: "sinestesia,f,1"}]},
-    iglesia: { género: "f", significados: [{id: "iglesia,f,1"}]},
-    situación: { género: "f", significados: [{id: "situación,f,1"}]},
-    frontera: { género: "f", significados: [{id: "frontera,f,1"}]},  // , adj: true
-    lluvia: { género: "f", significados: [{id: "lluvia,f,1"}]},
-    inmigración: { género: "f", significados: [{id: "inmigración,f,1"}]},
-    ley: { género: "f", significados: [{id: "ley,f,1"}]},
-    canal: { género: "a", significados: [{id: "canal,a,1"}]},
-    flow: { género: "m", préstamo: "en", significados: [{id: "flow,m,1"}]},
-    conducto: { género: "m", significados: [{id: "conducto,m,1"}]},
-    equipo: { género: "m", significados: [{id: "equipo,m,1"}]},
-    papel: { género: "m", significados: [{id: "papel,m,1"}]},
-    viento: { género: "m", significados: [{id: "viento,m,1"}]},
-    loco: { género: "mf", significados: [{id: "loco,mf,1"}]},  // , adj: true
-    apartamento: { género: "m", significados: [{id: "apartamento,m,1"}]},
-    recuerdo: { género: "m", infinitivo: "recordar", significados: [{id: "recuerdo,m,1"}]},
-    vagón: { género: "m", significados: [{id: "vagón,m,1"}]},
-    pelo: { género: "m", significados: [{id: "pelo,m,1"}]},
-    punta: { género: "f", significados: [{id: "punta,f,1"}]},
-    cambio: { género: "m", infinitivo: "cambiar", significados: [{id: "cambio,m,1"}]},
-    juego: { género: "m", infinitivo: "jugar", significados: [{id: "juego,m,1"}]},
-    contrabandista: { género: "a", significados: [{id: "contrabandista,a,1"}]},
-    seguridad: { género: "f", significados: [{id: "seguridad,f,1"}]},
-    fe: { género: "f", significados: [{id: "fe,f,1"}]},
-    droga: { género: "f", infinitivo: "drogar", significados: [{id: "droga,f,1"}]},
-    paz: { género: "f", significados: [{id: "paz,f,1"}]},
-    tornillo: { género: "m", significados: [{id: "tornillo,m,1"}]},
-    estado: { género: "m", infinitivo: "estar", significados: [{id: "estado,m,1"}]},
-    hambre: { género: "f", exige_el: true, significados: [{id: "hambre,f,1"}]},
-    aparato: { género: "m", significados: [{id: "aparato,m,1"}]},
-    ejemplo: { género: "m", significados: [{id: "ejemplo,m,1"}]},
-    minuto: { género: "m", significados: [{id: "minuto,m,1"}]},
-    tío: { género: "mf", significados: [{id: "tío,mf,1"}]},
-    centro: { género: "m", significados: [{id: "centro,m,1"}]},
-    convento: { género: "m", significados: [{id: "convento,m,1"}]},
-    destino: { género: "m", significados: [{id: "destino,m,1"}]},
-    jefe: { género: "mf", significados: [{id: "jefe,mf,1"}]},
-    herida: { género: "f", significados: [{id: "herida,f,1"}]},
-    mayoría: { género: "f", significados: [{id: "mayoría,f,1"}]},
-    cabrón: { género: "mf", significados: [{id: "cabrón,mf,1"}]},  // , adj: true
-    felón: { género: "mf", significados: [{id: "felón,mf,1"}]},  // , adj: true
-    soledad: { género: "f", significados: [{id: "soledad,f,1"}]},
-    pandillero: { género: "mf", significados: [{id: "pandillero,mf,1"}]},  // , adj: true
-    principio: { género: "m", significados: [{id: "principio,m,1"}]},
-    salud: { género: "f", significados: [{id: "salud,f,1"}]},
-    cuadra: { género: "f", significados: [{id: "cuadra,f,1"}]},
-    decisión: { género: "f", significados: [{id: "decisión,f,1"}]},
-    pregunta: { género: "f", significados: [{id: "pregunta,f,1"}]},
-    sangre: { género: "f", significados: [{id: "sangre,f,1"}]},
-    información: { género: "f", significados: [{id: "información,f,1"}]},
-    camisa: { género: "f", significados: [{id: "camisa,f,1"}]},
-    vía: { género: "f", significados: [{id: "vía,f,1"}]},
-    silencio: { género: "m", significados: [{id: "silencio,m,1"}]},
-    pueblo: { género: "m", significados: [{id: "pueblo,m,1"}]},
-    cora: { género: "m", abr: "corazón", significados: [{id: "cora,m,1"}]},
-    culpa: { género: "f", infinitivo: "culpar", significados: [{id: "culpa,f,1"}]},
-    realidad: { género: "f", significados: [{id: "realidad,f,1"}]},
-    fiesta: { género: "f", infinitivo: "fiestar", significados: [{id: "fiesta,f,1"}]},
-    orificio: { género: "m", significados: [{id: "orificio,m,1"}]},
-    solo: { género: "m", significados: [{id: "solo,m,1"}]},  // , adj: true
-    teléfono: { género: "m", significados: [{id: "teléfono,m,1"}]},
-    fusible: { género: "m", significados: [{id: "fusible,m,1"}]},  // , adj: true
-    autoridad: { género: "f", significados: [{id: "autoridad,f,1"}]},
-    flor: { género: "f", significados: [{id: "flor,f,1"}]},
-    sentido: { género: "m", significados: [{id: "sentido,m,1"}]},  // , adj: true
-    mensaje: { género: "m", significados: [{id: "mensaje,m,1"}]},
-    disco: { género: "m", significados: [{id: "disco,m,1"}]},
-    plan: { género: "m", significados: [{id: "plan,m,1"}]},
-    resto: { género: "m", significados: [{id: "resto,m,1"}]},
-    daño: { género: "m", significados: [{id: "daño,m,1"}]},
-    ángel: { género: "m", exige_el: true, significados: [{id: "ángel,m,1"}]},
-    experiencia: { género: "f", significados: [{id: "experiencia,f,1"}]},
-    prueba: { género: "f", infinitivo: "probar", significados: [{id: "prueba,f,1"}]},
-    instalación: { género: "f", significados: [{id: "instalación,f,1"}]},
-    cerebro: { género: "m", significados: [{id: "cerebro,m,1"}]},
-    plástico: { género: "m", significados: [{id: "plástico,m,1"}]},
-    entrevista: { género: "m", significados: [{id: "entrevista,m,1"}]},
-    montante: { género: "m", significados: [{id: "montante,m,1"}]},  // , adj: true
-    libro: { género: "m", significados: [{id: "libro,m,1"}]},
-    estilo: { género: "m", significados: [{id: "estilo,m,1"}]},
-    viejo: { género: "mf", significados: [{id: "viejo,mf,1"}]},  // , adj: true
-    vista: { género: "a", significados: [{id: "vista,f,1"},{id: "vista,m,1"}]},
-    voluntad: { género: "f", significados: [{id: "voluntad,f,1"}]},
-    ayuda: { género: "a", significados: [{id: "ayuda,f,1"},{id: "ayuda,m,1"}]},
-    programa: { género: "m", significados: [{id: "programa,m,1"}]},
-    velocidad: { género: "f", significados: [{id: "velocidad,f,1"}]},
-    valor: { género: "m", significados: [{id: "valor,m,1"}]},
-    uso: { género: "m", infinitivo: "usar", significados: [{id: "uso,m,1"}]},
-    unidad: { género: "f", significados: [{id: "unidad,f,1"}]},
-    universidad: { género: "f", significados: [{id: "universidad,f,1"}]},
-    tubo: { género: "m", significados: [{id: "tubo,m,1"}]},
-    tratamiento: { género: "m", significados: [{id: "tratamiento,m,1"}]},
-    trabajo: { género: "m", infinitivo: "trabjar", significados: [{id: "trabajo,m,1"}]},
-    trabajador: { género: "mf", significados: [{id: "trabajador,m,1"}]},
-    total: { género: "m", significados: [{id: "total,m,1"}]},  // , adj: true
-    todo: { género: "m", significados: [{id: "todo,m,1"}]},  // , adj: true, prep: true
-    terreno: { género: "m", significados: [{id: "terreno,m,1"}]},
-    término: { género: "m", significados: [{id: "término,m,1"}]},
-    temperatura: { género: "f", significados: [{id: "temperatura,f,1"}]},
-    técnico: { género: "mf", significados: [{id: "técnico,mf,1"}]},
-    teatro: { género: "m", significados: [{id: "teatro,m,1"}]},
-    té: { género: "m", significados: [{id: "té,m,1"}]},
-    tamaño: { género: "m", significados: [{id: "tamaño,m,1"}]},  // , adj: true
-    superficie: { género: "f", significados: [{id: "superficie,f,1"}]},
-    sociedad: { género: "f", significados: [{id: "sociedad,f,1"}]},
-    solución: { género: "f", significados: [{id: "solución,f,1"}]},
-    sobre: { género: "m", significados: [{id: "sobre,m,1"}]},  // , prep: true
-    siglo: { género: "m", significados: [{id: "siglo,m,1"}]},
-    suelo: { género: "m", significados: [{id: "suelo,m,1"}]},
-    serie: { género: "f", significados: [{id: "serie,f,1"}]},
-    señorito: { género: "mf", significados: [{id: "señorito,mf,1"}]},
-    señor: { género: "mf", significados: [{id: "señor,mf,1"}]},
-    señal: { género: "f", significados: [{id: "señal,f,1"}]},
-    uno: { género: "mf", significados: [{id: "uno,mf,1"},{id: "una,f,1"}]},  // , adj: true, pron: true
-    dos: { género: "v", significados: [{id: "dos,m,1"},{id: "dos,f,1"}]},  // , adj: true, pron: true
-    tres: { género: "v", significados: [{id: "tres,m,1"},{id: "tres,f,1"}]},  // , adj: true, pron: true
-    cuatro: { género: "v", significados: [{id: "cuatro,m,1"},{id: "cuatro,f,1"}]},  // , adj: true, pron: true
-    cinco: { género: "v", significados: [{id: "cinco,m,1"},{id: "cinco,f,1"}]},  // , adj: true, pron: true
-    seis: { género: "v", significados: [{id: "seis,m,1"},{id: "seis,f,1"}]},  // , adj: true, pron: true
-    siete: { género: "v", significados: [{id: "siete,m,1"},{id: "siete,f,1"}]},  // , adj: true, pron: true
-    ocho: { género: "v", significados: [{id: "ocho,m,1"},{id: "ocho,f,1"}]},  // , adj: true, pron: true
-    nueve: { género: "v", significados: [{id: "nueve,m,1"},{id: "nueve,f,1"}]},  // , adj: true, pron: true
-    diez: { género: "v", significados: [{id: "diez,m,1"},{id: "diez,f,1"}]},  // , adj: true, pron: true
-    once: { género: "v", significados: [{id: "once,m,1"},{id: "once,f,1"}]},  // , adj: true, pron: true
-    doce: { género: "v", significados: [{id: "doce,m,1"},{id: "doce,f,1"}]},  // , adj: true, pron: true
-    trece: { género: "v", significados: [{id: "trece,m,1"},{id: "trece,f,1"}]},  // , adj: true, pron: true
-    catorce: { género: "v", significados: [{id: "catorce,m,1"},{id: "catorce,f,1"}]},  // , adj: true, pron: true
-    quince: { género: "v", significados: [{id: "quince,m,1"},{id: "quince,f,1"}]},  // , adj: true, pron: true
-    dieciséis: { género: "v", significados: [{id: "dieciséis,m,1"},{id: "dieciséis,f,1"}]},  // , adj: true, pron: true
-    diecisiete: { género: "v", significados: [{id: "diecisiete,m,1"},{id: "diecisiete,f,1"}]},  // , adj: true, pron: true
-    dieciocho: { género: "v", significados: [{id: "dieciocho,m,1"},{id: "dieciocho,f,1"}]},  // , adj: true, pron: true
-    diecinueve: { género: "v", significados: [{id: "diecinueve,m,1"},{id: "diecinueve,f,1"}]},  // , adj: true, pron: true
-    veinte: { género: "v", significados: [{id: "veinte,m,1"},{id: "veinte,f,1"}]},  // , adj: true, pron: true
-    veintiuno: { género: "mf", significados: [{id: "veintiuno,m,1"},{id: "veintiuna,f,1"}]},  // , adj: true, pron: true
-    veintidós: { género: "v", significados: [{id: "veintidós,m,1"},{id: "veintidós,f,1"}]},  // , adj: true, pron: true
-    veinticuatro: { género: "v", significados: [{id: "veinticuatro,m,1"},{id: "veinticuatro,f,1"}]},  // , adj: true, pron: true
-    veinticinco: { género: "m", significados: [{id: "veinticinco,m,1"}]},  // , adj: true, pron: true
-    veintiséis: { género: "m", significados: [{id: "veintiséis,m,1"}]},  // , adj: true, pron: true
-    veintisiete: { género: "m", significados: [{id: "veintisiete,m,1"}]},  // , adj: true, pron: true
-    veintiocho: { género: "m", significados: [{id: "veintiocho,m,1"}]},  // , adj: true, pron: true
-    veintinueve: { género: "m", significados: [{id: "veintinueve,m,1"}]},  // , adj: true, pron: true
-    treinta: { género: "m", significados: [{id: "treinta,m,1"}]},  // , adj: true, pron: true
-    cuarenta: { género: "m", significados: [{id: "treinta,m,1"}]},  // , adj: true, pron: true
-    cincuenta: { género: "m", significados: [{id: "cincuenta,m,1"}]},  // , adj: true, pron: true
-    sesenta: { género: "m", significados: [{id: "sesenta,m,1"}]},  // , adj: true, pron: true
-    setenta: { género: "m", significados: [{id: "setenta,m,1"}]},  // , adj: true, pron: true
-    ochenta: { género: "m", significados: [{id: "ochenta,m,1"}]},  // , adj: true, pron: true
-    noventa: { género: "m", significados: [{id: "noventa,m,1"}]},  // , adj: true, pron: true
-    cien: { género: "m", significados: [{id: "cien,m,1"}]},  // , adj: true, pron: true
-    ciento: { género: "m", significados: [{id: "ciento,m,1"}]},  // , adj: true, pron: true
-    quinientos: { género: "m", significados: [{id: "quinientos,m,1"}]},  // , adj: true, pron: true
-    mil: { género: "m", significados: [{id: "mil,m,1"}]},  // , adj: true, pron: true
-    millón: { género: "m", significados: [{id: "millón,m,1"}]},  // , adj: true
-    billón: { género: "m", significados: [{id: "billón,m,1"}]},  // , adj: true
-    trillón: { género: "m", significados: [{id: "trillón,m,1"}]},  // , adj: true
-    seguro: { género: "m", significados: [{id: "seguro,m,1"}]},  // , adj: true, adv: true
-    segundo: { género: "mf", significados: [{id: "segundo,mf,1"}]},  // , adj: true
-    secundaria: { género: "f", significados: [{id: "secundaria,f,1"}]},  // , adj: true
-    sector: { género: "m", significados: [{id: "sector,m,1"}]},
-    secretario: { género: "mf", significados: [{id: "secretario,mf,1"}]},
-    sección: { género: "f", significados: [{id: "sección,f,1"}]},
-    salida: { género: "f", significados: [{id: "salida,f,1"}]},
-    sal: { género: "f", significados: [{id: "sal,f,1"}]},
-    rostro: { género: "m", significados: [{id: "rostro,m,1"}]},
-    relación: { género: "f", significados: [{id: "relación,f,1"}]},
-    resistencia: { género: "f", significados: [{id: "resistencia,f,1"}]},
-    respuesta: { género: "f", significados: [{id: "respuesta,f,1"}]},
-    rey: { género: "m", significados: [{id: "rey,m,1"}]},
-    resultado: { género: "m", significados: [{id: "resultado,m,1"}]},
-    respecto: { género: "m", significados: [{id: "respecto,m,1"}]},
-    puesto: { género: "m", infinitivo: "poner", significados: [{id: "puesto,m,1"}]},  // , adj: true
-    supuesto: { género: "m", infinitivo: "suponer", significados: [{id: "supuesto,m,1"}]},  // , adj: true
-    impuesto: { género: "m", infinitivo: "imponer", significados: [{id: "impuesto,m,1"}]},  // , adj: true
-    presupuesto: { género: "m", infinitivo: "presuponer", significados: [{id: "presupuesto,m,1"}]},
-    producción: { género: "f", significados: [{id: "producción,f,1"}]},
-    propiedad: { género: "f", significados: [{id: "propiedad,f,1"}]},
-    reacción: { género: "f", significados: [{id: "reacción,f,1"}]},
-    región: { género: "f", significados: [{id: "región,f,1"}]},
-    práctico: { género: "mf", significados: [{id: "práctico,mf,1"}]},  // , adj: true
-    precio: { género: "m", significados: [{id: "precio,m,1"}]},
-    producto: { género: "m", significados: [{id: "producto,m,1"}]},
-    pronto: { género: "m", significados: [{id: "pronto,m,1"}]},
-    propósito: { género: "m", significados: [{id: "propósito,m,1"}]},
-    público: { género: "m", significados: [{id: "público,m,1"}]},
-    real: { género: "m", significados: [{id: "real,m,1"}]},
-    recurso: { género: "m", significados: [{id: "recurso,m,1"}]},
-    regulares: { género: "m", solo_plural: true, significados: [{id: "regulares,m,1"}]},
-    posición: { género: "f", significados: [{id: "posición,f,1"}]},
-    presencia: { género: "f", significados: [{id: "presencia,f,1"}]},
-    presión: { género: "f", significados: [{id: "presión,f,1"}]},
-    presidente: { género: "mf", significados: [{id: "presidente,mf,1"}]},  // , adj: true
-    primera: { género: "f", significados: [{id: "primera,f,1"}]},  // , adj: true
-    proceso: { género: "m", significados: [{id: "proceso,m,1"}]},
-    principal: { género: "m", significados: [{id: "principal,m,1"}]},  // , adj: true
-    presente: { género: "m", significados: [{id: "presente,m,1"}]},  // , adj: true
-    posible: { género: "m", significados: [{id: "posible,m,1"}]},  // , adj: true
-    plaza: { género: "f", significados: [{id: "plaza,f,1"}]},
-    población: { género: "f", significados: [{id: "población,f,1"}]},
-    poesía: { género: "f", significados: [{id: "poesía,f,1"}]},
-    política: { género: "f", significados: [{id: "política,f,1"}]},  // , adj: true
-    posibilidad: { género: "f", significados: [{id: "posibilidad,f,1"}]},  // , adj: true
-    pobre: { género: "a", significados: [{id: "pobre,a,1"}]},  // , adj: true
-    pieza: { género: "f", significados: [{id: "pieza,f,1"}]},
-    planta: { género: "f", significados: [{id: "planta,f,1"}]},
-    personal: { género: "m", significados: [{id: "personal,m,1"}]},  // , adj: true
-    pasado: { género: "m", infinitivo: "pasar", significados: [{id: "pasado,m,1"}]},
-    partido: { género: "m", significados: [{id: "partido,m,1"}]},
-    pan: { género: "m", significados: [{id: "pan,m,1"}]},
-    obra: { género: "f", significados: [{id: "obra,f,1"}]},
-    ocasión: { género: "f", significados: [{id: "ocasión,f,1"}]},
-    operación: { género: "f", significados: [{id: "operación,f,1"}]},
-    opinión: { género: "f", significados: [{id: "opinión,f,1"}]},
-    oportunidad: { género: "f", significados: [{id: "oportunidad,f,1"}]},
-    orden: { género: "a", significados: [{id: "orden,m,1"},{id: "orden,f,1"}]},
-    organización: { género: "f", significados: [{id: "organización,f,1"}]},
-    oro: { género: "m", significados: [{id: "oro,m,1"}]},  // , adj: true
-    origen: { género: "m", significados: [{id: "origen,m,1"}]},
-    naturaleza: { género: "f", significados: [{id: "naturaleza,f,1"}]},
-    necesidad: { género: "f", significados: [{id: "necesidad,f,1"}]},
-    objeto: { género: "m", significados: [{id: "objeto,m,1"}]},
-    nivel: { género: "m", significados: [{id: "nivel,m,1"}]},
-    nacional: { género: "m", significados: [{id: "nacional,m,1"}]},  // , adv: true
-    nada: { género: "mf", significados: [{id: "nada,mf,1"}]},  // , adv: true
-    natural: { género: "a", significados: [{id: "natural,a,1"}]},  // , adj: true
-    negro: { género: "mf", significados: [{id: "negro,mf,1"}]},  // , adj: true
-    mitad: { género: "f", significados: [{id: "mitad,f,1"}]},  // , adv: true
-    música: { género: "f", significados: [{id: "música,f,1"}]},
-    muchacho: { género: "mf", significados: [{id: "muchacho,mf,1"}]},
-    movimiento: { género: "m", significados: [{id: "movimiento,m,1"}]},
-    motivo: { género: "m", significados: [{id: "motivo,m,1"}]},
-    modo: { género: "m", significados: [{id: "modo,m,1"}]},
-    miembro: { género: "m", significados: [{id: "miembro,m,1"}]},
-    mejicano: { género: "mf", significados: [{id: "mejicano,mf,1"}]},  // , adj: true
-    mexicano: { género: "mf", significados: [{id: "mexicano,mf,1"}]},  // , adj: true
-    medida: { género: "f", significados: [{id: "medida,f,1"}]},
-    mesa: { género: "f", significados: [{id: "mesa,f,1"}]},
-    método: { género: "m", significados: [{id: "método,m,1"}]},
-    mercado: { género: "m", significados: [{id: "mercado,m,1"}]},
-    menos: { género: "m", significados: [{id: "menos,m,1"}]},  // , adj: true, adv: true
-    menor: { género: "m", significados: [{id: "menor,m,1"}]},  // , adj: true
-    mayor: { género: "m", significados: [{id: "mayor,m,1"}]},  // , adj: true
-    masa: { género: "f", significados: [{id: "masa,f,1"}]},
-    materia: { género: "f", significados: [{id: "materia,f,1"}]},
-    matrimonio: { género: "m", significados: [{id: "matrimonio,m,1"}]},
-    material: { género: "m", significados: [{id: "material,m,1"}]},  // , adj: true
-    más: { género: "m", incontable: true, significados: [{id: "más,m,1"}]},  // , adj: true
-    marido: { género: "m", significados: [{id: "marido,m,1"}]},
-    mal: { género: "m", significados: [{id: "mal,m,1"}]},  // , adj: true, adv: true
-    mar: { género: "a", significados: [{id: "mar,mf,1"}]},
-    maíz: { género: "m", significados: [{id: "maíz,m,1"}]},
-    leyenda: { género: "f", significados: [{id: "leyenda,f,1"}]},
-    libertad: { género: "f", significados: [{id: "libertad,f,1"}]},
-    licenciado: { género: "mf", significados: [{id: "licenciado,mf,1"}]},
-    lucha: { género: "f", significados: [{id: "lucha,f,1"}]},  // , adv: true
-    madera: { género: "f", significados: [{id: "madera,f,1"}]},
-    maestro: { género: "mf", significados: [{id: "maestro,mf,1"}]},
-    inversión: { género: "f", significados: [{id: "inversión,f,1"}]},
-    investigación: { género: "f", significados: [{id: "investigación,f,1"}]},
-    justicia: { género: "f", significados: [{id: "justicia,f,1"}]},
-    labor: { género: "f", significados: [{id: "labor,f,1"}]},
-    larga: { género: "f", significados: [{id: "larga,f,1"}]},  // , adj: true
-    leche: { género: "f", significados: [{id: "leche,f,1"}]},
-    lejos: { género: "m", significados: [{id: "lejos,m,1"}]},  // , adv: true
-    joven: { género: "a", significados: [{id: "joven,a,1"}]},  // , adj: true
-    largo: { género: "m", significados: [{id: "largo,m,1"}]},  // , adj: true
-    internacional: { género: "f", significados: [{id: "internacional,f,1"}]},  // , adj: true
-    ingeniero: { género: "mf", significados: [{id: "ingeniero,mf,1"}]},
-    interés: { género: "m", significados: [{id: "interés,m,1"}]},
-    instituto: { género: "m", significados: [{id: "instituto,m,1"}]},
-    industrial: { género: "m", significados: [{id: "industrial,m,1"}]},  // , adj: true
-    humano: { género: "mf", significados: [{id: "humano,mf,1"}]},  // , adj: true
-    imagen: { género: "f", significados: [{id: "imagen,f,1"}]},
-    importancia: { género: "f", significados: [{id: "importancia,f,1"}]},
-    industria: { género: "f", significados: [{id: "industria,f,1"}]},
-    igual: { género: "m", significados: [{id: "igual,m,1"}]},  // , adj: true, adv: true
-    hoy: { género: "m", significados: [{id: "hoy,m,1"}]},  // , adv: true
-    guerra: { género: "f", significados: [{id: "guerra,f,1"}]},
-    hecho: { género: "m", significados: [{id: "hecho,m,1"}]},
-    gusto: { género: "m", significados: [{id: "gusto,m,1"}]},
-    grado: { género: "m", significados: [{id: "grado,m,1"}]},
-    ganado: { género: "m", significados: [{id: "ganado,m,1"}]},
-    general: { género: "a", significados: [{id: "general,a,1"}, {id: "general,m,1"}]},  // , adj: true
-    descendiente: { género: "a", significados: [{id: "descendiente,a,1"}]},  // , adj: true
-    final: { género: "a", significados: [{id: "final,a,1"}]},  // , adj: true
-    frecuencia: { género: "f", significados: [{id: "frecuencia,f,1"}]},
-    fuerza: { género: "f", significados: [{id: "fuerza,f,1"}]},
-    función: { género: "f", significados: [{id: "función,f,1"}]},
-    futuro: { género: "mf", significados: [{id: "futuro,mf,1"},{id: "futuro,m,1"},{id: "futuro,f,1"}]},  // , adj: true
-    fuerte: { género: "m", significados: [{id: "fuerte,m,1"}]},  // , adj: true, adv: true
-    fondo: { género: "m", significados: [{id: "fondo,m,1"}]},  // , adj: true
-    existencia: { género: "f", significados: [{id: "existencia,f,1"}]},
-    expresión: { género: "f", significados: [{id: "expresión,f,1"}]},
-    falta: { género: "f", significados: [{id: "falta,f,1"}]},
-    fecha: { género: "f", significados: [{id: "fecha,f,1"}]},
-    federal: { género: "a", significados: [{id: "federal,a,1"}]},  // , adj: true
-    figura: { género: "a", infinitivo: 'figurar', significados: [{id: "figura,f,1"},{id: "figura,m,1"}]},
-    favor: { género: "m", significados: [{id: "favor,m,1"}]},
-    factor: { género: "m", significados: [{id: "factor,m,1"}]},
-    éxito: { género: "m", significados: [{id: "éxito,m,1"}]},
-    especie: { género: "f", significados: [{id: "especie,f,1"}]},
-    esposo: { género: "mf", significados: [{id: "esposo,mf,1"}]},
-    estructura: { género: "f", significados: [{id: "estructura,f,1"}]},
-    etapa: { género: "f", significados: [{id: "etapa,f,1"}]},
-    etcétera: { género: "m", significados: [{id: "etcétera,m,1"}]},
-    espíritu: { género: "m", significados: [{id: "espíritu,m,1"}]},
-    espacio: { género: "m", significados: [{id: "espacio,m,1"}]},
-    empresa: { género: "f", significados: [{id: "empresa,f,1"}]},
-    energía: { género: "f", significados: [{id: "energía,f,1"}]},
-    enfermedad: { género: "f", significados: [{id: "enfermedad,f,1"}]},
-    entrada: { género: "f", significados: [{id: "entrada,f,1"}]},
-    época: { género: "f", significados: [{id: "época,f,1"}]},
-    esfuerzo: { género: "m", significados: [{id: "esfuerzo,m,1"}]},
-    embargo: { género: "m", significados: [{id: "embargo,m,1"}]},
-    economía: { género: "f", significados: [{id: "economía,f,1"}]},
-    edad: { género: "f", significados: [{id: "edad,f,1"}]},
-    educación: { género: "f", significados: [{id: "educación,f,1"}]},
-    elemento: { género: "m", significados: [{id: "elemento,m,1"}]},
-    efecto: { género: "m", significados: [{id: "efecto,m,1"}]},
-    duda: { género: "f", significados: [{id: "duda,f,1"}]},
-    domingo: { género: "m", significados: [{id: "domingo,m,1"}]},
-    lunes: { género: "m", significados: [{id: "lunes,m,1"}]},
-    martes: { género: "m", significados: [{id: "martes,m,1"}]},
-    miércoles: { género: "m", significados: [{id: "miércoles,m,1"}]},
-    jueves: { género: "m", significados: [{id: "jueves,m,1"}]},
-    viernes: { género: "m", significados: [{id: "viernes,m,1"}]},
-    sábado: { género: "m", significados: [{id: "sábado,m,1"}]},
-    doctor: { género: "mf", significados: [{id: "doctor,mf,1"}]},
-    director: { género: "mf", significados: [{id: "director,mf,1"}]},  // , adj: true
-    dirección: { género: "f", significados: [{id: "fffffff,f,1"}]},
-    demanda: { género: "f", significados: [{id: "demanda,f,1"}]},
-    dios: { género: "mf", significados: [{id: "dios,mf,1"}]},
-    desarrollo: { género: "m", significados: [{id: "desarrollo,m,1"}]},
-    derecho: { género: "v", significados: [{id: "derecho,m,1"},{id: "derecho,f,1"}]},
-    departamento: { género: "m", significados: [{id: "departamento,m,1"}]},
-    dato: { género: "m", significados: [{id: "dato,m,1"}]},
-    cuenta: { género: "f", infinitivo: "contar", significados: [{id: "cuenta,f,1"}]},
-    cuestión: { género: "f", significados: [{id: "cuestión,f,1"}]},
-    cultura: { género: "f", significados: [{id: "cultura,f,1"}]},
-    curso: { género: "m", significados: [{id: "curso,m,1"}]},
-    cuidado: { género: "m", significados: [{id: "cuidado,m,1"}]},
-    cuarto: { género: "mf", significados: [{id: "cuarto,m,1"},{id: "cuarta,f,1"}]},  // , adj: true
-    cuadro: { género: "m", significados: [{id: "cuadro,m,1"}]},  // , adj: true
-    crecimiento: { género: "m", significados: [{id: "crecimiento,m,1"}]},
-    corte: { género: "v", significados: [{id: "corte,m,1"},{id: "corte,f,1"}]},
-    costo: { género: "m", significados: [{id: "costo,m,1"}]},
-    contrario: { género: "mf", significados: [{id: "contrario,mf,1"}]},  // , adj: true
-    control: { género: "m", infinitivo: "contener", significados: [{id: "control,m,1"}]},  // , adj: true
-    contra: { género: "v", significados: [{id: "contra,m,1"},{id: "contra,f,1"}]},
-    contenido: { género: "m", significados: [{id: "contenido,m,1"}]},
-    conciencia: { género: "f", significados: [{id: "conciencia,f,1"}]},
-    condición: { género: "f", significados: [{id: "condición,f,1"}]},
-    consecuencia: { género: "f", significados: [{id: "consecuencia,f,1"}]},
-    construcción: { género: "f", significados: [{id: "construcción,f,1"}]},
-    conocimiento: { género: "m", significados: [{id: "conocimiento,m,1"}]},
-    conjunto: { género: "m", significados: [{id: "conjunto,m,1"}]},  // , adj: true
-    común: { género: "m", significados: [{id: "común,m,1"}]},  // , adj: true
-    especial: { género: "m", significados: [{id: "especial,m,1"}]},  // , adj: true
-    claro: { género: "v", significados: [{id: "claro,m,1"},{id: "clara,f,1"}]},  // , adj: true
-    colonia: { género: "f", significados: [{id: "colonia,f,1"}]},
-    comercio: { género: "m", significados: [{id: "comercio,m,1"}]},
-    colegio: { género: "m", significados: [{id: "colegio,m,1"}]},
-    cine: { género: "m", significados: [{id: "cine,m,1"}]},
-    centímetro: { género: "m", significados: [{id: "centímetro,m,1"}]},
-    metro: { género: "m", significados: [{id: "metro,m,1"}]},
-    kilómetro: { género: "m", significados: [{id: "kilómetro,m,1"}]},
-    característico: { género: "mf", significados: [{id: "característico,mf,1"},{id: "característica,f,1"}]},
-    carne: { género: "f", significados: [{id: "carne,f,1"}]},  // , adj: true
-    carrera: { género: "f", significados: [{id: "carrera,f,1"}]},
-    causa: { género: "f", significados: [{id: "causa,f,1"}]},
-    cargo: { género: "m", infinitivo: "cargar", significados: [{id: "cargo,m,1"}]},
-    carga: { género: "f", infinitivo: "cargar", significados: [{id: "cargo,f,1"}]},
-    carácter: { género: "m", significados: [{id: "carácter,m,1"}]},
-    calidad: { género: "f", significados: [{id: "calidad,f,1"}]},
-    cantidad: { género: "f", significados: [{id: "cantidad,f,1"}]},
-    capacidad: { género: "f", significados: [{id: "capacidad,f,1"}]},
-    campo: { género: "m", significados: [{id: "campo,m,1"}]},
-    campesino: { género: "mf", significados: [{id: "campesino,mf,1"}]},  // , adj: true
-    café: { género: "m", significados: [{id: "café,m,1"}]},  // , adj: true
-    caballo: { género: "m", significados: [{id: "caballo,m,1"}]},
-    cabo: { género: "a", significados: [{id: "cabo,m,1"},{id: "cabo,f,1"}]},
-    capital: { género: "v", significados: [{id: "capital,m,1"},{id: "capital,f,1"}]},
-    bonito: { género: "f", significados: [{id: "bonito,m,1"}]},  // , adj: true
-    blanco: { género: "m", significados: [{id: "blanco,m,1"}]},  // , adj: true
-    blanca: { género: "f", significados: [{id: "blanco,f,1"}]},  // , adj: true
-    bien: { género: "m", significados: [{id: "bien,m,1"}]},  // , adv: true
-    base: { género: "a", significados: [{id: "base,f,1"},{id: "base,m,1"}]},
-    bajo: { género: "m", significados: [{id: "bajo,m,1"}]},  // , adj: true, adv: true, prep: true
-    azúcar: { género: "a", significados: [{id: "azúcar,a,1"}]},
-    baile: { género: "m", infinitivo: "bailar", significados: [{id: "baile,m,1"}]},
-    ayer: { género: "m", significados: [{id: "ayer,m,1"}]},  // , adv: true
-    arte: { género: "a", significados: [{id: "arte,a,1"}]},
-    autor: { género: "mf", significados: [{id: "autor,mf,1"}]},
-    aumento: { género: "m", infinitivo: "aumento", significados: [{id: "aumento,m,1"}]},
-    aspecto: { género: "m", significados: [{id: "aspecto,m,1"}]},
-    artículo: { género: "m", significados: [{id: "artículo,m,1"}]},
-    alto: { género: "mf", significados: [{id: "alto,m,1"},{id: "alta,f,1"}]},
-    altura: { género: "f", significados: [{id: "altura,f,1"}]},
-    aplicación: { género: "f", significados: [{id: "aplicación,f,1"}]},
-    árbol: { género: "m", significados: [{id: "árbol,m,1"}]},
-    apoyo: { género: "m", infinitivo: "apoyar", significados: [{id: "apoyo,m,1"}]},
-    animal: { género: "m", significados: [{id: "animal,m,1"}]},  // , adj: true
-    análisis: { género: "m", significados: [{id: "análisis,m,1"}]},
-    ambiente: { género: "m", significados: [{id: "ambiente,m,1"}]},  // , adj: true
-    acuerdo: { género: "m", significados: [{id: "acuerdo,m,1"}]},
-    acto: { género: "m", significados: [{id: "acto,m,1"}]},
-    acción: { género: "f", significados: [{id: "acción,f,1"}]},
-    actitud: { género: "f", significados: [{id: "actitud,f,1"}]},
-    actividad: { género: "f", significados: [{id: "actividad,f,1"}]},
-    aceite: { género: "m", significados: [{id: "aceite,m,1"}]},
-    novela: { género: "f", significados: [{id: "novela,f,1"}]},
-    ante: { género: "m", significados: [{id: "ante,m,1"}]},  // , adv: true, prep: true
-    aparte: { género: "m", significados: [{id: "aparte,m,1"}]},  // , adj: true, adv: true
-    ay: { género: "m", significados: [{id: "ay,m,1"}]},  // , interj: true
-    cerca: { género: "f", infinitivo: "cercar", significados: [{id: "cerca,f,1"}]},  // , adv: true
-    cómo: { género: "m", significados: [{id: "cómo,m,1"}]},  // , adv: true, conj: true
-    cualquiera: { género: "a", significados: [{id: "cualquiera,a,1"}]},  // , adj: true, pron: true
-    cuanto: { género: "m", significados: [{id: "cuanto,m,1"}]},  // , adj: true, adv: true, pron: true, conj: true
-    cuyo: { género: "m", significados: [{id: "cuyo,m,1"}]},  // , adj: true
-    don: { género: "mf", irregularidades: {f: "doña"}, significados: [{id: "don,m,1"},{id: "don,m,2"},{id: "doña,f,1"}]},  // , adj: true
+    amor: {género: "m", significados: [{id: "amor,m,1"}]},
+    año: {género: "m", significados: [{id: "año,m,1"}]},
+    amigo: {género: "mf", significados: [{id: "amigo,mf,1"}]},  // , adj: true
+    barrio: {género: "m", significados: [{id: "barrio,m,1"}]},
+    cable: {género: "m", significados: [{id: "cable,m,1"}]},
+    caja: {género: "f", significados: [{id: "caja,f,1"}]},
+    calle: {género: "f", significados: [{id: "calle,f,1"}]},
+    casa: {género: "f", significados: [{id: "casa,f,1"}]},
+    cosa: {género: "f", significados: [{id: "cosa,f,1"}]},
+    corazón: {género: "m", significados: [{id: "corazón,m,1"}]},
+    día: {género: "m", significados: [{id: "día,m,1"}]},
+    dinero: {género: "m", significados: [{id: "dinero,m,1"}]},
+    familia: {género: "f", significados: [{id: "familia,f,1"}]},
+    gente: {género: "f", significados: [{id: "gente,f,1"}]},
+    hijo: {género: "mf", significados: [{id: "hijo,mf,1"}]},
+    lado: {género: "m", significados: [{id: "lado,m,1"}]},
+    lugar: {género: "m", significados: [{id: "lugar,m,1"}]},
+    madre: {género: "f", significados: [{id: "madre,f,1"}]},
+    migrante: {género: "a", significados: [{id: "migrante,a,1", regiones: ["MX"]}]},  // , adj: true
+    momento: {género: "m", significados: [{id: "momento,m,1"}]},
+    mundo: {género: "m", significados: [{id: "mundo,m,1"}]},
+    mano: {género: "f", significados: [{id: "mano,f,1"}]},
+    mujer: {género: "f", significados: [{id: "mujer,f,1"}]},
+    niño: {género: "v", significados: [{id: "niño,mf,1"},{id: "niña,f,1"},{id: "niña,f,2"}]},  // , adj: true
+    noche: {género: "f", significados: [{id: "noche,f,1"}]},
+    parte: {género: "v", significados: [{id: "parte,f,1"},{id: "parte,m,1"}]},
+    persona: {género: "f", significados: [{id: "persona,f,1"}]},
+    tiempo: {género: "m", significados: [{id: "tiempo,m,1"}]},
+    tren: {género: "m", significados: [{id: "tren,m,1"}]},
+    vez: {género: "f", significados: [{id: "vez,f,1"}]},
+    vida: {género: "f", significados: [{id: "vida,f,1"}]},
+    hora: {género: "f", significados: [{id: "hora,f,1"}]},
+    historia: {género: "f", significados: [{id: "historia,f,1"},{id: "historia,f,2"}]},
+    tierra: {género: "f", significados: [{id: "tierra,f,1"}]},
+    manera: {género: "f", significados: [{id: "manera,f,1"}]},
+    cuerpo: {género: "m", significados: [{id: "cuerpo,m,1"}]},
+    ojo: {género: "m", significados: [{id: "ojo,m,1"}]},
+    nombre: {género: "m", significados: [{id: "nombre,m,1"}]},
+    mes: {género: "m", significados: [{id: "mes,m,1"}]},
+    hombre: {género: "m", significados: [{id: "hombre,m,1"}]},
+    policía: {género: "v", significados: [{id: "policía,f,1"},{id: "policía,mf,1"}]},
+    luz: {género: "f", significados: [{id: "luz,f,1"}]},
+    agua: {género: "f", exige_el: true, incontable: true, significados: [{id: "agua,f,1"}]},
+    palabra: {género: "f", significados: [{id: "palabra,f,1"}]},
+    pie: {género: "m", significados: [{id: "pie,m,1"}]},
+    miedo: {género: "m", significados: [{id: "miedo,m,1"}]},
+    pared: {género: "f", significados: [{id: "pared,f,1"}]},
+    forma: {género: "f", significados: [{id: "forma,f,1"}]},
+    muerte: {género: "f", significados: [{id: "muerte,f,1"}]},
+    inmigrante: {género: "a", significados: [{id: "inmigrante,a,1"}]},  // , adj: true
+    camino: {género: "m", significados: [{id: "camino,m,1"}]},
+    sol: {género: "m", significados: [{id: "sol,m,1"}]},
+    padre: {género: "m", significados: [{id: "padre,m,1"}]},
+    problema: {género: "m", significados: [{id: "problema,m,1"}]},
+    beso: {género: "m", significados: [{id: "beso,m,1"}]},
+    corriente: {género: "f", significados: [{id: "corriente,f,1"}]},
+    red: {género: "f", significados: [{id: "red,f,1"}]},
+    comida: {género: "f", significados: [{id: "comida,f,1"}]},
+    verdad: {género: "f", significados: [{id: "verdad,f,1"}]},
+    semana: {género: "f", significados: [{id: "semana,f,1"}]},
+    puerta: {género: "f", significados: [{id: "puerta,f,1"}]},
+    perro: {género: "v", significados: [{id: "perro,mf,1"},{id: "perro,m,1"},{id: "perra,f,1"}]},
+    servicio: {género: "m", significados: [{id: "servicio,m,1"}]},
+    país: {género: "m", significados: [{id: "país,m,1"}]},
+    fin: {género: "m", significados: [{id: "fin,m,1"}]},
+    viaje: {género: "m", significados: [{id: "viaje,m,1"}]},
+    ciudad: {género: "f", significados: [{id: "ciudad,f,1"}]},
+    cabeza: {género: "v", significados: [{id: "cabeza,f,1"},{id: "cabeza,a,1"}]},
+    agente: {género: "a", significados: [{id: "agente,a,1"}]},
+    noticia: {género: "f", significados: [{id: "noticia,f,1"}]},
+    mamá: {género: "f", significados: [{id: "mamá,f,1"}]},
+    vuelta: {género: "f", significados: [{id: "vuelta,f,1"}]},
+    circuito: {género: "m", significados: [{id: "circuito,m,1"}]},
+    techo: {género: "m", significados: [{id: "techo,m,1"}]},
+    color: {género: "a", significados: [{id: "color,m,1"},{id: "color,a,1"}]},
+    planeta: {género: "v", significados: [{id: "planeta,m,1"},{id: "planeta,f,1"}]},
+    caso: {género: "m", significados: [{id: "caso,m,1"}]},
+    cielo: {género: "m", significados: [{id: "cielo,m,1"}]},
+    dólar: {género: "m", significados: [{id: "dólar,m,1"}]},
+    río: {género: "m", significados: [{id: "río,m,1"}]},
+    boca: {género: "f", significados: [{id: "boca,f,1"}]},
+    cara: {género: "f", significados: [{id: "cara,f,1"}]},
+    mente: {género: "f", significados: [{id: "mente,f,1"}]},  // terminación posible de adverbios
+    ion:   {género: "m", forma_alterniva: "ión", significados: [{id: "ion,m,1"}]},  // terminación posible de sustantivos
+    frente: {género: "v", significados: [{id: "frente,f,1"},{id: "frente,m,1"}]},
+    panel: {género: "m", significados: [{id: "panel,m,1"},{id: "panel,m,2"}]},
+    tomacorriente: {género: "m", significados: [{id: "tomacorriente,m,1", regiones: ["Am."]}]},
+    media: {género: "f", significados: [{id: "media,f,1"}]},  // , adj: true
+    medio: {género: "m", significados: [{id: "medio,m,1"}]},  // , adj: true
+    mañana: {género: "f", significados: [{id: "mañana,f,1"}]},
+    suerte: {género: "f", significados: [{id: "suerte,f,1"}]},
+    piel: {género: "f", significados: [{id: "piel,f,1"}]},
+    pena: {género: "f", significados: [{id: "pena,f,1"}]},
+    voz: {género: "f", significados: [{id: "voz,f,1"}]},
+    hermano: {género: "mf", infinitivo: "hermanar", significados: [{id: "hermano,mf,1"}]},  // , adj: true
+    dolor: {género: "m", significados: [{id: "dolor,m,1"}]},
+    sueño: {género: "m", significados: [{id: "sueño,m,1"}]},
+    número: {género: "m", significados: [{id: "número,m,1"}]},
+    canción: {género: "f", significados: [{id: "canción,f,1"}]},
+    zona: {género: "a", significados: [{id: "zona,f,1"},{id: "zona,m,1"}]},
+    escuela: {género: "f", significados: [{id: "escuela,f,1"}]},
+    luna: {género: "f", significados: [{id: "luna,f,1"}]},
+    edificio: {género: "m", significados: [{id: "edificio,m,1"}]},
+    peso: {género: "m", infinitivo: "pesar", significados: [{id: "peso,m,1"}]},
+    par: {género: "m", significados: [{id: "par,m,1"}]},
+    fuego: {género: "m", significados: [{id: "fuego,m,1"}]},
+    cortacircuitos: {género: "m", solo_plural: true, significados: [{id: "cortacircuitos,m,1"}]},
+    abuelo: {género: "mf", significados: [{id: "abuelo,mf,1"}]},
+    bisabuelo: {género: "mf", significados: [{id: "bisabuelo,mf,1"}]},
+    idea: {género: "f", infinitivo: "idear", significados: [{id: "idea,f,1"}]},
+    ropa: {género: "f", significados: [{id: "ropa,f,1"}]},
+    gracia: {género: "f", significados: [{id: "gracias,f,1"}]},
+    periodista: {género: "a", significados: [{id: "periodista,a,1"}]},
+    grupo: {género: "m", significados: [{id: "grupo,m,1"}]},
+    labio: {género: "m", significados: [{id: "labio,m,1"}]},
+    paso: {género: "m", infinitivo: "pasar", significados: [{id: "paso,m,1"}]},
+    tipo: {género: "m", significados: [{id: "tipo,m,1"}]},
+    fotoperiodista: {género: "a", significados: [{id: "fotoperiodista,a,1"}]},
+    foto: {género: "f", significados: [{id: "foto,f,1"}]},
+    fotografía: {género: "f", significados: [{id: "fotografía,f,1"}]},
+    fotocopia: {género: "f", significados: [{id: "fotocopia,f,1"}]},
+    fotoperiodismo: {género: "m", significados: [{id: "fotoperiodismo,m,1"}]},
+    periodismo: {género: "m", significados: [{id: "periodismo,m,1"}]},
+    alma: {género: "f", exige_el: true, significados: [{id: "alma,f,1"}]},
+    metal: {género: "m", significados: [{id: "metal,m,1"}]},
+    gana: {género: "f", significados: [{id: "gana,f,1"}]},
+    cama: {género: "f", significados: [{id: "cama,f,1"}]},
+    razón: {género: "f", significados: [{id: "razón,f,1"}]},
+    brazo: {género: "m", significados: [{id: "brazo,m,1"}]},
+    punto: {género: "m", significados: [{id: "punto,m,1"}]},
+    aire: {género: "m", significados: [{id: "aire,m,1"}]},
+    través: {género: "m", significados: [{id: "través,m,1"}]},
+    humo: {género: "m", significados: [{id: "humo,m,1"}]},
+    rato: {género: "m", significados: [{id: "rato,m,1"}]},
+    hijueputa: {género: "a", significados: [{id: "hijueputa,a,1"}]},  // , adj: true
+    clase: {género: "f", significados: [{id: "clase,f,1"}]},
+    atención: {género: "f", significados: [{id: "atención,f,1"}]},
+    norte: {género: "m", significados: [{id: "norte,m,1"}]},
+    sur: {género: "m", significados: [{id: "sur,m,1"}]},
+    este: {género: "m", significados: [{id: "este,m,1"}]},
+    oeste: {género: "m", significados: [{id: "oeste,m,1"}]},
+    piso: {género: "m", significados: [{id: "piso,m,1"}]},
+    estudio: {género: "m", infinitivo: "estudiar", significados: [{id: "estudio,m,1"}]},
+    distancia: {género: "f", significados: [{id: "distancia,f,1"}]},
+    papá: {género: "m", significados: [{id: "papá,m,1"}]},
+    tema: {género: "m", significados: [{id: "tema,m,1"}]},
+    frío: {género: "m", significados: [{id: "frío,m,1"}]},  // , adj: true
+    sabor: {género: "m", significados: [{id: "sabor,m,1"}]},
+    sistema: {género: "m", significados: [{id: "sistema,m,1"}]},
+    vecino: {género: "mf", significados: [{id: "vecino,mf,1"}]},  // , adj: true
+    gobierno: {género: "m", significados: [{id: "gobierno,m,1"}]},
+    mirada: {género: "f", infinitivo: "mirar", significados: [{id: "mirada,f,1"}]},
+    tarde: {género: "f", infinitivo: "tardar", significados: [{id: "tarde,f,1"}]},  // , adv: true
+    conexión: {género: "f", significados: [{id: "conexión,f,1"}]},
+    calor: {género: "m", significados: [{id: "calor,m,1"}]},
+    sinestesia: {género: "f", significados: [{id: "sinestesia,f,1"}]},
+    iglesia: {género: "f", significados: [{id: "iglesia,f,1"}]},
+    situación: {género: "f", significados: [{id: "situación,f,1"}]},
+    frontera: {género: "f", significados: [{id: "frontera,f,1"}]},  // , adj: true
+    lluvia: {género: "f", significados: [{id: "lluvia,f,1"}]},
+    inmigración: {género: "f", significados: [{id: "inmigración,f,1"}]},
+    ley: {género: "f", significados: [{id: "ley,f,1"}]},
+    canal: {género: "a", significados: [{id: "canal,a,1"}]},
+    flow: {género: "m", préstamo: "en", significados: [{id: "flow,m,1"}]},
+    conducto: {género: "m", significados: [{id: "conducto,m,1"}]},
+    equipo: {género: "m", significados: [{id: "equipo,m,1"}]},
+    papel: {género: "m", significados: [{id: "papel,m,1"}]},
+    viento: {género: "m", significados: [{id: "viento,m,1"}]},
+    loco: {género: "mf", significados: [{id: "loco,mf,1"}]},  // , adj: true
+    apartamento: {género: "m", significados: [{id: "apartamento,m,1"}]},
+    recuerdo: {género: "m", infinitivo: "recordar", significados: [{id: "recuerdo,m,1"}]},
+    vagón: {género: "m", significados: [{id: "vagón,m,1"}]},
+    pelo: {género: "m", significados: [{id: "pelo,m,1"}]},
+    punta: {género: "f", significados: [{id: "punta,f,1"}]},
+    cambio: {género: "m", infinitivo: "cambiar", significados: [{id: "cambio,m,1"}]},
+    juego: {género: "m", infinitivo: "jugar", significados: [{id: "juego,m,1"}]},
+    contrabandista: {género: "a", significados: [{id: "contrabandista,a,1"}]},
+    seguridad: {género: "f", significados: [{id: "seguridad,f,1"}]},
+    fe: {género: "f", significados: [{id: "fe,f,1"}]},
+    droga: {género: "f", infinitivo: "drogar", significados: [{id: "droga,f,1"}]},
+    paz: {género: "f", significados: [{id: "paz,f,1"}]},
+    tornillo: {género: "m", significados: [{id: "tornillo,m,1"}]},
+    estado: {género: "m", infinitivo: "estar", significados: [{id: "estado,m,1"}]},
+    hambre: {género: "f", exige_el: true, significados: [{id: "hambre,f,1"}]},
+    aparato: {género: "m", significados: [{id: "aparato,m,1"}]},
+    ejemplo: {género: "m", significados: [{id: "ejemplo,m,1"}]},
+    minuto: {género: "m", significados: [{id: "minuto,m,1"}]},
+    tío: {género: "mf", significados: [{id: "tío,mf,1"}]},
+    centro: {género: "m", significados: [{id: "centro,m,1"}]},
+    convento: {género: "m", significados: [{id: "convento,m,1"}]},
+    destino: {género: "m", significados: [{id: "destino,m,1"}]},
+    jefe: {género: "mf", significados: [{id: "jefe,mf,1"}]},
+    herida: {género: "f", significados: [{id: "herida,f,1"}]},
+    mayoría: {género: "f", significados: [{id: "mayoría,f,1"}]},
+    cabrón: {género: "mf", significados: [{id: "cabrón,mf,1"}]},  // , adj: true
+    felón: {género: "mf", significados: [{id: "felón,mf,1"}]},  // , adj: true
+    soledad: {género: "f", significados: [{id: "soledad,f,1"}]},
+    pandillero: {género: "mf", significados: [{id: "pandillero,mf,1"}]},  // , adj: true
+    principio: {género: "m", significados: [{id: "principio,m,1"}]},
+    salud: {género: "f", significados: [{id: "salud,f,1"}]},
+    cuadra: {género: "f", significados: [{id: "cuadra,f,1"}]},
+    decisión: {género: "f", significados: [{id: "decisión,f,1"}]},
+    pregunta: {género: "f", significados: [{id: "pregunta,f,1"}]},
+    sangre: {género: "f", significados: [{id: "sangre,f,1"}]},
+    información: {género: "f", significados: [{id: "información,f,1"}]},
+    camisa: {género: "f", significados: [{id: "camisa,f,1"}]},
+    vía: {género: "f", significados: [{id: "vía,f,1"}]},
+    silencio: {género: "m", significados: [{id: "silencio,m,1"}]},
+    pueblo: {género: "m", significados: [{id: "pueblo,m,1"}]},
+    cora: {género: "m", abr: "corazón", significados: [{id: "cora,m,1"}]},
+    culpa: {género: "f", infinitivo: "culpar", significados: [{id: "culpa,f,1"}]},
+    realidad: {género: "f", significados: [{id: "realidad,f,1"}]},
+    fiesta: {género: "f", infinitivo: "fiestar", significados: [{id: "fiesta,f,1"}]},
+    orificio: {género: "m", significados: [{id: "orificio,m,1"}]},
+    solo: {género: "m", significados: [{id: "solo,m,1"}]},  // , adj: true
+    teléfono: {género: "m", significados: [{id: "teléfono,m,1"}]},
+    fusible: {género: "m", significados: [{id: "fusible,m,1"}]},  // , adj: true
+    autoridad: {género: "f", significados: [{id: "autoridad,f,1"}]},
+    flor: {género: "f", significados: [{id: "flor,f,1"}]},
+    sentido: {género: "m", significados: [{id: "sentido,m,1"}]},  // , adj: true
+    mensaje: {género: "m", significados: [{id: "mensaje,m,1"}]},
+    disco: {género: "m", significados: [{id: "disco,m,1"}]},
+    plan: {género: "m", significados: [{id: "plan,m,1"}]},
+    resto: {género: "m", significados: [{id: "resto,m,1"}]},
+    daño: {género: "m", significados: [{id: "daño,m,1"}]},
+    ángel: {género: "m", exige_el: true, significados: [{id: "ángel,m,1"}]},
+    experiencia: {género: "f", significados: [{id: "experiencia,f,1"}]},
+    prueba: {género: "f", infinitivo: "probar", significados: [{id: "prueba,f,1"}]},
+    instalación: {género: "f", significados: [{id: "instalación,f,1"}]},
+    cerebro: {género: "m", significados: [{id: "cerebro,m,1"}]},
+    plástico: {género: "m", significados: [{id: "plástico,m,1"}]},
+    entrevista: {género: "m", significados: [{id: "entrevista,m,1"}]},
+    montante: {género: "m", significados: [{id: "montante,m,1"}]},  // , adj: true
+    libro: {género: "m", significados: [{id: "libro,m,1"}]},
+    estilo: {género: "m", significados: [{id: "estilo,m,1"}]},
+    viejo: {género: "mf", significados: [{id: "viejo,mf,1"}]},  // , adj: true
+    vista: {género: "a", significados: [{id: "vista,f,1"},{id: "vista,m,1"}]},
+    voluntad: {género: "f", significados: [{id: "voluntad,f,1"}]},
+    ayuda: {género: "a", significados: [{id: "ayuda,f,1"},{id: "ayuda,m,1"}]},
+    programa: {género: "m", significados: [{id: "programa,m,1"}]},
+    velocidad: {género: "f", significados: [{id: "velocidad,f,1"}]},
+    valor: {género: "m", significados: [{id: "valor,m,1"}]},
+    uso: {género: "m", infinitivo: "usar", significados: [{id: "uso,m,1"}]},
+    unidad: {género: "f", significados: [{id: "unidad,f,1"}]},
+    universidad: {género: "f", significados: [{id: "universidad,f,1"}]},
+    tubo: {género: "m", significados: [{id: "tubo,m,1"}]},
+    tratamiento: {género: "m", significados: [{id: "tratamiento,m,1"}]},
+    trabajo: {género: "m", infinitivo: "trabjar", significados: [{id: "trabajo,m,1"}]},
+    trabajador: {género: "mf", significados: [{id: "trabajador,m,1"}]},
+    total: {género: "m", significados: [{id: "total,m,1"}]},  // , adj: true
+    todo: {género: "m", significados: [{id: "todo,m,1"}]},  // , adj: true, prep: true
+    terreno: {género: "m", significados: [{id: "terreno,m,1"}]},
+    término: {género: "m", significados: [{id: "término,m,1"}]},
+    temperatura: {género: "f", significados: [{id: "temperatura,f,1"}]},
+    técnico: {género: "mf", significados: [{id: "técnico,mf,1"}]},
+    teatro: {género: "m", significados: [{id: "teatro,m,1"}]},
+    té: {género: "m", significados: [{id: "té,m,1"}]},
+    tamaño: {género: "m", significados: [{id: "tamaño,m,1"}]},  // , adj: true
+    superficie: {género: "f", significados: [{id: "superficie,f,1"}]},
+    sociedad: {género: "f", significados: [{id: "sociedad,f,1"}]},
+    solución: {género: "f", significados: [{id: "solución,f,1"}]},
+    sobre: {género: "m", frecuencias: {general: 1.7}, significados: [{id: "sobre,m,1"}]},  // , prep: true
+    siglo: {género: "m", significados: [{id: "siglo,m,1"}]},
+    suelo: {género: "m", significados: [{id: "suelo,m,1"}]},
+    serie: {género: "f", significados: [{id: "serie,f,1"}]},
+    señorito: {género: "mf", significados: [{id: "señorito,mf,1"}]},
+    señor: {género: "mf", significados: [{id: "señor,mf,1"}]},
+    señal: {género: "f", significados: [{id: "señal,f,1"}]},
+    uno: {género: "mf", frecuencias: {f: 17}, significados: [{id: "uno,mf,1"},{id: "una,f,1"}]},  // , adj: true, pron: true
+    dos: {género: "v", significados: [{id: "dos,m,1"},{id: "dos,f,1"}]},  // , adj: true, pron: true
+    tres: {género: "v", significados: [{id: "tres,m,1"},{id: "tres,f,1"}]},  // , adj: true, pron: true
+    cuatro: {género: "v", significados: [{id: "cuatro,m,1"},{id: "cuatro,f,1"}]},  // , adj: true, pron: true
+    cinco: {género: "v", significados: [{id: "cinco,m,1"},{id: "cinco,f,1"}]},  // , adj: true, pron: true
+    seis: {género: "v", significados: [{id: "seis,m,1"},{id: "seis,f,1"}]},  // , adj: true, pron: true
+    siete: {género: "v", significados: [{id: "siete,m,1"},{id: "siete,f,1"}]},  // , adj: true, pron: true
+    ocho: {género: "v", significados: [{id: "ocho,m,1"},{id: "ocho,f,1"}]},  // , adj: true, pron: true
+    nueve: {género: "v", significados: [{id: "nueve,m,1"},{id: "nueve,f,1"}]},  // , adj: true, pron: true
+    diez: {género: "v", significados: [{id: "diez,m,1"},{id: "diez,f,1"}]},  // , adj: true, pron: true
+    once: {género: "v", significados: [{id: "once,m,1"},{id: "once,f,1"}]},  // , adj: true, pron: true
+    doce: {género: "v", significados: [{id: "doce,m,1"},{id: "doce,f,1"}]},  // , adj: true, pron: true
+    trece: {género: "v", significados: [{id: "trece,m,1"},{id: "trece,f,1"}]},  // , adj: true, pron: true
+    catorce: {género: "v", significados: [{id: "catorce,m,1"},{id: "catorce,f,1"}]},  // , adj: true, pron: true
+    quince: {género: "v", significados: [{id: "quince,m,1"},{id: "quince,f,1"}]},  // , adj: true, pron: true
+    dieciséis: {género: "v", significados: [{id: "dieciséis,m,1"},{id: "dieciséis,f,1"}]},  // , adj: true, pron: true
+    diecisiete: {género: "v", significados: [{id: "diecisiete,m,1"},{id: "diecisiete,f,1"}]},  // , adj: true, pron: true
+    dieciocho: {género: "v", significados: [{id: "dieciocho,m,1"},{id: "dieciocho,f,1"}]},  // , adj: true, pron: true
+    diecinueve: {género: "v", significados: [{id: "diecinueve,m,1"},{id: "diecinueve,f,1"}]},  // , adj: true, pron: true
+    veinte: {género: "v", significados: [{id: "veinte,m,1"},{id: "veinte,f,1"}]},  // , adj: true, pron: true
+    veintiuno: {género: "mf", significados: [{id: "veintiuno,m,1"},{id: "veintiuna,f,1"}]},  // , adj: true, pron: true
+    veintidós: {género: "v", significados: [{id: "veintidós,m,1"},{id: "veintidós,f,1"}]},  // , adj: true, pron: true
+    veinticuatro: {género: "v", significados: [{id: "veinticuatro,m,1"},{id: "veinticuatro,f,1"}]},  // , adj: true, pron: true
+    veinticinco: {género: "m", significados: [{id: "veinticinco,m,1"}]},  // , adj: true, pron: true
+    veintiséis: {género: "m", significados: [{id: "veintiséis,m,1"}]},  // , adj: true, pron: true
+    veintisiete: {género: "m", significados: [{id: "veintisiete,m,1"}]},  // , adj: true, pron: true
+    veintiocho: {género: "m", significados: [{id: "veintiocho,m,1"}]},  // , adj: true, pron: true
+    veintinueve: {género: "m", significados: [{id: "veintinueve,m,1"}]},  // , adj: true, pron: true
+    treinta: {género: "m", significados: [{id: "treinta,m,1"}]},  // , adj: true, pron: true
+    cuarenta: {género: "m", significados: [{id: "treinta,m,1"}]},  // , adj: true, pron: true
+    cincuenta: {género: "m", significados: [{id: "cincuenta,m,1"}]},  // , adj: true, pron: true
+    sesenta: {género: "m", significados: [{id: "sesenta,m,1"}]},  // , adj: true, pron: true
+    setenta: {género: "m", significados: [{id: "setenta,m,1"}]},  // , adj: true, pron: true
+    ochenta: {género: "m", significados: [{id: "ochenta,m,1"}]},  // , adj: true, pron: true
+    noventa: {género: "m", significados: [{id: "noventa,m,1"}]},  // , adj: true, pron: true
+    cien: {género: "m", significados: [{id: "cien,m,1"}]},  // , adj: true, pron: true
+    ciento: {género: "m", significados: [{id: "ciento,m,1"}]},  // , adj: true, pron: true
+    quinientos: {género: "m", significados: [{id: "quinientos,m,1"}]},  // , adj: true, pron: true
+    mil: {género: "m", significados: [{id: "mil,m,1"}]},  // , adj: true, pron: true
+    millón: {género: "m", significados: [{id: "millón,m,1"}]},  // , adj: true
+    billón: {género: "m", significados: [{id: "billón,m,1"}]},  // , adj: true
+    trillón: {género: "m", significados: [{id: "trillón,m,1"}]},  // , adj: true
+    seguro: {género: "m", significados: [{id: "seguro,m,1"}]},  // , adj: true, adv: true
+    segundo: {género: "mf", significados: [{id: "segundo,mf,1"}]},  // , adj: true
+    secundaria: {género: "f", significados: [{id: "secundaria,f,1"}]},  // , adj: true
+    sector: {género: "m", significados: [{id: "sector,m,1"}]},
+    secretario: {género: "mf", significados: [{id: "secretario,mf,1"}]},
+    sección: {género: "f", significados: [{id: "sección,f,1"}]},
+    salida: {género: "f", significados: [{id: "salida,f,1"}]},
+    sal: {género: "f", significados: [{id: "sal,f,1"}]},
+    rostro: {género: "m", significados: [{id: "rostro,m,1"}]},
+    relación: {género: "f", significados: [{id: "relación,f,1"}]},
+    resistencia: {género: "f", significados: [{id: "resistencia,f,1"}]},
+    respuesta: {género: "f", significados: [{id: "respuesta,f,1"}]},
+    rey: {género: "m", significados: [{id: "rey,m,1"}]},
+    resultado: {género: "m", significados: [{id: "resultado,m,1"}]},
+    respecto: {género: "m", significados: [{id: "respecto,m,1"}]},
+    puesto: {género: "m", infinitivo: "poner", significados: [{id: "puesto,m,1"}]},  // , adj: true
+    supuesto: {género: "m", infinitivo: "suponer", significados: [{id: "supuesto,m,1"}]},  // , adj: true
+    impuesto: {género: "m", infinitivo: "imponer", significados: [{id: "impuesto,m,1"}]},  // , adj: true
+    presupuesto: {género: "m", infinitivo: "presuponer", significados: [{id: "presupuesto,m,1"}]},
+    producción: {género: "f", significados: [{id: "producción,f,1"}]},
+    propiedad: {género: "f", significados: [{id: "propiedad,f,1"}]},
+    reacción: {género: "f", significados: [{id: "reacción,f,1"}]},
+    región: {género: "f", significados: [{id: "región,f,1"}]},
+    práctico: {género: "mf", significados: [{id: "práctico,mf,1"}]},  // , adj: true
+    precio: {género: "m", significados: [{id: "precio,m,1"}]},
+    producto: {género: "m", significados: [{id: "producto,m,1"}]},
+    pronto: {género: "m", significados: [{id: "pronto,m,1"}]},
+    propósito: {género: "m", significados: [{id: "propósito,m,1"}]},
+    público: {género: "m", significados: [{id: "público,m,1"}]},
+    real: {género: "m", significados: [{id: "real,m,1"}]},
+    recurso: {género: "m", significados: [{id: "recurso,m,1"}]},
+    regulares: {género: "m", solo_plural: true, significados: [{id: "regulares,m,1"}]},
+    posición: {género: "f", significados: [{id: "posición,f,1"}]},
+    presencia: {género: "f", significados: [{id: "presencia,f,1"}]},
+    presión: {género: "f", significados: [{id: "presión,f,1"}]},
+    presidente: {género: "mf", significados: [{id: "presidente,mf,1"}]},  // , adj: true
+    primera: {género: "f", significados: [{id: "primera,f,1"}]},  // , adj: true
+    proceso: {género: "m", significados: [{id: "proceso,m,1"}]},
+    principal: {género: "m", significados: [{id: "principal,m,1"}]},  // , adj: true
+    presente: {género: "m", significados: [{id: "presente,m,1"}]},  // , adj: true
+    posible: {género: "m", significados: [{id: "posible,m,1"}]},  // , adj: true
+    plaza: {género: "f", significados: [{id: "plaza,f,1"}]},
+    población: {género: "f", significados: [{id: "población,f,1"}]},
+    poesía: {género: "f", significados: [{id: "poesía,f,1"}]},
+    política: {género: "f", significados: [{id: "política,f,1"}]},  // , adj: true
+    posibilidad: {género: "f", significados: [{id: "posibilidad,f,1"}]},  // , adj: true
+    pobre: {género: "a", significados: [{id: "pobre,a,1"}]},  // , adj: true
+    pieza: {género: "f", significados: [{id: "pieza,f,1"}]},
+    planta: {género: "f", significados: [{id: "planta,f,1"}]},
+    personal: {género: "m", significados: [{id: "personal,m,1"}]},  // , adj: true
+    pasado: {género: "m", infinitivo: "pasar", significados: [{id: "pasado,m,1"}]},
+    partido: {género: "m", significados: [{id: "partido,m,1"}]},
+    pan: {género: "m", significados: [{id: "pan,m,1"}]},
+    obra: {género: "f", significados: [{id: "obra,f,1"}]},
+    ocasión: {género: "f", significados: [{id: "ocasión,f,1"}]},
+    operación: {género: "f", significados: [{id: "operación,f,1"}]},
+    opinión: {género: "f", significados: [{id: "opinión,f,1"}]},
+    oportunidad: {género: "f", significados: [{id: "oportunidad,f,1"}]},
+    orden: {género: "a", significados: [{id: "orden,m,1"},{id: "orden,f,1"}]},
+    organización: {género: "f", significados: [{id: "organización,f,1"}]},
+    oro: {género: "m", significados: [{id: "oro,m,1"}]},  // , adj: true
+    origen: {género: "m", significados: [{id: "origen,m,1"}]},
+    naturaleza: {género: "f", significados: [{id: "naturaleza,f,1"}]},
+    necesidad: {género: "f", significados: [{id: "necesidad,f,1"}]},
+    objeto: {género: "m", significados: [{id: "objeto,m,1"}]},
+    nivel: {género: "m", significados: [{id: "nivel,m,1"}]},
+    nacional: {género: "m", significados: [{id: "nacional,m,1"}]},  // , adv: true
+    nada: {género: "mf", significados: [{id: "nada,mf,1"}]},  // , adv: true
+    natural: {género: "a", significados: [{id: "natural,a,1"}]},  // , adj: true
+    negro: {género: "mf", significados: [{id: "negro,mf,1"}]},  // , adj: true
+    mitad: {género: "f", significados: [{id: "mitad,f,1"}]},  // , adv: true
+    música: {género: "f", significados: [{id: "música,f,1"}]},
+    muchacho: {género: "mf", significados: [{id: "muchacho,mf,1"}]},
+    movimiento: {género: "m", significados: [{id: "movimiento,m,1"}]},
+    motivo: {género: "m", significados: [{id: "motivo,m,1"}]},
+    modo: {género: "m", significados: [{id: "modo,m,1"}]},
+    miembro: {género: "m", significados: [{id: "miembro,m,1"}]},
+    mejicano: {género: "mf", significados: [{id: "mejicano,mf,1"}]},  // , adj: true
+    mexicano: {género: "mf", significados: [{id: "mexicano,mf,1"}]},  // , adj: true
+    medida: {género: "f", significados: [{id: "medida,f,1"}]},
+    mesa: {género: "f", significados: [{id: "mesa,f,1"}]},
+    método: {género: "m", significados: [{id: "método,m,1"}]},
+    mercado: {género: "m", significados: [{id: "mercado,m,1"}]},
+    menos: {género: "m", significados: [{id: "menos,m,1"}]},  // , adj: true, adv: true
+    menor: {género: "m", significados: [{id: "menor,m,1"}]},  // , adj: true
+    mayor: {género: "m", significados: [{id: "mayor,m,1"}]},  // , adj: true
+    masa: {género: "f", significados: [{id: "masa,f,1"}]},
+    materia: {género: "f", significados: [{id: "materia,f,1"}]},
+    matrimonio: {género: "m", significados: [{id: "matrimonio,m,1"}]},
+    material: {género: "m", significados: [{id: "material,m,1"}]},  // , adj: true
+    más: {género: "m", incontable: true, significados: [{id: "más,m,1"}]},  // , adj: true
+    marido: {género: "m", significados: [{id: "marido,m,1"}]},
+    mal: {género: "m", significados: [{id: "mal,m,1"}]},  // , adj: true, adv: true
+    mar: {género: "a", significados: [{id: "mar,mf,1"}]},
+    maíz: {género: "m", significados: [{id: "maíz,m,1"}]},
+    leyenda: {género: "f", significados: [{id: "leyenda,f,1"}]},
+    libertad: {género: "f", significados: [{id: "libertad,f,1"}]},
+    licenciado: {género: "mf", significados: [{id: "licenciado,mf,1"}]},
+    lucha: {género: "f", significados: [{id: "lucha,f,1"}]},  // , adv: true
+    madera: {género: "f", significados: [{id: "madera,f,1"}]},
+    maestro: {género: "mf", significados: [{id: "maestro,mf,1"}]},
+    inversión: {género: "f", significados: [{id: "inversión,f,1"}]},
+    investigación: {género: "f", significados: [{id: "investigación,f,1"}]},
+    justicia: {género: "f", significados: [{id: "justicia,f,1"}]},
+    labor: {género: "f", significados: [{id: "labor,f,1"}]},
+    larga: {género: "f", significados: [{id: "larga,f,1"}]},  // , adj: true
+    leche: {género: "f", significados: [{id: "leche,f,1"}]},
+    lejos: {género: "m", significados: [{id: "lejos,m,1"}]},  // , adv: true
+    joven: {género: "a", significados: [{id: "joven,a,1"}]},  // , adj: true
+    largo: {género: "m", significados: [{id: "largo,m,1"}]},  // , adj: true
+    internacional: {género: "f", significados: [{id: "internacional,f,1"}]},  // , adj: true
+    ingeniero: {género: "mf", significados: [{id: "ingeniero,mf,1"}]},
+    interés: {género: "m", significados: [{id: "interés,m,1"}]},
+    instituto: {género: "m", significados: [{id: "instituto,m,1"}]},
+    industrial: {género: "m", significados: [{id: "industrial,m,1"}]},  // , adj: true
+    humano: {género: "mf", significados: [{id: "humano,mf,1"}]},  // , adj: true
+    imagen: {género: "f", significados: [{id: "imagen,f,1"}]},
+    importancia: {género: "f", significados: [{id: "importancia,f,1"}]},
+    industria: {género: "f", significados: [{id: "industria,f,1"}]},
+    igual: {género: "m", significados: [{id: "igual,m,1"}]},  // , adj: true, adv: true
+    hoy: {género: "m", significados: [{id: "hoy,m,1"}]},  // , adv: true
+    guerra: {género: "f", significados: [{id: "guerra,f,1"}]},
+    hecho: {género: "m", significados: [{id: "hecho,m,1"}]},
+    gusto: {género: "m", significados: [{id: "gusto,m,1"}]},
+    grado: {género: "m", significados: [{id: "grado,m,1"}]},
+    ganado: {género: "m", significados: [{id: "ganado,m,1"}]},
+    general: {género: "a", significados: [{id: "general,a,1"}, {id: "general,m,1"}]},  // , adj: true
+    descendiente: {género: "a", significados: [{id: "descendiente,a,1"}]},  // , adj: true
+    final: {género: "a", significados: [{id: "final,a,1"}]},  // , adj: true
+    frecuencias: {género: "f", significados: [{id: "frecuencia,f,1"}]},
+    fuerza: {género: "f", significados: [{id: "fuerza,f,1"}]},
+    función: {género: "f", significados: [{id: "función,f,1"}]},
+    futuro: {género: "mf", significados: [{id: "futuro,mf,1"},{id: "futuro,m,1"},{id: "futuro,f,1"}]},  // , adj: true
+    fuerte: {género: "m", significados: [{id: "fuerte,m,1"}]},  // , adj: true, adv: true
+    fondo: {género: "m", significados: [{id: "fondo,m,1"}]},  // , adj: true
+    existencia: {género: "f", significados: [{id: "existencia,f,1"}]},
+    expresión: {género: "f", significados: [{id: "expresión,f,1"}]},
+    falta: {género: "f", significados: [{id: "falta,f,1"}]},
+    fecha: {género: "f", significados: [{id: "fecha,f,1"}]},
+    federal: {género: "a", significados: [{id: "federal,a,1"}]},  // , adj: true
+    figura: {género: "a", infinitivo: 'figurar', significados: [{id: "figura,f,1"},{id: "figura,m,1"}]},
+    favor: {género: "m", significados: [{id: "favor,m,1"}]},
+    factor: {género: "m", significados: [{id: "factor,m,1"}]},
+    éxito: {género: "m", significados: [{id: "éxito,m,1"}]},
+    especie: {género: "f", significados: [{id: "especie,f,1"}]},
+    esposo: {género: "mf", significados: [{id: "esposo,mf,1"}]},
+    estructura: {género: "f", significados: [{id: "estructura,f,1"}]},
+    etapa: {género: "f", significados: [{id: "etapa,f,1"}]},
+    etcétera: {género: "m", significados: [{id: "etcétera,m,1"}]},
+    espíritu: {género: "m", significados: [{id: "espíritu,m,1"}]},
+    espacio: {género: "m", significados: [{id: "espacio,m,1"}]},
+    empresa: {género: "f", significados: [{id: "empresa,f,1"}]},
+    energía: {género: "f", significados: [{id: "energía,f,1"}]},
+    enfermedad: {género: "f", significados: [{id: "enfermedad,f,1"}]},
+    entrada: {género: "f", significados: [{id: "entrada,f,1"}]},
+    época: {género: "f", significados: [{id: "época,f,1"}]},
+    esfuerzo: {género: "m", significados: [{id: "esfuerzo,m,1"}]},
+    embargo: {género: "m", significados: [{id: "embargo,m,1"}]},
+    economía: {género: "f", significados: [{id: "economía,f,1"}]},
+    edad: {género: "f", significados: [{id: "edad,f,1"}]},
+    educación: {género: "f", significados: [{id: "educación,f,1"}]},
+    elemento: {género: "m", significados: [{id: "elemento,m,1"}]},
+    efecto: {género: "m", significados: [{id: "efecto,m,1"}]},
+    duda: {género: "f", significados: [{id: "duda,f,1"}]},
+    domingo: {género: "m", significados: [{id: "domingo,m,1"}]},
+    lunes: {género: "m", significados: [{id: "lunes,m,1"}]},
+    martes: {género: "m", significados: [{id: "martes,m,1"}]},
+    miércoles: {género: "m", significados: [{id: "miércoles,m,1"}]},
+    jueves: {género: "m", significados: [{id: "jueves,m,1"}]},
+    viernes: {género: "m", significados: [{id: "viernes,m,1"}]},
+    sábado: {género: "m", significados: [{id: "sábado,m,1"}]},
+    doctor: {género: "mf", significados: [{id: "doctor,mf,1"}]},
+    director: {género: "mf", significados: [{id: "director,mf,1"}]},  // , adj: true
+    dirección: {género: "f", significados: [{id: "fffffff,f,1"}]},
+    demanda: {género: "f", significados: [{id: "demanda,f,1"}]},
+    dios: {género: "mf", significados: [{id: "dios,mf,1"}]},
+    desarrollo: {género: "m", significados: [{id: "desarrollo,m,1"}]},
+    derecho: {género: "v", significados: [{id: "derecho,m,1"},{id: "derecho,f,1"}]},
+    departamento: {género: "m", significados: [{id: "departamento,m,1"}]},
+    dato: {género: "m", significados: [{id: "dato,m,1"}]},
+    cuenta: {género: "f", infinitivo: "contar", significados: [{id: "cuenta,f,1"}]},
+    cuestión: {género: "f", significados: [{id: "cuestión,f,1"}]},
+    cultura: {género: "f", significados: [{id: "cultura,f,1"}]},
+    curso: {género: "m", significados: [{id: "curso,m,1"}]},
+    cuidado: {género: "m", significados: [{id: "cuidado,m,1"}]},
+    cuarto: {género: "mf", significados: [{id: "cuarto,m,1"},{id: "cuarta,f,1"}]},  // , adj: true
+    cuadro: {género: "m", significados: [{id: "cuadro,m,1"}]},  // , adj: true
+    crecimiento: {género: "m", significados: [{id: "crecimiento,m,1"}]},
+    corte: {género: "v", significados: [{id: "corte,m,1"},{id: "corte,f,1"}]},
+    costo: {género: "m", significados: [{id: "costo,m,1"}]},
+    contrario: {género: "mf", significados: [{id: "contrario,mf,1"}]},  // , adj: true
+    control: {género: "m", infinitivo: "contener", significados: [{id: "control,m,1"}]},  // , adj: true
+    contra: {género: "v", significados: [{id: "contra,m,1"},{id: "contra,f,1"}]},
+    contenido: {género: "m", significados: [{id: "contenido,m,1"}]},
+    conciencia: {género: "f", significados: [{id: "conciencia,f,1"}]},
+    condición: {género: "f", significados: [{id: "condición,f,1"}]},
+    consecuencia: {género: "f", significados: [{id: "consecuencia,f,1"}]},
+    construcción: {género: "f", significados: [{id: "construcción,f,1"}]},
+    conocimiento: {género: "m", significados: [{id: "conocimiento,m,1"}]},
+    conjunto: {género: "m", significados: [{id: "conjunto,m,1"}]},  // , adj: true
+    común: {género: "m", significados: [{id: "común,m,1"}]},  // , adj: true
+    especial: {género: "m", significados: [{id: "especial,m,1"}]},  // , adj: true
+    claro: {género: "v", significados: [{id: "claro,m,1"},{id: "clara,f,1"}]},  // , adj: true
+    colonia: {género: "f", significados: [{id: "colonia,f,1"}]},
+    comercio: {género: "m", significados: [{id: "comercio,m,1"}]},
+    colegio: {género: "m", significados: [{id: "colegio,m,1"}]},
+    cine: {género: "m", significados: [{id: "cine,m,1"}]},
+    centímetro: {género: "m", significados: [{id: "centímetro,m,1"}]},
+    metro: {género: "m", significados: [{id: "metro,m,1"}]},
+    kilómetro: {género: "m", significados: [{id: "kilómetro,m,1"}]},
+    característico: {género: "mf", significados: [{id: "característico,mf,1"},{id: "característica,f,1"}]},
+    carne: {género: "f", significados: [{id: "carne,f,1"}]},  // , adj: true
+    carrera: {género: "f", significados: [{id: "carrera,f,1"}]},
+    causa: {género: "f", significados: [{id: "causa,f,1"}]},
+    cargo: {género: "m", infinitivo: "cargar", significados: [{id: "cargo,m,1"}]},
+    carga: {género: "f", infinitivo: "cargar", significados: [{id: "cargo,f,1"}]},
+    carácter: {género: "m", significados: [{id: "carácter,m,1"}]},
+    calidad: {género: "f", significados: [{id: "calidad,f,1"}]},
+    cantidad: {género: "f", significados: [{id: "cantidad,f,1"}]},
+    capacidad: {género: "f", significados: [{id: "capacidad,f,1"}]},
+    campo: {género: "m", significados: [{id: "campo,m,1"}]},
+    campesino: {género: "mf", significados: [{id: "campesino,mf,1"}]},  // , adj: true
+    café: {género: "m", significados: [{id: "café,m,1"}]},  // , adj: true
+    caballo: {género: "m", significados: [{id: "caballo,m,1"}]},
+    cabo: {género: "a", significados: [{id: "cabo,m,1"},{id: "cabo,f,1"}]},
+    capital: {género: "v", significados: [{id: "capital,m,1"},{id: "capital,f,1"}]},
+    bonito: {género: "f", significados: [{id: "bonito,m,1"}]},  // , adj: true
+    blanco: {género: "m", significados: [{id: "blanco,m,1"}]},  // , adj: true
+    blanca: {género: "f", significados: [{id: "blanco,f,1"}]},  // , adj: true
+    bien: {género: "m", significados: [{id: "bien,m,1"}]},  // , adv: true
+    base: {género: "a", significados: [{id: "base,f,1"},{id: "base,m,1"}]},
+    bajo: {género: "m", significados: [{id: "bajo,m,1"}]},  // , adj: true, adv: true, prep: true
+    azúcar: {género: "a", significados: [{id: "azúcar,a,1"}]},
+    baile: {género: "m", infinitivo: "bailar", significados: [{id: "baile,m,1"}]},
+    ayer: {género: "m", significados: [{id: "ayer,m,1"}]},  // , adv: true
+    arte: {género: "a", significados: [{id: "arte,a,1"}]},
+    autor: {género: "mf", significados: [{id: "autor,mf,1"}]},
+    aumento: {género: "m", infinitivo: "aumento", significados: [{id: "aumento,m,1"}]},
+    aspecto: {género: "m", significados: [{id: "aspecto,m,1"}]},
+    artículo: {género: "m", significados: [{id: "artículo,m,1"}]},
+    alto: {género: "mf", significados: [{id: "alto,m,1"},{id: "alta,f,1"}]},
+    altura: {género: "f", significados: [{id: "altura,f,1"}]},
+    aplicación: {género: "f", significados: [{id: "aplicación,f,1"}]},
+    árbol: {género: "m", significados: [{id: "árbol,m,1"}]},
+    apoyo: {género: "m", infinitivo: "apoyar", significados: [{id: "apoyo,m,1"}]},
+    animal: {género: "m", significados: [{id: "animal,m,1"}]},  // , adj: true
+    análisis: {género: "m", significados: [{id: "análisis,m,1"}]},
+    ambiente: {género: "m", significados: [{id: "ambiente,m,1"}]},  // , adj: true
+    acuerdo: {género: "m", significados: [{id: "acuerdo,m,1"}]},
+    acto: {género: "m", significados: [{id: "acto,m,1"}]},
+    acción: {género: "f", significados: [{id: "acción,f,1"}]},
+    actitud: {género: "f", significados: [{id: "actitud,f,1"}]},
+    actividad: {género: "f", significados: [{id: "actividad,f,1"}]},
+    aceite: {género: "m", significados: [{id: "aceite,m,1"}]},
+    novela: {género: "f", significados: [{id: "novela,f,1"}]},
+    ante: {género: "m", significados: [{id: "ante,m,1"}]},  // , adv: true, prep: true
+    aparte: {género: "m", significados: [{id: "aparte,m,1"}]},  // , adj: true, adv: true
+    ay: {género: "m", significados: [{id: "ay,m,1"}]},  // , interj: true
+    cerca: {género: "f", infinitivo: "cercar", significados: [{id: "cerca,f,1"}]},  // , adv: true
+    cómo: {género: "m", significados: [{id: "cómo,m,1"}]},  // , adv: true, conj: true
+    cualquiera: {género: "a", significados: [{id: "cualquiera,a,1"}]},  // , adj: true, pron: true
+    cuanto: {género: "m", significados: [{id: "cuanto,m,1"}]},  // , adj: true, adv: true, pron: true, conj: true
+    cuyo: {género: "m", significados: [{id: "cuyo,m,1"}]},  // , adj: true
+    don: {género: "mf", irregularidades: {f: "doña"}, significados: [{id: "don,m,1"},{id: "don,m,2"},{id: "doña,f,1"}]},  // , adj: true
     dónde: {género: "m", significados: [{id: "dónde,m,1"}]},  // , adv: true
 
-    a: { género: "f", significados: [{id: "a,f,1"}]},  // , prep: true
-    b: { género: "f", significados: [{id: "b,f,1"}]},
-    be: { género: "f", significados: [{id: "be,f,1"}]},
-    c: { género: "f", significados: [{id: "c,f,1"}]},
-    ce: { género: "f", significados: [{id: "ce,f,1"}]},
-    d: { género: "f", significados: [{id: "d,f,1"}]},
-    de: { género: "f", significados: [{id: "de,f,1"}]},
-    e: { género: "f", significados: [{id: "e,f,1"}]},  // , conj: true
-    f: { género: "f", significados: [{id: "f,f,1"}]},
-    efe: { género: "f", significados: [{id: "efe,f,1"}]},
-    g: { género: "f", significados: [{id: "g,f,1"}]},
-    ge: { género: "f", significados: [{id: "ge,f,1"}]},
-    h: { género: "f", significados: [{id: "h,f,1"}]},
-    hache: { género: "f", significados: [{id: "hache"}]},
-    i: { género: "f", significados: [{id: "i,f,1"}]},
-    jota: { género: "f", significados: [{id: "jota,f,1"}]},
-    k: { género: "f", significados: [{id: "k,f,1"}]},
-    ka: { género: "f", significados: [{id: "ka,f,1"}]},
-    l: { género: "f", significados: [{id: "l,f,1"}]},
-    ele: { género: "f", significados: [{id: "ele,f,1"}]},
-    elle: { género: "f", significados: [{id: "elle,f,1"}]},
-    m: { género: "f", significados: [{id: "m,f,1"}]},
-    eme: { género: "f", significados: [{id: "eme,f,1"}]},
-    n: { género: "f", significados: [{id: "n,f,1"}]},
-    ene: { género: "f", significados: [{id: "ene,f,1"}]},
-    ñ: { género: "f", significados: [{id: "ñ,f,1"}]},
-    eñe: { género: "f", significados: [{id: "eñe,f,1"}]},
-    o: { género: "f", significados: [{id: "o,f,1"}]},  // , conj: true
-    p: { género: "f", significados: [{id: "p,f,1"}]},
-    pe: { género: "f", significados: [{id: "pe,f,1"}]},
-    q: { género: "f", significados: [{id: "q,f,1"}]},
-    qu: { género: "f", significados: [{id: "qu,f,1"}]},
-    r: { género: "f", significados: [{id: "r,f,1"}]},
-    ere: { género: "f", significados: [{id: "ere,f,1"}]},
-    erre: { género: "f", significados: [{id: "erre,f,1"}]},
-    s: { género: "f", significados: [{id: "s,f,1"}]},
-    ese: { género: "f", significados: [{id: "ese,f,1"}]},
-    t: { género: "f", significados: [{id: "t,f,1"}]},
-    te: { género: "f", significados: [{id: "te,f,1"}]},
-    u: { género: "f", significados: [{id: "u,f,1"}]},  // , conj: true
-    v: { género: "f", significados: [{id: "v,f,1"}]},
-    ve: { género: "f", significados: [{id: "ve,f,1"}]},
-    uve: { género: "f", significados: [{id: "uve,f,1"}]},
-    w: { género: "f", significados: [{id: "w,f,1"}]},
-    x: { género: "f", significados: [{id: "x,f,1"}]},
-    equis: { género: "f", significados: [{id: "equis,f,1"}]},
-    y: { género: "f", significados: [{id: "y,f,1"}]},  // , conj: true
-    ye: { género: "f", significados: [{id: "ye,f,1"}]},  // , conj: true
-    z: { género: "f", significados: [{id: "z,f,1"}]},
-    zeta: { género: "f", significados: [{id: "zeta,f,1"}]},
-    zeda: { género: "f", significados: [{id: "zeda,f,1"}]},
-    ello: { género: "m", significados: [{id: "ello,m,1"}]},  // , pron: true
+    a: {género: "f", frecuencias: {f: 0.01, fp: 0.001}, significados: [{id: "a,f,1"}]},  // , prep: true
+    b: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "b,f,1"}]},
+    be: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "be,f,1"}]},
+    c: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "c,f,1"}]},
+    ce: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "ce,f,1"}]},
+    d: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "d,f,1"}]},
+    de: {género: "f", frecuencias: {f: 0.01, fp: 0.001}, significados: [{id: "de,f,1"}]},
+    e: {género: "f", frecuencias: {f: 0.01, fp: 0.001},  significados: [{id: "e,f,1"}]},  // , conj: true
+    f: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "f,f,1"}]},
+    efe: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "efe,f,1"}]},
+    g: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "g,f,1"}]},
+    ge: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "ge,f,1"}]},
+    h: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "h,f,1"}]},
+    hache: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "hache"}]},
+    i: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "i,f,1"}]},
+    jota: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "jota,f,1"}]},
+    k: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "k,f,1"}]},
+    ka: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "ka,f,1"}]},
+    l: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "l,f,1"}]},
+    ele: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "ele,f,1"}]},
+    elle: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "elle,f,1"}]},
+    m: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "m,f,1"}]},
+    eme: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "eme,f,1"}]},
+    n: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "n,f,1"}]},
+    ene: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "ene,f,1"}]},
+    ñ: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "ñ,f,1"}]},
+    eñe: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "eñe,f,1"}]},
+    o: {género: "f", frecuencias: {f: 0.01, fp: 0.001}, significados: [{id: "o,f,1"}]},  // , conj: true
+    p: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "p,f,1"}]},
+    pe: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "pe,f,1"}]},
+    q: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "q,f,1"}]},
+    qu: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "qu,f,1"}]},
+    r: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "r,f,1"}]},
+    ere: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "ere,f,1"}]},
+    erre: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "erre,f,1"}]},
+    s: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "s,f,1"}]},
+    ese: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "ese,f,1"}]},
+    t: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "t,f,1"}]},
+    te: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "te,f,1"}]},
+    u: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "u,f,1"}]},  // , conj: true
+    v: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "v,f,1"}]},
+    ve: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "ve,f,1"}]},
+    uve: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "uve,f,1"}]},
+    w: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "w,f,1"}]},
+    x: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "x,f,1"}]},
+    equis: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "equis,f,1"}]},
+    y: {género: "f", frecuencias: {f: 0.01, fp: 0.001}, significados: [{id: "y,f,1"}]},  // , conj: true
+    ye: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "ye,f,1"}]},  // , conj: true
+    z: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "z,f,1"}]},
+    zeta: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "zeta,f,1"}]},
+    zeda: {género: "f", frecuencias: {fp: 0.001}, significados: [{id: "zeda,f,1"}]},
+    ello: {género: "m", significados: [{id: "ello,m,1"}]},  // , pron: true
 
-    yo: { género: "a", significados: [{id: "yo,a,1"}]},  // , pron: true
-    la: { género: "f", significados: [{id: "la,f,1"}]},  // , pron: true, art: true
-    mi: { género: "m", significados: [{id: "mi,m,1"}]},  // , adj: true
-    sí: { género: "m", significados: [{id: "sí,m,1"}]},  // , adv: true, pron: true
-    no: { género: "m", significados: [{id: "no,m,1"}]},  // , adv: true
+    yo: {género: "a", significados: [{id: "yo,a,1"}]},  // , pron: true
+    la: {género: "f", significados: [{id: "la,f,1"}]},  // , pron: true, art: true
+    mi: {género: "m", significados: [{id: "mi,m,1"}]},  // , adj: true
+    sí: {género: "m", significados: [{id: "sí,m,1"}]},  // , adv: true, pron: true
+    no: {género: "m", significados: [{id: "no,m,1"}]},  // , adv: true
 
-    pero: { género: "m", significados: [{id: "pero,m,1"}]},
-    poco: { género: "m", significados: [{id: "poco,m,1"}]},
-    sino: { género: "m", significados: [{id: "sino,m,1"}] },  // , conj: true
-    tan:  { género: "m", significados: [{id: "tan,m,1"}]},  // , adj: true, adv: true, pron: true
-    tanto:  { género: "m", significados: [{id: "tanto,m,1"}]},  // , adj: true, adv: true, pron: true
-    tras:  {género: "m", significados: [{id: "tras,m,1"}]},  // , prep: true
-    varios: { género: "m", solo_plural: true, significados: [{id: "varios,m,1"}]},  // , adj: true, pron: true
-    cabe: { género: "m", significados: [{id: "cabe,m,1"}]},  // , prep: true
-    viá: { género: "f", significados: [{id: "viá,f,1"}]},  // , prep: true
-    pájaro: { género: "m", significados: [{id: "pájaro,m,1"}]},
-    gato: { género: "mf", significados: [{id: "gato,mf,1"}]},
-    mapa: { género: "v", significados: [{id: "mapa,m,1"},{id: "mapa,f,1"}]},
-    sartén: { género: "a", significados: [{id: "sartén,a,1"}]},
-    actor: { género: "mf", irregularidades: {f: "actriz"}, significados: [{id: "actor,m,1"},{id: "actriz,f,1"}],
-             adicional: { género: "mf",  /* adj: true, */ significados: [{id: "actor,mf,1"}]}}, 
+    pero: {género: "m", significados: [{id: "pero,m,1"}]},
+    poco: {género: "m", significados: [{id: "poco,m,1"}]},
+    sino: {género: "m", significados: [{id: "sino,m,1"}] },  // , conj: true
+    tan:    {género: "m", significados: [{id: "tan,m,1"}]},  // , adj: true, adv: true, pron: true
+    tanto:  {género: "m", significados: [{id: "tanto,m,1"}]},  // , adj: true, adv: true, pron: true
+    tras:   {género: "m", significados: [{id: "tras,m,1"}]},  // , prep: true
+    varios: {género: "m", solo_plural: true, significados: [{id: "varios,m,1"}]},  // , adj: true, pron: true
+    cabe:   {género: "m", significados: [{id: "cabe,m,1"}]},  // , prep: true
+    viá:    {género: "f", significados: [{id: "viá,f,1"}]},  // , prep: true
+    pájaro: {género: "m", significados: [{id: "pájaro,m,1"}]},
+    gato:   {género: "mf", significados: [{id: "gato,mf,1"}]},
+    mapa:   {género: "v", significados: [{id: "mapa,m,1"},{id: "mapa,f,1"}]},
+    sartén:     { género: "a", significados: [{id: "sartén,a,1"}]},
+    actor:      { género: "mf", irregularidades: {f: "actriz"}, significados: [{id: "actor,m,1"},{id: "actriz,f,1"}],
+                  adicional: {género: "mf",  /* adj: true, */ significados: [{id: "actor,mf,1"}]}}, 
 
 }
 
 /*
 const ej = {
-    mfmfmfmf: { género: "mf", significados: [{id: "mfmfmfmf,mf,1"}]},
-    aaaaaaaa: { género: "a", significados: [{id: "aaaaaaaa,a,1"}]},
-    fffffff: { género: "f", significados: [{id: "fffffff,f,1"}]},
-    mmmmmmm: { género: "m", significados: [{id: "mmmmmmm,m,1"}]},
+    mfmfmfmf: {género: "mf", significados: [{id: "mfmfmfmf,mf,1"}]},
+    aaaaaaaa: {género: "a", significados: [{id: "aaaaaaaa,a,1"}]},
+    fffffff: {género: "f", significados: [{id: "fffffff,f,1"}]},
+    mmmmmmm: {género: "m", significados: [{id: "mmmmmmm,m,1"}]},
 
-    fffffff: { género: "f", significados: [{id: "fffffff,f,1"}]},
+    fffffff: {género: "f", significados: [{id: "fffffff,f,1"}]},
 
 
 HERE
 
-    fffffff: { género: "f", significados: [{id: "fffffff,f,1"}]},
-    fffffff: { género: "f", significados: [{id: "fffffff,f,1"}]},
-    mmmmmmm: { género: "m", significados: [{id: "mmmmmmm,m,1"}]},
+    fffffff: {género: "f", significados: [{id: "fffffff,f,1"}]},
+    fffffff: {género: "f", significados: [{id: "fffffff,f,1"}]},
+    mmmmmmm: {género: "m", significados: [{id: "mmmmmmm,m,1"}]},
 
 }
 
@@ -5723,7 +5728,6 @@ const to_add = {
     "insecto,NOUN,es": { "lemma": "insecto", "upos": "NOUN", "lang": "es", "count": 1 },
     "intelecto,NOUN,es": { "lemma": "intelecto", "upos": "NOUN", "lang": "es", "count": 1 },
     "víbora,NOUN,pt": { "lemma": "víbora", "upos": "NOUN", "lang": "pt", "count": 1 },
-    "mente,NOUN,pt": { "lemma": "mente", "upos": "NOUN", "lang": "pt", "count": 1 },
     "locker,NOUN,es": { "lemma": "locker", "upos": "NOUN", "lang": "es", "count": 1 },
     "póquer,NOUN,es": { "lemma": "póquer", "upos": "NOUN", "lang": "es", "count": 1 },
     "fénix,NOUN,es": { "lemma": "fénix", "upos": "NOUN", "lang": "es", "count": 1 },

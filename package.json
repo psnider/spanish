@@ -1,6 +1,6 @@
 {
   "name": "spanish",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "verb conjugator",
   "type": "module",
   "main": "index.js",
@@ -8,10 +8,13 @@
     "version": "tsc --version",
     "build": "tsc -P .",
     "clean": "rm -fr generated",
-    "test": "node generated/src/test_sustantivos_adjetivos.js"
+    "test": "node generated/test/test_sustantivos_adjetivos.js"
   },
   "author": "Peter Snider",
   "license": "CC-BY-NC-4.0",
+  "dependencies": {
+    "conjugador-espanol": "github:psnider/conjugador-espanol"
+  },
   "devDependencies": {
     "@types/node": "^20.3.3",
     "typescript": "^5.9.3"

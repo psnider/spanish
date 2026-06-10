@@ -1,14 +1,14 @@
 import assert from "node:assert"
 import { generaFormasDeSustantivo} from "../src/genera-formas-de-sustantivos.js"
 import { PartOfSpeech } from "../src_dict/index.js"
-import { AtributosDeAdjetivo, AtributosDeSustantivo, Género, IndiceDePalabrasAtribuidas } from "../src/index.js"
+import { AtributosDeAdjetivo, AtributosDeSustantivo, GéneroDeForma, IndiceDePalabrasAtribuidas } from "../src/index.js"
 import { generaFormasDeAdjetivo } from "../src/genera-formas-de-adjetivos.js"
 
 
 type ExpectedResults = {[forma: string]: ExpectedResult[]}
 interface ExpectedResult {
     parte: PartOfSpeech
-    género: Género
+    género: GéneroDeForma
     singular: boolean
 }
 
@@ -49,77 +49,77 @@ function test_adjetivo(prueba_nombre: string, lema: string, esperado: ExpectedRe
 
 
 test_sustantivo("test_gato_mf_o", "gato", {
-    gato:  [{parte: "NOUN", género: "m", singular: true}],
-    gatos: [{parte: "NOUN", género: "m", singular: false}],
-    gata:  [{parte: "NOUN", género: "f", singular: true}],
-    gatas: [{parte: "NOUN", género: "f", singular: false}],
+    gato:  [{parte: "NOU", género: "m", singular: true}],
+    gatos: [{parte: "NOU", género: "m", singular: false}],
+    gata:  [{parte: "NOU", género: "f", singular: true}],
+    gatas: [{parte: "NOU", género: "f", singular: false}],
 })
 
 test_sustantivo("test_jefe_mf_e", "jefe", {
-    jefe:  [{parte: "NOUN", género: "m", singular: true}],
-    jefes: [{parte: "NOUN", género: "m", singular: false}],
-    jefa:  [{parte: "NOUN", género: "f", singular: true}],
-    jefas: [{parte: "NOUN", género: "f", singular: false}],
+    jefe:  [{parte: "NOU", género: "m", singular: true}],
+    jefes: [{parte: "NOU", género: "m", singular: false}],
+    jefa:  [{parte: "NOU", género: "f", singular: true}],
+    jefas: [{parte: "NOU", género: "f", singular: false}],
 })
 
 test_sustantivo("test_felón_mf_n", "felón", {
-    felón:  [{parte: "NOUN", género: "m", singular: true}],
-    felones: [{parte: "NOUN", género: "m", singular: false}],
-    felona:  [{parte: "NOUN", género: "f", singular: true}],
-    felonas: [{parte: "NOUN", género: "f", singular: false}],
+    felón:  [{parte: "NOU", género: "m", singular: true}],
+    felones: [{parte: "NOU", género: "m", singular: false}],
+    felona:  [{parte: "NOU", género: "f", singular: true}],
+    felonas: [{parte: "NOU", género: "f", singular: false}],
 })
 
 test_sustantivo("test_trabajador_mf_r", "trabajador", {
-    trabajador:  [{parte: "NOUN", género: "m", singular: true}],
-    trabajadores: [{parte: "NOUN", género: "m", singular: false}],
-    trabajadora:  [{parte: "NOUN", género: "f", singular: true}],
-    trabajadoras: [{parte: "NOUN", género: "f", singular: false}],
+    trabajador:  [{parte: "NOU", género: "m", singular: true}],
+    trabajadores: [{parte: "NOU", género: "m", singular: false}],
+    trabajadora:  [{parte: "NOU", género: "f", singular: true}],
+    trabajadoras: [{parte: "NOU", género: "f", singular: false}],
 })
 
 test_sustantivo("test_pájaro_m_o", "pájaro", {
-    pájaro:  [{parte: "NOUN", género: "m", singular: true}],
-    pájaros: [{parte: "NOUN", género: "m", singular: false}],
+    pájaro:  [{parte: "NOU", género: "m", singular: true}],
+    pájaros: [{parte: "NOU", género: "m", singular: false}],
 })
 
 test_sustantivo("test_tema_m_a", "tema", {
-    tema:  [{parte: "NOUN", género: "m", singular: true}],
-    temas: [{parte: "NOUN", género: "m", singular: false}],
+    tema:  [{parte: "NOU", género: "m", singular: true}],
+    temas: [{parte: "NOU", género: "m", singular: false}],
 })
 
 test_sustantivo("test_casa_f_a", "casa", {
-    casa:  [{parte: "NOUN", género: "f", singular: true}],
-    casas: [{parte: "NOUN", género: "f", singular: false}],
+    casa:  [{parte: "NOU", género: "f", singular: true}],
+    casas: [{parte: "NOU", género: "f", singular: false}],
 })
 
 test_sustantivo("test_mano_f_o", "mano", {
-    mano:  [{parte: "NOUN", género: "f", singular: true}],
-    manos: [{parte: "NOUN", género: "f", singular: false}],
+    mano:  [{parte: "NOU", género: "f", singular: true}],
+    manos: [{parte: "NOU", género: "f", singular: false}],
 })
 
 test_sustantivo("test_sartén_ambos_n", "sartén", {
-    sartén:  [{parte: "NOUN", género: "mf", singular: true}],
-    sartenes: [{parte: "NOUN", género: "mf", singular: false}],
+    sartén:  [{parte: "NOU", género: "mf", singular: true}],
+    sartenes: [{parte: "NOU", género: "mf", singular: false}],
 })
 
 test_sustantivo("test_parte_var_n", "parte", {
-    parte:  [{parte: "NOUN", género: "mf", singular: true}],
-    partes: [{parte: "NOUN", género: "mf", singular: false}],
+    parte:  [{parte: "NOU", género: "mf", singular: true}],
+    partes: [{parte: "NOU", género: "mf", singular: false}],
 })
 
 test_sustantivo("test_don_irregularidad_f", "don", {
-    don:  [{parte: "NOUN", género: "m", singular: true}],
-    dones: [{parte: "NOUN", género: "m", singular: false}],
-    doña:  [{parte: "NOUN", género: "f", singular: true}],
-    doñas: [{parte: "NOUN", género: "f", singular: false}],
+    don:  [{parte: "NOU", género: "m", singular: true}],
+    dones: [{parte: "NOU", género: "m", singular: false}],
+    doña:  [{parte: "NOU", género: "f", singular: true}],
+    doñas: [{parte: "NOU", género: "f", singular: false}],
 })
 
 test_sustantivo("test_actor_con_2_patrones", "actor", {
-    actor:    [{parte: "NOUN", género: "m", singular: true}],
-    actores:  [{parte: "NOUN", género: "m", singular: false}],
-    actriz:   [{parte: "NOUN", género: "f", singular: true}],
-    actrices: [{parte: "NOUN", género: "f", singular: false}],
-    actora:   [{parte: "NOUN", género: "f", singular: true},],
-    actoras:  [{parte: "NOUN", género: "f", singular: false},],
+    actor:    [{parte: "NOU", género: "m", singular: true}],
+    actores:  [{parte: "NOU", género: "m", singular: false}],
+    actriz:   [{parte: "NOU", género: "f", singular: true}],
+    actrices: [{parte: "NOU", género: "f", singular: false}],
+    actora:   [{parte: "NOU", género: "f", singular: true},],
+    actoras:  [{parte: "NOU", género: "f", singular: false},],
 })
 
 

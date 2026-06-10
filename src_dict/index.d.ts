@@ -17,25 +17,50 @@ export type LemmaID = string;
 // This is composed of a LemmaID + a concept/meaning ID
 export type LemmaConceptID = string;
 
-// Universal Dependencies (UD) POS tag set (UPOS)
-export type PartOfSpeech =
-  | "ADJ"    // adjective
-  | "ADP"    // adposition (prepositions, postpositions)
-  | "ADV"    // adverb
-  | "AUX"    // auxiliary verb
-  | "CCONJ"  // coordinating conjunction
-  | "DET"    // determiner
-  | "INTJ"   // interjection, some emojis
-  | "NOUN"   // common noun
-  | "NUM"    // numeral
-  | "PART"   // particle
-  | "PRON"   // pronoun
-  | "PROPN"  // proper noun
-  | "SCONJ"  // subordinating conjunction
-  | "SYM"    // symbol, emojis, hashtags, URLs, email addresses
-  | "VERB"   // main verb
-  | "X"      // other / foreign / unclassified
-  | "PUNCT"; // punctuation (unusual for lexicons but part of UD)
+// Valores en mayúsculas significan que la parte de oración es cierto o casí cierto.
+// Palabras etiquadas con estos valores en mayúsculas vengan de tables.
+export type PartOfSpeechCertain =
+  // Estándar UD normalizado a 3 caracteres
+  | "ADJ"   // adjective
+  | "ADP"   // adposition (prepositions, postpositions)
+  | "ADV"   // adverb
+  | "AUX"   // auxiliary verb
+  | "CON"   // coordinating conjunction (CCONJ)
+  | "DET"   // determiner
+  | "INT"   // interjection, some emojis (INTJ)
+  | "NOU"   // common noun (NOUN)
+  | "NUM"   // numeral
+  | "PRT"   // particle (PART)
+  | "PRN"   // pronoun (PRON)
+  | "NAM"   // proper noun (PROPN)
+  | "SUB"   // subordinating conjunction (SCONJ)
+  | "SYM"   // symbol, emojis, hashtags, URLs, email addresses
+  | "VRB"   // main verb (VERB)
+  | "PNC"   // punctuation (PUNCT)
+  | "UNK"   // other / foreign / unclassified (X)
+  // Additional types added for simplification
+  | "CTN"   // contraction
+  | "ONO"   // onomatopeya
+
+
+// Valores en minúsculas significan que la parte de oración está inferido.
+// Palabras etiquadas con estos valores en mayúsculas vengan de tables.
+export type PartOfSpeechInferred =
+  | "adj"   // adjective
+  | "adv"   // adverb
+  | "int"   // interjection, some emojis (INTJ)
+  | "nou"   // common noun (NOUN)
+  | "nam"   // proper noun (PROPN)
+  | "vrb"   // main verb (VERB)
+  // Additional types added for simplification
+  | "ctn"   // contraction
+  | "ono"   // onomatopeya
+
+// Universal Dependencies (UD) POS tag set (UPOS).
+// Valores en mayúsculas significan que la parte de oración es cierto o casí cierto.
+// Los en minúsculas significan que es una inferencia.
+export type PartOfSpeech = PartOfSpeechCertain | PartOfSpeechInferred
+
 
 // How often this word appears every 10000 words
 export type UsageFrequency = number

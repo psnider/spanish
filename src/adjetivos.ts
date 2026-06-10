@@ -1,3 +1,4 @@
+import { Frecuencias } from "./index.js"
 
 
 type GrammaticalPerson = "s1" | "s2" | "s3" | "p1" | "p2" | "p3" | "sp3"
@@ -47,6 +48,7 @@ export interface AtributosDeAdjetivo {
     // Indica que la forma masculina cambia antes de un sustantivo.
     // El valor indica cual porción del sufijo debe remover.
     apócope?: string
+    frecuencias?: Frecuencias
     irregularidades?: IrregularidadesOrtograficasDeAdjetivos    
 }
 
@@ -59,6 +61,7 @@ export const indice_de_adjetivos:        {[lemma: string]: AtributosDeAdjetivo} 
     anterior:      {géneros: "n"},
     antes:         {géneros: "n"},
     aparte:        {géneros: "n"},  // noun: true  // adv: true
+    aquel:         {géneros: "mf", demostrativo: true, irregularidades: {f: "aquella", mpl: "aquellos", n: "aquello"}},
     así:           {géneros: "n"},  // adv: true  // conj: true
     bastante:      {géneros: "n"},  // pron: true  // adv: true
     bajo:          {géneros: "mf"},  // noun: true  // adv: true  // prep: true
@@ -158,7 +161,7 @@ export const indice_de_adjetivos:        {[lemma: string]: AtributosDeAdjetivo} 
     tuyo:          {géneros: "mf", posesivo: true, persona: "s2"},
     veinte:        {géneros: "n"},  // noun: true
     viejo:         {géneros: "mf"},  // noun: true
-    uno:           {géneros: "mf", apócope: "o"},  // noun: true  // pron: true
+    uno:           {géneros: "mf", apócope: "o", frecuencias: {f: 8}},  // noun: true  // pron: true
     último:        {géneros: "mf"},
     único:         {géneros: "mf"},
     vuestro:       {géneros: "mf", posesivo: true, persona: "p2"},
