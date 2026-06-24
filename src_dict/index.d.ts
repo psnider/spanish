@@ -29,7 +29,7 @@ export type PartOfSpeechCertain =
   | "DET"   // determiner
   | "INT"   // interjection, some emojis (INTJ)
   | "NOU"   // common noun (NOUN)
-  | "NUM"   // numeral
+  | "NUM"   // number
   | "PRT"   // particle (PART)
   | "PRN"   // pronoun (PRON)
   | "NAM"   // proper noun (PROPN)

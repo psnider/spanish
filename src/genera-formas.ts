@@ -1,5 +1,6 @@
 import assert from "node:assert"
-import { AtributosBase, AtributosDePalabra, IndiceDePalabrasAtribuidas } from "./index.js"
+import { AtributosDePalabra, AtributosSintetizados, IndiceDePalabrasAtribuidas } from "./index.js"
+import { PartOfSpeech } from "../src_dict/index.js"
 
 
 const vocales = "aáeéiíoóuú"
@@ -17,6 +18,18 @@ export function remueveUltimaAcento(forma: string) {
     const inacentado = map_acentado_a_inacentuado[acentado]
     assert(inacentado, `forma=${forma} debo tener vocal acentado`)
     const removed = forma.slice(0, -2) + inacentado + forma.slice(-1)
+    return removed
+}
+
+export function remueveAcentoDeTerminaciónDeEnclisis(forma: string) {
+    function remueveAcento(c: string) {
+        return map_acentado_a_inacentuado[c] || c
+    }
+    const anterior = forma.slice(0, -2)
+    const terminación_0 = forma.slice(-2, -1)
+    const terminación_1 = forma.slice(-1)
+    const terminación_inacentado = remueveAcento(terminación_0) + remueveAcento(terminación_1)
+    const removed = anterior + terminación_inacentado
     return removed
 }
 
@@ -38,24 +51,44 @@ export function generaPlural(forma: string) : string {
 }
 
 
-function atributosEqual<T extends AtributosBase>(lhs: T, rhs: T) : boolean {
-    if (lhs.parte !== rhs.parte) return false
-    // estas comparaciones funcionan aun los campos no existan
-    if ((<any> lhs)?.género !== (<any> rhs)?.género) return false
-    if ((<any> lhs)?.singular !== (<any> rhs)?.singular) return false
-    return true
+export function añadaSiEsNuevo(formas: IndiceDePalabrasAtribuidas, forma: string, síntesis: AtributosSintetizados) {
+    formas[forma] = formas[forma] || []
+    for (let existente of formas[forma]) {
+        if (síntesis === existente) {
+            return
+        }
+    }
+    formas[forma].push(síntesis)
 }
 
-export function añadaSiEsNuevo(formas: IndiceDePalabrasAtribuidas, forma: string, atributos: AtributosDePalabra) {
-    const lista = formas[forma]
-    if (lista) {
-        for (let i in lista) {
-            if (atributosEqual(atributos, lista[i])) {
-                return
+
+// Las abreviaturas utilizadas por DLE
+const atributos_con_valores_únicos = [ "género", "pluralidad" ]
+const etiquetas_de_pronombres = [ "ger", "inf", "od", "oi", "op", "part",
+                    "advers", "causal", "comp", "conc", "copulat", "dem", "distrib",
+                    "excl", "indef", "indet", "interrog", "poses", "relat" ]
+
+export function generaSíntetis(args: {parte?: PartOfSpeech, atributos: AtributosDePalabra}) : AtributosSintetizados {
+    const {atributos} = args
+    const {parte, ...resto} = atributos
+    assert(args.parte || parte, `debe poner un valor a parte`)
+    let síntesis: string = <string> (args.parte || parte)
+    let etiquetas = ""
+    const nombres_de_atributos = Object.keys(resto)
+    for (let nombre of nombres_de_atributos) {
+        if (atributos_con_valores_únicos.includes(nombre)) {
+            const valor = atributos[<keyof AtributosDePalabra> nombre]
+            if (valor) {
+                síntesis += `,${valor}`
             }
+        } else if (etiquetas_de_pronombres.includes(nombre)) {
+            etiquetas += `,${nombre}`
         }
-    } else {
-        formas[forma] = formas[forma] || []
     }
-    formas[forma].push(atributos)
+    síntesis += etiquetas
+    if (atributos.frecuencia) {
+        síntesis += `,f=${atributos.frecuencia}`
+    }
+    return síntesis
 }
+

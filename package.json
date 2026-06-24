@@ -3,12 +3,13 @@
   "version": "0.2.0",
   "description": "verb conjugator",
   "type": "module",
-  "main": "index.js",
+  "main": "./generated/src/publico.js",
+  "types": "./src/index.d.ts",
   "scripts": {
     "version": "tsc --version",
     "build": "tsc -P .",
     "clean": "rm -fr generated",
-    "test": "node generated/test/test_sustantivos_adjetivos.js"
+    "test": "node generated/test/test_sustantivos_adjetivos_pronombres.js"
   },
   "author": "Peter Snider",
   "license": "CC-BY-NC-4.0",
@@ -26,5 +27,11 @@
   "bugs": {
     "url": "https://github.com/psnider/spanish/issues"
   },
-  "homepage": "https://github.com/psnider/spanish#readme"
+  "homepage": "https://github.com/psnider/spanish#readme",
+  "files": [
+    "generated/src",
+    "src/index.d.ts",
+    "README.md",
+    "LICENSE"
+  ]
 }

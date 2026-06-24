@@ -1,85 +1,83 @@
 // import "../conjugator/index"
 
-import { Frecuencias, IrregularidadesOrtograficas } from "./index.js"
+import { AtributosDePalabra, AtributosDePronombre, Frecuencias, GéneroDeForma, IrregularidadesOrtograficas } from "./index.js"
 
 
-export type GrammaticalPersonDePronombre = "s1" | "s2" | "s3" | "p1" | "p2" | "p3" | "sp3"
-export type GéneroDePronombre = "n" | "m" | "mf" | "mfn" | "mn" | "f"
+export type GéneroDePronombre = GéneroDeForma | "a"
 
-interface Pronombre {
+type PronombreBase = Pick<AtributosDePalabra, "persona" | "dem" | "relat" | "od" | "oi" | "op" | "comp" | "excl" | "indef" | "interrog" >
+export interface Pronombre extends PronombreBase {
     sujeto?: true
-    persona?: GrammaticalPersonDePronombre
-    género: GéneroDePronombre
+    géneros: GéneroDePronombre
+    solo_singular?: true
     solo_plural?: true
-    demostrativo?: true
-    relativo?: true
-    // objeto directo
-    od?: true
-    // objeto indirecto
-    oi?: true
-    // objeto de preposición
-    op?: true
-    // noun?: true
-    // adj?: true
-    // adv?: true
-    // conj?: true
+    // El valor indica cual porción del sufijo debe remover.
+    apócope?: string
     frecuencias?: Frecuencias
     irregularidades?: IrregularidadesOrtograficas 
     // formas/ortografías alternativos   
     alternativos?: IrregularidadesOrtograficas
     alternativo?: string
-    comparativo?: true
-    exclamativo?: true
-    indefinido?: true
-    interrogativo?: true
 }
 
+
 export const indice_de_pronombres: {[lemma: string]: Pronombre} = {
-    yo:       { sujeto: true, persona: "s1", género: "mf"},
-    tú:       { sujeto: true, persona: "s2", género: "mf"},
-    vos:      { sujeto: true, persona: "s2", género: "mf"},
-    usted:    { sujeto: true, persona: "s2", op: true, género: "mf"},
-    él:       { sujeto: true, persona: "s3", op: true, género: "m"},
-    ella:     { sujeto: true, persona: "s3", op: true, género: "f"},
-    ello:     { sujeto: true, persona: "s3", op: true, género: "mn"},
-    nosotros: { sujeto: true, persona: "p1", op: true, género: "n"},
-    vosotros: { sujeto: true, persona: "p2", op: true, género: "n"},
-    ustedes:  { sujeto: true, persona: "p2", op: true, género: "mf"},
-    ellos:    { sujeto: true, persona: "p3", op: true, género: "mn"},
-    ellas:    { sujeto: true, persona: "p3", op: true, género: "f"},
+    yo:       { géneros: "a", solo_singular: true, sujeto: true, persona: "s1", },
+    tú:       { géneros: "a", solo_singular: true, sujeto: true, persona: "s2"},
+    vos:      { géneros: "a", solo_singular: true, sujeto: true, persona: "s2"},
+    usted:    { géneros: "a", sujeto: true, persona: "2", op: true },
+    él:       { géneros: "mf", persona: "s3", irregularidades: {f: "ella", mpl: "ellos", n: "ello"}}, // regular: fpl: "ellas", 
+    // él:       { sujeto: true, persona: "s3", op: true, géneros: "m"},
+    // ello:     { sujeto: true, persona: "s3", op: true, géneros: "n"},
+    // ella:     { sujeto: true, persona: "s3", op: true, géneros: "f"},
+    // ellos:    { sujeto: true, persona: "p3", op: true, géneros: "m"},
+    // ellas:    { sujeto: true, persona: "p3", op: true, géneros: "f"},
+    nosotros: { géneros: "mf", solo_plural: true, sujeto: true, persona: "p1", op: true, irregularidades: {fpl: "nosotras"}},
+    vosotros: { géneros: "mf", solo_plural: true, sujeto: true, persona: "p2", op: true, irregularidades: {fpl: "vosotras"}},
+    quien:    { géneros: "n", relat: true},
+    quién:    { géneros: "n", indef: true, interrog: true, excl: true, irregularidades: {npl: "quiénes"}},
 
-    ese:      {género: "mfn", demostrativo: true, irregularidades: {mpl: "esos", n: "eso"}, alternativos: {m: "ése", f: "ésa", n: "éso", mpl: "ésos", fpl: "ésas"}},
-    este:     {género: "mfn", demostrativo: true, irregularidades: {mpl: "estos", n: "etso"}, alternativos: {m: "éste", f: "ésta", n: "ésto", mpl: "éstos", fpl: "éstas"}},
-    aquel:    {género: "mfn", demostrativo: true, irregularidades: {f: "aquella", mpl: "aquellos", n: "aquello"}, alternativos: {m: "aquél", f: "aquélla", n: "aquéllo", mpl: "aquéllos", fpl: "aquéllas"}},
-    le:       {género: "mfn", alternativo: "se"},
-    me:       {género: "mf", od: true, persona: "s1"},
-    te:       {género: "mf", od: true, persona: "s2"},
-    lo:       {género: "mf", od: true, persona: "s3", irregularidades: {f: "la"}, alternativo: "se"},
-    se:       {género: "mf", od: true, persona: "sp3"},
-    nos:      {género: "mf", od: true, persona: "p1"},
-    os:       {género: "mf", od: true, persona: "p2"},
-    los:      {género: "mf", od: true, persona: "p3", irregularidades: {fpl: "las"}},
+    alguien:  { géneros: "n", solo_singular: true, indef: true},
+    nadie:    { géneros: "n", solo_singular: true, indef: true},
+    alguno:   {géneros: "mf", indef: true },
+    algo:     {géneros: "n", indef: true },
+    ninguno:   {géneros: "mf", solo_singular: true, indef: true },
 
-    mí:       {género: "n", op: true, persona: "s1"},
-    conmigo:  {género: "n", op: true, persona: "s1"},
-    ti:       {género: "n", op: true, persona: "s2"},
-    contigo:  {género: "n", op: true, persona: "s2"},
-    sí:       {género: "n", op: true, persona: "s3"},   // noun: true, adv: true,
 
-    demasiado: {género: "mf", indefinido: true},  // adj: true
+    ese:      { géneros: "mf", dem: true, irregularidades: {mpl: "esos", n: "eso"}, alternativos: {m: "ése", f: "ésa", n: "éso", mpl: "ésos", fpl: "ésas"}},
+    este:     { géneros: "mf", dem: true, irregularidades: {mpl: "estos", n: "etso"}, alternativos: {m: "éste", f: "ésta", n: "ésto", mpl: "éstos", fpl: "éstas"}},
+    aquel:    { géneros: "mf", dem: true, irregularidades: {f: "aquella", mpl: "aquellos", n: "aquello"}, alternativos: {m: "aquél", f: "aquélla", n: "aquéllo", mpl: "aquéllos", fpl: "aquéllas"}},
+    le:       { géneros: "a", alternativo: "se"},
+    me:       { géneros: "a", od: true, persona: "s1"},
+    te:       { géneros: "a", od: true, persona: "s2"},
+    lo:       { géneros: "mf", od: true, persona: "s3", irregularidades: {f: "la"}, alternativo: "se"},
+    se:       { géneros: "a", od: true, persona: "sp3"},
+    nos:      { géneros: "a", od: true, persona: "p1"},
+    os:       { géneros: "a", od: true, persona: "p2"},
+    los:      { géneros: "mf", od: true, persona: "p3", irregularidades: {fpl: "las"}},
 
-    mucho:    {género: "mf", indefinido: true},   // , adj: true, adv: true
-    poco:     {género: "mf", indefinido: true},   // noun: true, adj: true, 
-    que:      {género: "n", relativo: true},   // conj: true, 
-    qué:      {género: "n", interrogativo: true, exclamativo: true},   // adj: true, adv: true
+    mí:       { géneros: "n", op: true, persona: "s1"},
+    conmigo:  { géneros: "n", op: true, persona: "s1"},
+    ti:       { géneros: "n", op: true, persona: "s2"},
+    contigo:  { géneros: "n", op: true, persona: "s2"},
+    sí:       { géneros: "n", op: true, persona: "s3"},   // noun: true, adv: true,
 
-    quien:    {género: "n", relativo: true},
-    quién:    {género: "n", indefinido: true, interrogativo: true, exclamativo: true},
-    tal:      {género: "n"},   // adj: true, adv: true
-    tan:      {género: "n", comparativo: true, demostrativo: true},   // , noun: true, adj: true, adv: true
-    tanto:    {género: "mf", comparativo: true, demostrativo: true},   // noun: true, adj: true, adv: true, 
-    uno:      { género: "mf", frecuencias: {f: 50}},   // noun: true, adj: true
-    vario:    { género: "mf", solo_plural: true, indefinido: true},   // , noun: true
+    demasiado: { géneros: "mf", indef: true},  // adj: true
+
+    mucho:    { géneros: "mf", indef: true},   // , adj: true, adv: true
+    poco:     { géneros: "mf", indef: true},   // noun: true, adj: true, 
+    que:      { géneros: "n", relat: true},   // conj: true, 
+    qué:      { géneros: "n", interrog: true, excl: true},   // adj: true, adv: true
+
+    tal:      { géneros: "n"},   // adj: true, adv: true
+    tan:      { géneros: "n", comp: true, dem: true},   // , noun: true, adj: true, adv: true
+    tanto:    { géneros: "mf", apócope: "to", comp: true, dem: true},   // noun: true, adj: true, adv: true, 
+    uno:      { géneros: "mf", frecuencias: {f: 50}},   // noun: true, adj: true
+    varios:   { géneros: "mf", solo_plural: true, indef: true, irregularidades: {fpl: "varias"}},   // , noun: true
+    todo:     { géneros: "mf", indef: true},
+
+    cuál:     { géneros: "mf", indef: true, interrog: true},
+    cuánto:   { géneros: "mf", interrog: true},
 }
 
 

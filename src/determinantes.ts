@@ -4,27 +4,24 @@ import { Frecuencias } from "./index.js"
 
 interface Determinante {
     género: GéneroDeLema
-    singular: boolean
+    pluralidad: "s" | "p"
     frecuencia: number
     apócope?: string
-    // noun?: true
-    // pron?: true
-    determinante?: true
-    indeterminado?: true
+    indet?: true
     irregularidades?: IrregularidadesOrtograficas    
 }
 
 
 export const indice_de_determinantes: {[lemma: string]: Determinante} = {
-    el:  {género: "m", singular: true, frecuencia: 8000 },
-    los: {género: "m", singular: false, frecuencia: 1500},
-    lo:  {género: "n", singular: false, frecuencia: 1200},
-    la:  {género: "f", singular: true, frecuencia: 6000 },
-    las: {género: "f", singular: false, frecuencia: 2000},
+    el:  {género: "m", pluralidad: "s", frecuencia: 8000 },
+    los: {género: "m", pluralidad: "p", frecuencia: 1500},
+    lo:  {género: "n", pluralidad: "s", frecuencia: 1200},
+    la:  {género: "f", pluralidad: "s", frecuencia: 6000 },
+    las: {género: "f", pluralidad: "p", frecuencia: 2000},
 
-    un:   {género: "m", singular: true, apócope: "o", frecuencia: 3500, indeterminado: true},
-    uno:  {género: "m", singular: true, frecuencia: 300, indeterminado: true},
-    unos: {género: "m", singular: false, frecuencia: 500, indeterminado: true},
-    una:  {género: "f", singular: true, frecuencia: 4000, indeterminado: true},
-    unas: {género: "f", singular: false, frecuencia: 500, indeterminado: true},
+    un:   {género: "m", pluralidad: "s", apócope: "o", frecuencia: 3500, indet: true},
+    uno:  {género: "m", pluralidad: "s", frecuencia: 300, indet: true},
+    unos: {género: "m", pluralidad: "p", frecuencia: 500, indet: true},
+    una:  {género: "f", pluralidad: "s", frecuencia: 4000, indet: true},
+    unas: {género: "f", pluralidad: "p", frecuencia: 500, indet: true},
 }
